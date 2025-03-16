@@ -6,11 +6,17 @@ on:
       - main
       - develop
       - develop/*
+    paths:
+      - 'frontend/**'
   pull_request:
     branches:
       - main
       - develop
       - develop/*
+    branches-ignore:
+      - '*'
+    paths:
+      - 'frontend/**'
 
 jobs:
   build:
