@@ -13,8 +13,6 @@ on:
       - main
       - develop
       - develop/*
-    branches-ignore:
-      - '*'
     paths:
       - 'frontend/**'
 
