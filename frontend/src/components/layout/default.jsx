@@ -6,7 +6,7 @@ function Layout({children}) {
       <header>
         <h1>My App</h1>
       </header>
-      <main className="main">
+      <main>
         {children}
       </main>
       <footer>
