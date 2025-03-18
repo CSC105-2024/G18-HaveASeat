@@ -8,7 +8,28 @@
     "backend"
   ],
   "keywords": [],
-  "author": [],
+  "authors": [
+    {
+      "name": "Theerawat Patthawee",
+      "url": "https://github.com/ttwrpz"
+    },
+    {
+      "name": "Karnsinee Phophutaraksa",
+      "url": "https://github.com/Tienkarnsinee"
+    },
+    {
+      "name": "Jirapon Thipbodee",
+      "url": "https://github.com/Jirapon-Thipbodee"
+    },
+    {
+      "name": "Chotiwet Wisitworanat",
+      "url": "https://github.com/Sunthewhat"
+    },
+    {
+      "name": "Thanatat Wongabut",
+      "url": "https://github.com/thanatat-wong"
+    }
+  ],
   "engines": {
     "node": ">=22"
   },
