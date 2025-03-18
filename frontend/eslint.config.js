@@ -2,8 +2,7 @@ import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
-
-const eslintPluginPrettierRecommended = require('eslint-plugin-prettier/recommended');
+import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
 
 export default [
   { ignores: ['dist'] },
@@ -32,5 +31,9 @@ export default [
       ],
     },
   },
-  eslintPluginPrettierRecommended
+  {
+    plugins: {
+      prettier: eslintPluginPrettier,
+    },
+  },
 ]
