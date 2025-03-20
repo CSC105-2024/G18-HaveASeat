@@ -1,7 +1,7 @@
 import "./global.css";
 import { StrictMode, Suspense, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, useRoutes } from "react-router-dom";
+import { BrowserRouter, useRoutes } from "react-router";
 import Layout from "@/components/layout/default.jsx";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback, ErrorLayout } from "@/components/layout/error.jsx";
