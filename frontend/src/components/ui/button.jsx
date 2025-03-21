@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
-import { cva } from "class-variance-authority";
+import { cva } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
@@ -35,6 +35,16 @@ const buttonVariants = cva(
   }
 )
 
+/**
+ * @typedef {Object} ButtonVariants
+ * @property {'default' | 'destructive' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'} variant
+ * @property {'default' | 'sm' | 'lg' | 'icon'} size
+ */
+
+/**
+ * @param {React.ComponentProps<"button"> & ButtonVariants & { asChild?: boolean}} props
+ * @returns {JSX.Element}
+ */
 function Button({
   className,
   variant,
@@ -48,8 +58,9 @@ function Button({
     <Comp
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
-      {...props} />
-  );
+      {...props}
+    />
+  )
 }
 
 export { Button, buttonVariants }

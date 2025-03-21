@@ -5,6 +5,10 @@ import { DayPicker } from "react-day-picker"
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 
+/**
+ * @param {React.ComponentProps<typeof DayPicker>} props
+ * @returns {JSX.Element}
+ */
 function Calendar({
   className,
   classNames,
@@ -65,8 +69,9 @@ function Calendar({
           <ChevronRight className={cn("size-4", className)} {...props} />
         ),
       }}
-      {...props} />
-  );
+      {...props}
+    />
+  )
 }
 
 export { Calendar }

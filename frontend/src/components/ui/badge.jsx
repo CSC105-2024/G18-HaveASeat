@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
-import { cva } from "class-variance-authority";
+import { cva, VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
@@ -25,6 +25,10 @@ const badgeVariants = cva(
   }
 )
 
+/**
+ * @param {React.ComponentProps<"span"> & import("class-variance-authority").VariantProps<typeof badgeVariants> & { asChild?: boolean }} props
+ * @returns {JSX.Element}
+ */
 function Badge({
   className,
   variant,
@@ -37,8 +41,9 @@ function Badge({
     <Comp
       data-slot="badge"
       className={cn(badgeVariants({ variant }), className)}
-      {...props} />
-  );
+      {...props}
+    />
+  )
 }
 
 export { Badge, badgeVariants }
