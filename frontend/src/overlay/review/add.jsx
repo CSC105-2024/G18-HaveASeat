@@ -3,7 +3,7 @@ import { createModalHook } from "@/hooks/use-modal.jsx";
 
 /**
  * @typedef {Object} ReviewAddOverlayProps
- * @property {boolean | undefined} isReply
+ * @property {boolean} [isReply]
  */
 
 /**
@@ -19,8 +19,8 @@ function ReviewAddOverlay({isReply = false}) {
 const useReviewAddOverlay = createModalHook(
   ReviewAddOverlay,
   'review-add',
-  'Leave A Review',
-  '',
+  ({isReply}) => isReply ? 'Reply Review' : 'Leave A Review',
+  ({isReply}) => isReply ? 'This is the best way to interact with your customers' : 'Tell us more about this place!',
 );
 
 export { useReviewAddOverlay, ReviewAddOverlay };
