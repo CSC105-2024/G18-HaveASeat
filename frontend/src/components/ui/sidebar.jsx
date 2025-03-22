@@ -266,7 +266,7 @@ function Sidebar({
 }
 
 /**
- * @param {React.ComponentProps<typeof Button>} props
+ * @param {React.ComponentProps<typeof import('./button').Button>} props
  * @returns {JSX.Element}
  */
 function SidebarTrigger({

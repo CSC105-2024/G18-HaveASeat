@@ -14,4 +14,4 @@ const useReviewDeleteOverlay = createModalHook(
   '',
 );
 
-export { useReviewDeleteOverlay };
+export { useReviewDeleteOverlay, ReviewDeleteOverlay };

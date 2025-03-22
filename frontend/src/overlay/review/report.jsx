@@ -14,4 +14,4 @@ const useReviewReportOverlay = createModalHook(
   '',
 );
 
-export { useReviewReportOverlay };
+export { useReviewReportOverlay, ReviewReportOverlay };

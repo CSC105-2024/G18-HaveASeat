@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 
 /**
- * @param {React.ComponentProps<typeof import('react-day-picker').DayPicker>} props
+ * @param {import('react-day-picker').DayPickerProps} props
  * @returns {JSX.Element}
  */
 function Calendar({
