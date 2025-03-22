@@ -8,11 +8,11 @@ import {
 
 /**
  * @typedef ModalProps
- * @property {string} [title]
- * @property {string | undefined} [description]
- * @property {boolean} [isOpen]
- * @property {() => void} [onClose]
- * @property {React.ReactNode | undefined} [children]
+ * @property {string} title
+ * @property {string} [description]
+ * @property {boolean} isOpen
+ * @property {() => void} onClose
+ * @property {React.ReactNode} [children]
  */
 
 /**
@@ -27,7 +27,8 @@ function Modal ({
   children,
 }) {
 
-  const onChange = /** @param {boolean} open */ (open) => {
+  /** @param {boolean} open */
+  const onChange = (open) => {
     if (!open) {
       onClose();
     }

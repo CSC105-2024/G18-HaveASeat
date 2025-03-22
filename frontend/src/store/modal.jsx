@@ -15,7 +15,7 @@ import { create } from 'zustand';
  * @property {(id: string) => void} closeModal - Function to close a modal.
  */
 
-/** @type {import('zustand').UseStore<ModalStore>} */
+/** @type {import('zustand').useStore<ModalStore>} */
 export const useModalStore = create((set) => ({
   modals: {},
 

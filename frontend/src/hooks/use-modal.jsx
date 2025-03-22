@@ -2,17 +2,14 @@ import React, { useCallback } from "react";
 import { useModalStore } from "@/store/modal.jsx";
 
 /**
- * @typedef {string | ((props: any) => string)} ContentGenerator
- */
-
-/**
- * Creates a custom hook for managing a modal.
+ * Creates a custom hook for opening and closing a specific modal.
  *
- * @param {React.ComponentType<any>} ModalContent - The modal component.
- * @param {string} modalId - Unique identifier for the modal.
- * @param {ContentGenerator} title - Title content, can be a string, or a function returning one.
- * @param {ContentGenerator} [description] - Description content (optional).
- * @returns {() => { open: (props: any) => void, close: () => void }} - Returns a hook for opening and closing the modal.
+ * @template T
+ * @param {React.ComponentType<T>} ModalContent - The React component to render inside the modal.
+ * @param {string} modalId - The unique identifier for the modal.
+ * @param {string | ((props: T) => string)} title - The title of the modal (static string or function returning a string).
+ * @param {string | ((props: T) => string)} [description] - The description of the modal (optional).
+ * @returns {function(): { open: (props: T) => void, close: () => void }} - A hook returning `open` and `close` functions.
  */
 export const createModalHook = (ModalContent, modalId, title, description) => {
   return () => {
@@ -21,13 +18,15 @@ export const createModalHook = (ModalContent, modalId, title, description) => {
     /**
      * Opens the modal with the provided props.
      *
-     * @param {any} props - Props to pass to the modal.
+     * @template T
+     * @param {T} props - Props to pass to the modal.
      */
     const open = useCallback((props) => {
       /**
        * Resolves content dynamically.
        *
-       * @param {ContentGenerator} content - The content generator function or value.
+       * @template T
+       * @param {string | ((props: T) => string)} content - The content generator function or value.
        * @returns {string} - Resolved content.
        */
       const resolveContent = (content) => {
@@ -48,14 +47,14 @@ export const createModalHook = (ModalContent, modalId, title, description) => {
         modalTitle,
         modalDescription,
       );
-    }, []);
+    }, [openModal]);
 
     /**
      * Closes the modal.
      */
     const close = useCallback(() => {
       closeModal(modalId);
-    }, []);
+    }, [closeModal]);
 
     return { open, close };
   };

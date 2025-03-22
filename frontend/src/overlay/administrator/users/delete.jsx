@@ -1,4 +1,5 @@
 import React from "react";
+import { createModalHook } from "@/hooks/use-modal.jsx";
 
 function UserDeleteOverlay(props) {
   return (
@@ -6,4 +7,11 @@ function UserDeleteOverlay(props) {
   );
 }
 
-export { UserDeleteOverlay };
+const useUserDeleteOverlay = createModalHook(
+  UserDeleteOverlay,
+  'user-delete',
+  'User Delete',
+  '',
+);
+
+export { useUserDeleteOverlay };

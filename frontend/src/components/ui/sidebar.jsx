@@ -77,9 +77,9 @@ function SidebarProvider({
   const open = openProp ?? _open
 
   /**
-   *  @param {boolean} open - The current state of the sidebar.
-   *  @param {(open: boolean) => void} [setOpenProp] - Optional external state setter.
-   *  @returns {(value: boolean | ((value: boolean) => boolean)) => void} - Function to update sidebar state.
+   *  @param {boolean} open
+   *  @param {(open: boolean) => void} [setOpenProp]
+   *  @returns {(value: boolean | ((value: boolean) => boolean)) => void}
    */
   const setOpen = React.useCallback(
     (value) => {
@@ -124,7 +124,8 @@ function SidebarProvider({
   // This makes it easier to style the sidebar with Tailwind classes.
   const state = open ? "expanded" : "collapsed"
 
-  const contextValue = React.useMemo<SidebarContextProps>(
+  /** @type {React.Context<SidebarContextProps>} */
+  const contextValue = React.useMemo(
     () => ({
       state,
       open,
@@ -564,12 +565,12 @@ const sidebarMenuButtonVariants = cva(
 
 /**
  * @typedef {Object} SidebarMenuButtonVariants
- * @property {'default' | 'outline'} variant
- * @property {'default' | 'sm' | 'lg'} size
+ * @property {'default' | 'outline'} [variant]
+ * @property {'default' | 'sm' | 'lg'} [size]
  */
 
 /**
- * @param {React.ComponentProps<'button'> & { asChild?: boolean, isActive?: boolean, tooltip?: string | React.ComponentProps<typeof TooltipContent } & SidebarMenuButtonVariants} props
+ * @param {React.ComponentProps<'button'> & { asChild?: boolean, isActive?: boolean, tooltip?: string | React.ComponentProps<typeof TooltipContent> } & SidebarMenuButtonVariants} props
  * @returns {JSX.Element}
  */
 function SidebarMenuButton({

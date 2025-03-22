@@ -37,8 +37,8 @@ const buttonVariants = cva(
 
 /**
  * @typedef {Object} ButtonVariants
- * @property {'default' | 'destructive' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'} variant
- * @property {'default' | 'sm' | 'lg' | 'icon'} size
+ * @property {'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'} [variant]
+ * @property {'default' | 'sm' | 'lg' | 'icon'} [size]
  */
 
 /**
