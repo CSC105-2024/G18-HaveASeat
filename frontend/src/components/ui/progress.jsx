@@ -4,7 +4,7 @@ import * as ProgressPrimitive from "@radix-ui/react-progress"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof ProgressPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-progress').Root>} props
  * @returns {JSX.Element}
  */
 function Progress({

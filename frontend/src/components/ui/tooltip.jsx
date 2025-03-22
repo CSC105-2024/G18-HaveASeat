@@ -4,7 +4,7 @@ import * as TooltipPrimitive from "@radix-ui/react-tooltip"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof TooltipPrimitive.Provider>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-tooltip').Provider>} props
  * @returns {JSX.Element}
  */
 function TooltipProvider({
@@ -21,7 +21,7 @@ function TooltipProvider({
 }
 
 /**
- * @param {React.ComponentProps<typeof TooltipPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-tooltip').Root>} props
  * @returns {JSX.Element}
  */
 function Tooltip({
@@ -35,7 +35,7 @@ function Tooltip({
 }
 
 /**
- * @param {React.ComponentProps<typeof TooltipPrimitive.Trigger>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-tooltip').Trigger>} props
  * @returns {JSX.Element}
  */
 function TooltipTrigger({
@@ -46,7 +46,7 @@ function TooltipTrigger({
 
 
 /**
- * @param {React.ComponentProps<typeof TooltipPrimitive.Content>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-tooltip').Content>} props
  * @returns {JSX.Element}
  */
 function TooltipContent({

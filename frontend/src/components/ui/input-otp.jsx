@@ -7,7 +7,7 @@ import { MinusIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof OTPInput> & { containerClassName?: string }} props
+ * @param {React.ComponentProps<typeof import('input-otp').OTPInput> & { containerClassName?: string }} props
  * @returns {JSX.Element}
  */
 function InputOTP({

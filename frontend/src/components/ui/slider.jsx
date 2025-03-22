@@ -6,7 +6,7 @@ import * as SliderPrimitive from "@radix-ui/react-slider"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof SliderPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-slider').Root>} props
  * @returns {JSX.Element}
  */
 function Slider({

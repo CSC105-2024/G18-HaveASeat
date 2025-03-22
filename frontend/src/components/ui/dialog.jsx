@@ -5,7 +5,7 @@ import { XIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof DialogPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Root>} props
  * @returns {JSX.Element}
  */
 function Dialog({
@@ -15,7 +15,7 @@ function Dialog({
 }
 
 /**
- * @param {React.ComponentProps<typeof DialogPrimitive.Trigger>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Trigger>} props
  * @returns {JSX.Element}
  */
 function DialogTrigger({
@@ -25,7 +25,7 @@ function DialogTrigger({
 }
 
 /**
- * @param {React.ComponentProps<typeof DialogPrimitive.Portal>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Portal>} props
  * @returns {JSX.Element}
  */
 function DialogPortal({
@@ -35,7 +35,7 @@ function DialogPortal({
 }
 
 /**
- * @param {React.ComponentProps<typeof DialogPrimitive.Close>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Close>} props
  * @returns {JSX.Element}
  */
 function DialogClose({
@@ -45,7 +45,7 @@ function DialogClose({
 }
 
 /**
- * @param {React.ComponentProps<typeof DialogPrimitive.Overlay>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Overlay>} props
  * @returns {JSX.Element}
  */
 function DialogOverlay({
@@ -65,7 +65,7 @@ function DialogOverlay({
 }
 
 /**
- * @param {React.ComponentProps<typeof DialogPrimitive.Content>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Content>} props
  * @returns {JSX.Element}
  */
 function DialogContent({
@@ -126,7 +126,7 @@ function DialogFooter({ className, ...props }) {
 }
 
 /**
- * @param {React.ComponentProps<typeof DialogPrimitive.Title>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Title>} props
  * @returns {JSX.Element}
  */
 function DialogTitle({
@@ -143,7 +143,7 @@ function DialogTitle({
 }
 
 /**
- * @param {React.ComponentProps<typeof DialogPrimitive.Description>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Description>} props
  * @returns {JSX.Element}
  */
 function DialogDescription({

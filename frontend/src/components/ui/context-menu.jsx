@@ -7,7 +7,7 @@ import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof ContextMenuPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-context-menu').Root>} props
  * @returns {JSX.Element}
  */
 function ContextMenu({
@@ -17,7 +17,7 @@ function ContextMenu({
 }
 
 /**
- * @param {React.ComponentProps<typeof ContextMenuPrimitive.Trigger>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-context-menu').Trigger>} props
  * @returns {JSX.Element}
  */
 function ContextMenuTrigger({
@@ -29,7 +29,7 @@ function ContextMenuTrigger({
 }
 
 /**
- * @param {React.ComponentProps<typeof ContextMenuPrimitive.Group>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-context-menu').Group>} props
  * @returns {JSX.Element}
  */
 function ContextMenuGroup({
@@ -41,7 +41,7 @@ function ContextMenuGroup({
 }
 
 /**
- * @param {React.ComponentProps<typeof ContextMenuPrimitive.Portal>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-context-menu').Portal>} props
  * @returns {JSX.Element}
  */
 function ContextMenuPortal({
@@ -53,7 +53,7 @@ function ContextMenuPortal({
 }
 
 /**
- * @param {React.ComponentProps<typeof ContextMenuPrimitive.Sub>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-context-menu').Sub>} props
  * @returns {JSX.Element}
  */
 function ContextMenuSub({
@@ -63,7 +63,7 @@ function ContextMenuSub({
 }
 
 /**
- * @param {React.ComponentProps<typeof ContextMenuPrimitive.RadioGroup>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-context-menu').RadioGroup>} props
  * @returns {JSX.Element}
  */
 function ContextMenuRadioGroup({
@@ -78,7 +78,7 @@ function ContextMenuRadioGroup({
 }
 
 /**
- * @param {React.ComponentProps<typeof ContextMenuPrimitive.SubTrigger> & { inset?: boolean }} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-context-menu').SubTrigger> & { inset?: boolean }} props
  * @returns {JSX.Element}
  */
 function ContextMenuSubTrigger({
@@ -104,7 +104,7 @@ function ContextMenuSubTrigger({
 }
 
 /**
- * @param {React.ComponentProps<typeof ContextMenuPrimitive.SubContent>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-context-menu').SubContent>} props
  * @returns {JSX.Element}
  */
 function ContextMenuSubContent({
@@ -124,7 +124,7 @@ function ContextMenuSubContent({
 }
 
 /**
- * @param {React.ComponentProps<typeof ContextMenuPrimitive.Content>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-context-menu').Content>} props
  * @returns {JSX.Element}
  */
 function ContextMenuContent({
@@ -146,7 +146,7 @@ function ContextMenuContent({
 }
 
 /**
- * @param {React.ComponentProps<typeof ContextMenuPrimitive.Item> & { inset?: boolean, variant?: 'default' | 'destructive' }} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-context-menu').Item> & { inset?: boolean, variant?: 'default' | 'destructive' }} props
  * @returns {JSX.Element}
  */
 function ContextMenuItem({
@@ -170,7 +170,7 @@ function ContextMenuItem({
 }
 
 /**
- * @param {React.ComponentProps<typeof ContextMenuPrimitive.CheckboxItem>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-context-menu').CheckboxItem>} props
  * @returns {JSX.Element}
  */
 function ContextMenuCheckboxItem({
@@ -200,7 +200,7 @@ function ContextMenuCheckboxItem({
 }
 
 /**
- * @param {React.ComponentProps<typeof ContextMenuPrimitive.RadioItem>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-context-menu').RadioItem>} props
  * @returns {JSX.Element}
  */
 function ContextMenuRadioItem({
@@ -228,7 +228,7 @@ function ContextMenuRadioItem({
 }
 
 /**
- * @param {React.ComponentProps<typeof ContextMenuPrimitive.Label> & { inset?: boolean }} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-context-menu').Label> & { inset?: boolean }} props
  * @returns {JSX.Element}
  */
 function ContextMenuLabel({
@@ -250,7 +250,7 @@ function ContextMenuLabel({
 }
 
 /**
- * @param {React.ComponentProps<typeof ContextMenuPrimitive.Separator>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-context-menu').Separator>} props
  * @returns {JSX.Element}
  */
 function ContextMenuSeparator({

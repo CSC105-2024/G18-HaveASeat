@@ -6,7 +6,7 @@ import * as PopoverPrimitive from "@radix-ui/react-popover"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof PopoverPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-popover').Root>} props
  * @returns {JSX.Element}
  */
 function Popover({
@@ -16,7 +16,7 @@ function Popover({
 }
 
 /**
- * @param {React.ComponentProps<typeof PopoverPrimitive.Trigger>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-popover').Trigger>} props
  * @returns {JSX.Element}
  */
 function PopoverTrigger({
@@ -26,7 +26,7 @@ function PopoverTrigger({
 }
 
 /**
- * @param {React.ComponentProps<typeof PopoverPrimitive.Content>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-popover').Content>} props
  * @returns {JSX.Element}
  */
 function PopoverContent({
@@ -52,7 +52,7 @@ function PopoverContent({
 }
 
 /**
- * @param {React.ComponentProps<typeof PopoverPrimitive.Anchor>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-popover').Anchor>} props
  * @returns {JSX.Element}
  */
 function PopoverAnchor({

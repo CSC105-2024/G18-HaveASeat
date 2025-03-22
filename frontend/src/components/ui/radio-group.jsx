@@ -7,7 +7,7 @@ import { CircleIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof RadioGroupPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-radio-group').Root>} props
  * @returns {JSX.Element}
  */
 function RadioGroup({
@@ -24,7 +24,7 @@ function RadioGroup({
 }
 
 /**
- * @param {React.ComponentProps<typeof RadioGroupPrimitive.Item>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-radio-group').Item>} props
  * @returns {JSX.Element}
  */
 function RadioGroupItem({

@@ -5,10 +5,7 @@ import {
   Controller,
   FormProvider,
   useFormContext,
-  useFormState,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
+  useFormState
 } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
@@ -17,23 +14,21 @@ import { Label } from "@/components/ui/label"
 const Form = FormProvider
 
 /**
- * @typedef {Object} FormFieldContextValue
- * @property {TName} name
  * @template TFieldValues
  * @template TName
+ * @typedef {Object} FormFieldContextValue
+ * @property {TName} name
  */
 
-/**
- *  @type {React.Context<FormFieldContextValue>}
- */
+/** @type {React.Context<FormFieldContextValue>} */
 const FormFieldContext = React.createContext(
-  /** @type {FormFieldContextValue} */ {}
+  {}
 )
 
 /**
- * @param {ControllerProps<TFieldValues, TName>} props
  * @template TFieldValues
  * @template TName
+ * @param {import("react-hook-form").ControllerProps<TFieldValues, TName>} props
  * @returns {JSX.Element}
  */
 const FormField = ({
@@ -70,13 +65,13 @@ const useFormField = () => {
 }
 
 /**
- * @typedef FormItemContextValue
+ * @typedef {Object} FormItemContextValue
  * @property {string} id
  */
 
 /** @type {React.Context<FormItemContextValue>} */
 const FormItemContext = React.createContext(
-  /** @type {FormItemContextValue} */ {}
+  {}
 )
 
 /**
@@ -98,7 +93,7 @@ function FormItem({ className, ...props }) {
 }
 
 /**
- * @param {React.ComponentProps<typeof LabelPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-label').Root>} props
  * @returns {JSX.Element}
  */
 function FormLabel({
@@ -159,7 +154,7 @@ function FormDescription({ className, ...props }) {
 
 /**
  * @param {React.ComponentProps<'p'>} props
- * @returns {JSX.Element}
+ * @returns {JSX.Element | null}
  */
 function FormMessage({ className, ...props }) {
   const { error, formMessageId } = useFormField()

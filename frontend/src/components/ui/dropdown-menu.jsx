@@ -7,7 +7,7 @@ import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof DropdownMenuPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dropdown-menu').Root>} props
  * @returns {JSX.Element}
  */
 function DropdownMenu({
@@ -17,7 +17,7 @@ function DropdownMenu({
 }
 
 /**
- * @param {React.ComponentProps<typeof DropdownMenuPrimitive.Portal>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dropdown-menu').Portal>} props
  * @returns {JSX.Element}
  */
 function DropdownMenuPortal({
@@ -29,7 +29,7 @@ function DropdownMenuPortal({
 }
 
 /**
- * @param {React.ComponentProps<typeof DropdownMenuPrimitive.Trigger>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dropdown-menu').Trigger>} props
  * @returns {JSX.Element}
  */
 function DropdownMenuTrigger({
@@ -44,7 +44,7 @@ function DropdownMenuTrigger({
 }
 
 /**
- * @param {React.ComponentProps<typeof DropdownMenuPrimitive.Content>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dropdown-menu').Content>} props
  * @returns {JSX.Element}
  */
 function DropdownMenuContent({
@@ -68,7 +68,7 @@ function DropdownMenuContent({
 }
 
 /**
- * @param {React.ComponentProps<typeof DropdownMenuPrimitive.Group>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dropdown-menu').Group>} props
  * @returns {JSX.Element}
  */
 function DropdownMenuGroup({
@@ -80,7 +80,7 @@ function DropdownMenuGroup({
 }
 
 /**
- * @param {React.ComponentProps<typeof DropdownMenuPrimitive.Item> & { inset?: boolean, variant: 'default' | 'destructive' }} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dropdown-menu').Item> & { inset?: boolean, variant: 'default' | 'destructive' }} props
  * @returns {JSX.Element}
  */
 function DropdownMenuItem({
@@ -104,7 +104,7 @@ function DropdownMenuItem({
 }
 
 /**
- * @param {React.ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dropdown-menu').CheckboxItem>} props
  * @returns {JSX.Element}
  */
 function DropdownMenuCheckboxItem({
@@ -134,7 +134,7 @@ function DropdownMenuCheckboxItem({
 }
 
 /**
- * @param {React.ComponentProps<typeof DropdownMenuPrimitive.RadioGroup>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dropdown-menu').RadioGroup>} props
  * @returns {JSX.Element}
  */
 function DropdownMenuRadioGroup({
@@ -149,7 +149,7 @@ function DropdownMenuRadioGroup({
 }
 
 /**
- * @param {React.ComponentProps<typeof DropdownMenuPrimitive.RadioItem>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dropdown-menu').RadioItem>} props
  * @returns {JSX.Element}
  */
 function DropdownMenuRadioItem({
@@ -177,7 +177,7 @@ function DropdownMenuRadioItem({
 }
 
 /**
- * @param {React.ComponentProps<typeof DropdownMenuPrimitive.Label> & { inset?: boolean }} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dropdown-menu').Label> & { inset?: boolean }} props
  * @returns {JSX.Element}
  */
 function DropdownMenuLabel({
@@ -199,7 +199,7 @@ function DropdownMenuLabel({
 }
 
 /**
- * @param {React.ComponentProps<typeof DropdownMenuPrimitive.Separator>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dropdown-menu').Separator>} props
  * @returns {JSX.Element}
  */
 function DropdownMenuSeparator({
@@ -236,7 +236,7 @@ function DropdownMenuShortcut({
 }
 
 /**
- * @param {React.ComponentProps<typeof DropdownMenuPrimitive.Sub>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dropdown-menu').Sub>} props
  * @returns {JSX.Element}
  */
 function DropdownMenuSub({
@@ -246,7 +246,7 @@ function DropdownMenuSub({
 }
 
 /**
- * @param {React.ComponentProps<typeof DropdownMenuPrimitive.SubTrigger> & { inset?: boolean }} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dropdown-menu').SubTrigger> & { inset?: boolean }} props
  * @returns {JSX.Element}
  */
 function DropdownMenuSubTrigger({
@@ -272,7 +272,7 @@ function DropdownMenuSubTrigger({
 }
 
 /**
- * @param {React.ComponentProps<typeof DropdownMenuPrimitive.SubContent>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dropdown-menu').SubContent>} props
  * @returns {JSX.Element}
  */
 function DropdownMenuSubContent({

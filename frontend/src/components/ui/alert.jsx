@@ -1,5 +1,5 @@
 import * as React from "react"
-import { cva, VariantProps } from "class-variance-authority"
+import { cva } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
@@ -20,7 +20,12 @@ const alertVariants = cva(
 )
 
 /**
- * @param {React.ComponentProps<"div"> & VariantProps<typeof alertVariants>} props
+ * @typedef {Object} AlertVariants
+ * @property {'default' | 'destructive'} [variant]
+ */
+
+/**
+ * @param {React.ComponentProps<"div"> & AlertVariants} props
  * @returns {JSX.Element}
  */
 function Alert({

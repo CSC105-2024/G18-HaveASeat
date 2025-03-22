@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog"
 
 /**
- * @param {React.ComponentProps<typeof CommandPrimitive>} props
+ * @param {React.ComponentProps<typeof import('cmdk').Command>} props
  * @returns {JSX.Element}
  */
 function Command({
@@ -34,7 +34,7 @@ function Command({
 }
 
 /**
- * @param {React.ComponentProps<typeof Dialog> & {title?: string, description?: string }} props
+ * @param {React.ComponentProps<typeof import('dialog').Dialog> & {title?: string, description?: string }} props
  * @returns {JSX.Element}
  */
 function CommandDialog({
@@ -59,7 +59,7 @@ function CommandDialog({
 }
 
 /**
- * @param {React.ComponentProps<typeof CommandPrimitive.Input>} props
+ * @param {React.ComponentProps<typeof import('cmdk').Input>} props
  * @returns {JSX.Element}
  */
 function CommandInput({
@@ -85,7 +85,7 @@ function CommandInput({
 }
 
 /**
- * @param {React.ComponentProps<typeof CommandPrimitive.List>} props
+ * @param {React.ComponentProps<typeof import('cmdk').List>} props
  * @returns {JSX.Element}
  */
 function CommandList({
@@ -105,7 +105,7 @@ function CommandList({
 }
 
 /**
- * @param {React.ComponentProps<typeof CommandPrimitive.Empty>} props
+ * @param {React.ComponentProps<typeof import('cmdk').Empty>} props
  * @returns {JSX.Element}
  */
 function CommandEmpty({
@@ -121,7 +121,7 @@ function CommandEmpty({
 }
 
 /**
- * @param {React.ComponentProps<typeof CommandPrimitive.Group>} props
+ * @param {React.ComponentProps<typeof import('cmdk').Group>} props
  * @returns {JSX.Element}
  */
 function CommandGroup({
@@ -141,7 +141,7 @@ function CommandGroup({
 }
 
 /**
- * @param {React.ComponentProps<typeof CommandPrimitive.Separator>} props
+ * @param {React.ComponentProps<typeof import('cmdk').Separator>} props
  * @returns {JSX.Element}
  */
 function CommandSeparator({
@@ -158,7 +158,7 @@ function CommandSeparator({
 }
 
 /**
- * @param {React.ComponentProps<typeof CommandPrimitive.Item>} props
+ * @param {React.ComponentProps<typeof import('cmdk').Item>} props
  * @returns {JSX.Element}
  */
 function CommandItem({
