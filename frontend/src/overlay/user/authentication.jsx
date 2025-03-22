@@ -1,9 +1,9 @@
 import React, { Fragment } from "react";
 import { createModalHook } from "@/hooks/use-modal.jsx";
+import { useModalStore } from "@/store/modal.jsx";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { z } from "zod";
 import {
   Form,
   FormControl,
@@ -15,17 +15,18 @@ import {
 } from "@/components/ui/form.jsx";
 import { Input } from "@/components/ui/input.jsx";
 import { Button } from "@/components/ui/button.jsx";
-import { useModalStore } from "@/store/modal.jsx";
-import { useSignInOverlay } from "@/overlay/user/authentication.jsx";
+import { useForgetPasswordOverlay } from "@/overlay/user/forget-password.jsx";
+import { z } from "zod";
 
 const FormSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email address",
   }),
+  password: z.string().min(1, "Please enter a password")
 });
 
-function ForgetPasswordOverlay() {
-  const { open: openSignInOverlay } = useSignInOverlay();
+function SignInOverlay() {
+  const { open: openForgetPasswordOverlay } = useForgetPasswordOverlay();
   const { closeModal } = useModalStore();
 
   /** @type {import("react-hook-form").UseFormReturn<z.infer<typeof formSchema>>} */
@@ -33,6 +34,7 @@ function ForgetPasswordOverlay() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       email: "",
+      password: "",
     },
   });
 
@@ -50,13 +52,13 @@ function ForgetPasswordOverlay() {
   }
 
   function onSwapOverlay() {
-    closeModal("forget-password");
-    openSignInOverlay({});
+    closeModal("sign-in");
+    openForgetPasswordOverlay({});
   }
 
   return (
     <div className="space-y-4 pt-4">
-      <h1 className="text-xl font-semibold">Forget Password</h1>
+      <h1 className="text-xl font-semibold">Sign In</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="space-y-8">
@@ -75,16 +77,31 @@ function ForgetPasswordOverlay() {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Password <FormRequiredLabel />
+                  </FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
           <div className="space-y-4">
             <Button type="submit" className="w-full">
-              Confirm
+              Sign in
             </Button>
             <span
               onClick={onSwapOverlay}
               className="mx-auto block w-fit cursor-default text-center text-sm underline underline-offset-4 transition hover:scale-105"
             >
-              Suddenly Remember?
+              Forget Password?
             </span>
           </div>
         </form>
@@ -93,9 +110,9 @@ function ForgetPasswordOverlay() {
   );
 }
 
-const useForgetPasswordOverlay = createModalHook(
-  ForgetPasswordOverlay,
-  "forget-password",
+const useSignInOverlay = createModalHook(
+  SignInOverlay,
+  "sign-in",
   "Have A Seat",
   <Fragment>
     Book It. Sip It. Love It.{" "}
@@ -103,4 +120,4 @@ const useForgetPasswordOverlay = createModalHook(
   </Fragment>,
 );
 
-export { useForgetPasswordOverlay, ForgetPasswordOverlay };
+export { useSignInOverlay, SignInOverlay };

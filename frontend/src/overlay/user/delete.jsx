@@ -14,4 +14,4 @@ const useUserDeleteOverlay = createModalHook(
   '',
 );
 
-export { useUserDeleteOverlay };
+export { useUserDeleteOverlay, UserDeleteOverlay };

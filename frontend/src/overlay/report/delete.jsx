@@ -14,4 +14,4 @@ const useReportDeleteOverlay = createModalHook(
   '',
 );
 
-export { useReportDeleteOverlay };
+export { useReportDeleteOverlay, ReportDeleteOverlay };

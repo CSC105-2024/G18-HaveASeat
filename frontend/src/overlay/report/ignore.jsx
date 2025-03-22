@@ -14,4 +14,4 @@ const useReportIgnoreOverlay = createModalHook(
   '',
 );
 
-export { useReportIgnoreOverlay };
+export { useReportIgnoreOverlay, ReportIgnoreOverlay };

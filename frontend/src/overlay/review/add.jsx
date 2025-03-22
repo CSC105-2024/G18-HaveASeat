@@ -23,4 +23,4 @@ const useReviewAddOverlay = createModalHook(
   '',
 );
 
-export { useReviewAddOverlay };
+export { useReviewAddOverlay, ReviewAddOverlay };

@@ -1,14 +1,14 @@
 import React from "react";
 import { Button } from "@/components/ui/button.jsx";
 import { useNavigate } from "react-router";
-import { useSignInOverlay } from "@/overlay/user/sign-in.jsx";
-import { useSignUpOverlay } from "@/overlay/user/sign-up.jsx";
+import { useSignInOverlay } from "@/overlay/user/authentication.jsx";
+import { useSignUpOverlay } from "@/overlay/user/add.jsx";
 import { useForgetPasswordOverlay } from "@/overlay/user/forget-password.jsx";
-import { useUserAddOverlay } from "@/overlay/administrator/users/add.jsx";
-import { useUserEditOverlay } from "@/overlay/administrator/users/edit.jsx";
-import { useUserDeleteOverlay } from "@/overlay/administrator/users/delete.jsx";
-import { useReportIgnoreOverlay } from "@/overlay/administrator/report/ignore.jsx";
-import { useReportDeleteOverlay } from "@/overlay/administrator/report/delete.jsx";
+import { useUserAddOverlay } from "@/overlay/user/add.jsx";
+import { useUserEditOverlay } from "@/overlay/user/edit.jsx";
+import { useUserDeleteOverlay } from "@/overlay/user/delete.jsx";
+import { useReportIgnoreOverlay } from "@/overlay/report/ignore.jsx";
+import { useReportDeleteOverlay } from "@/overlay/report/delete.jsx";
 import { useReservationAddOverlay } from "@/overlay/reservation/add.jsx";
 import { useReservationMarkAsCompleteOverlay } from "@/overlay/reservation/mark-as-complete.jsx";
 import { useReservationCancelOverlay } from "@/overlay/reservation/cancel.jsx";
@@ -16,7 +16,7 @@ import { useReviewAddOverlay } from "@/overlay/review/add.jsx";
 import { useReviewReportOverlay } from "@/overlay/review/report.jsx";
 import { useReviewDeleteOverlay } from "@/overlay/review/delete.jsx";
 import { useBarPromotionImagesOverlay } from "@/overlay/merchant/images.jsx";
-import { useAccountSettingsOverlay } from "@/overlay/user/settings.jsx";
+import { useAccountSettingsOverlay } from "@/overlay/user/edit.jsx";
 
 function Experimental() {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ function Experimental() {
   // Authentication
   const {open: openSignInOverlay} = useSignInOverlay();
   const {open: openSignUpOverlay} = useSignUpOverlay();
-  const {open: openForgetPassOverlay} = useForgetPasswordOverlay();
+  const {open: openForgetPasswordOverlay} = useForgetPasswordOverlay();
 
   // Administrator
   const {open: openUserAddOverlay} = useUserAddOverlay();
@@ -50,23 +50,19 @@ function Experimental() {
   const {open: openReviewReportOverlay} = useReviewReportOverlay();
   const {open: openReviewDeleteOverlay} = useReviewDeleteOverlay();
 
-  if (!import.meta.env.DEV) {
-    return navigate("/", { replace: true });
-  }
-
   return (
     <div className="flex flex-col gap-8">
       <ExperimentalSection title="Authentication">
         <div className="space-x-2">
-          <Button onClick={openSignUpOverlay}>Sign up</Button>
+          <Button onClick={() => openSignUpOverlay({})}>Sign up</Button>
           <Button onClick={openSignInOverlay} variant="secondary">Sign in</Button>
-          <Button onClick={openForgetPassOverlay} variant="destructive">Forget Password</Button>
+          <Button onClick={openForgetPasswordOverlay} variant="destructive">Forget Password</Button>
         </div>
       </ExperimentalSection>
       <ExperimentalSection title="Administrator">
         <div className="space-x-2">
-          <Button onClick={openUserAddOverlay}>Add User</Button>
-          <Button onClick={openUserEditOverlay} variant="secondary">Edit User</Button>
+          <Button onClick={() => openUserAddOverlay({addMode: true})}>Add User</Button>
+          <Button onClick={() => openUserEditOverlay({editMode: true})} variant="secondary">Edit User</Button>
           <Button onClick={openUserDeleteOverlay} variant="destructive">Delete User</Button>
         </div>
         <div className="space-x-2">
@@ -91,7 +87,7 @@ function Experimental() {
       </ExperimentalSection>
       <ExperimentalSection title="User">
         <div className="space-x-2">
-          <Button onClick={openAccountSettingsOverlay}>Account Settings</Button>
+          <Button onClick={() => openAccountSettingsOverlay({})}>Account Settings</Button>
         </div>
         <div className="space-x-2">
           <Button onClick={() => openReservationAddOverlay({isManual: false})}>Reservation Make</Button>

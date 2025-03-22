@@ -7,8 +7,8 @@ import { useModalStore } from "@/store/modal.jsx";
  * @template T
  * @param {React.ComponentType<T>} ModalContent - The React component to render inside the modal.
  * @param {string} modalId - The unique identifier for the modal.
- * @param {string | ((props: T) => string)} title - The title of the modal (static string or function returning a string).
- * @param {string | ((props: T) => string)} [description] - The description of the modal (optional).
+ * @param {React.ReactNode | ((props: T) => React.ReactNode)} title - The title of the modal (static string or function returning a string).
+ * @param {React.ReactNode | ((props: T) => React.ReactNode)} [description] - The description of the modal (optional).
  * @returns {function(): { open: (props: T) => void, close: () => void }} - A hook returning `open` and `close` functions.
  */
 export const createModalHook = (ModalContent, modalId, title, description) => {
@@ -26,7 +26,7 @@ export const createModalHook = (ModalContent, modalId, title, description) => {
        * Resolves content dynamically.
        *
        * @template T
-       * @param {string | ((props: T) => string)} content - The content generator function or value.
+       * @param {string | React.ReactNode | ((props: T) => string | React.ReactNode)} content - The content generator function or value.
        * @returns {string} - Resolved content.
        */
       const resolveContent = (content) => {

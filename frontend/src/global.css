@@ -132,6 +132,15 @@
   }
 }
 
+@theme {
+  /** Fixing the tailwindcss v4 spacing multiplier */
+  --spacing: 0.2778rem;
+
+  --font-poppins: "Poppins", sans-serif;
+  --font-noto-sans-thai: "Noto Sans Thai", sans-serif;
+  --font-default: "Poppins", "Noto Sans Thai", sans-serif;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -141,8 +150,10 @@
   }
 }
 
-@theme {
-  --font-poppins: "Poppins", sans-serif;
-  --font-noto-sans-thai: "Noto Sans Thai", sans-serif;
-  --font-default: "Poppins", "Noto Sans Thai", sans-serif;
+section[data-layout="content"]:has([data-status="404"]) {
+  @apply flex-1 h-full;
+}
+
+section[data-layout="content"]:has([data-status="404"]) > main {
+  @apply flex flex-1;
 }

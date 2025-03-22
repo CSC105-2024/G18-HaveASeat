@@ -14,4 +14,4 @@ const useReservationMarkAsCompleteOverlay = createModalHook(
   '',
 );
 
-export { useReservationMarkAsCompleteOverlay };
+export { useReservationMarkAsCompleteOverlay, ReservationMarkAsCompleteOverlay };

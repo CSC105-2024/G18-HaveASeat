@@ -114,6 +114,19 @@ function FormLabel({
 }
 
 /**
+ * @param {React.ComponentProps<'span'>} props
+ * @returns {JSX.Element | null}
+ */
+function FormRequiredLabel({
+  className,
+  ...props
+}) {
+  return (
+    <span className={cn("text-red-500 self-center -ml-1.5", className)} {...props}>*</span>
+  )
+}
+
+/**
  * @param {React.ComponentProps<typeof Slot>} props
  * @returns {JSX.Element}
  */
@@ -181,6 +194,7 @@ export {
   Form,
   FormItem,
   FormLabel,
+  FormRequiredLabel,
   FormControl,
   FormDescription,
   FormMessage,

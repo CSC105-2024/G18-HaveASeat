@@ -14,4 +14,4 @@ const useReservationCancelOverlay = createModalHook(
   '',
 );
 
-export { useReservationCancelOverlay };
+export { useReservationCancelOverlay, ReservationCancelOverlay };
