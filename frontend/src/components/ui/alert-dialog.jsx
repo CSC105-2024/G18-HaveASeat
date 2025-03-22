@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 
 /**
- * @param {React.ComponentProps<typeof AlertDialogPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-alert-dialog').Root>} props
  * @returns {JSX.Element}
  */
 function AlertDialog({
@@ -17,7 +17,7 @@ function AlertDialog({
 }
 
 /**
- * @param {React.ComponentProps<typeof AlertDialogPrimitive.Trigger>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-alert-dialog').Trigger>} props
  * @returns {JSX.Element}
  */
 function AlertDialogTrigger({
@@ -29,7 +29,7 @@ function AlertDialogTrigger({
 }
 
 /**
- * @param {React.ComponentProps<typeof AlertDialogPrimitive.Portal>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-alert-dialog').Portal>} props
  * @returns {JSX.Element}
  */
 function AlertDialogPortal({
@@ -41,7 +41,7 @@ function AlertDialogPortal({
 }
 
 /**
- * @param {React.ComponentProps<typeof AlertDialogPrimitive.Overlay>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-alert-dialog').Overlay>} props
  * @returns {JSX.Element}
  */
 function AlertDialogOverlay({
@@ -61,7 +61,7 @@ function AlertDialogOverlay({
 }
 
 /**
- * @param {React.ComponentProps<typeof AlertDialogPrimitive.Content>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-alert-dialog').Content>} props
  * @returns {JSX.Element}
  */
 function AlertDialogContent({
@@ -122,7 +122,7 @@ function AlertDialogFooter({
 }
 
 /**
- * @param {React.ComponentProps<typeof AlertDialogPrimitive.Title>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-alert-dialog').Title>} props
  * @returns {JSX.Element}
  */
 function AlertDialogTitle({
@@ -139,7 +139,7 @@ function AlertDialogTitle({
 }
 
 /**
- * @param {React.ComponentProps<typeof AlertDialogPrimitive.Description>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-alert-dialog').Description>} props
  * @returns {JSX.Element}
  */
 function AlertDialogDescription({
@@ -156,7 +156,7 @@ function AlertDialogDescription({
 }
 
 /**
- * @param {React.ComponentProps<typeof AlertDialogPrimitive.Action>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-alert-dialog').Action>} props
  * @returns {JSX.Element}
  */
 function AlertDialogAction({
@@ -172,7 +172,7 @@ function AlertDialogAction({
 }
 
 /**
- * @param {React.ComponentProps<typeof AlertDialogPrimitive.Cancel>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-alert-dialog').Cancel>} props
  * @returns {JSX.Element}
  */
 function AlertDialogCancel({

@@ -6,7 +6,7 @@ import { ChevronDownIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof NavigationMenuPrimitive.Root> & { viewport?: boolean }} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-navigation-menu').Root> & { viewport?: boolean }} props
  * @returns {JSX.Element}
  */
 function NavigationMenu({
@@ -32,7 +32,7 @@ function NavigationMenu({
 }
 
 /**
- * @param {React.ComponentProps<typeof NavigationMenuPrimitive.List>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-navigation-menu').List>} props
  * @returns {JSX.Element}
  */
 function NavigationMenuList({
@@ -52,7 +52,7 @@ function NavigationMenuList({
 }
 
 /**
- * @param {React.ComponentProps<typeof NavigationMenuPrimitive.Item>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-navigation-menu').Item>} props
  * @returns {JSX.Element}
  */
 function NavigationMenuItem({
@@ -73,7 +73,7 @@ const navigationMenuTriggerStyle = cva(
 )
 
 /**
- * @param {React.ComponentProps<typeof NavigationMenuPrimitive.Trigger>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-navigation-menu').Trigger>} props
  * @returns {JSX.Element}
  */
 function NavigationMenuTrigger({
@@ -97,7 +97,7 @@ function NavigationMenuTrigger({
 }
 
 /**
- * @param {React.ComponentProps<typeof NavigationMenuPrimitive.Content>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-navigation-menu').Content>} props
  * @returns {JSX.Element}
  */
 function NavigationMenuContent({
@@ -118,7 +118,7 @@ function NavigationMenuContent({
 }
 
 /**
- * @param {React.ComponentProps<typeof NavigationMenuPrimitive.Viewport>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-navigation-menu').Viewport>} props
  * @returns {JSX.Element}
  */
 function NavigationMenuViewport({
@@ -144,7 +144,7 @@ function NavigationMenuViewport({
 }
 
 /**
- * @param {React.ComponentProps<typeof NavigationMenuPrimitive.Link>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-navigation-menu').Link>} props
  * @returns {JSX.Element}
  */
 function NavigationMenuLink({
@@ -164,7 +164,7 @@ function NavigationMenuLink({
 }
 
 /**
- * @param {React.ComponentProps<typeof NavigationMenuPrimitive.Indicator>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-navigation-menu').Indicator>} props
  * @returns {JSX.Element}
  */
 function NavigationMenuIndicator({

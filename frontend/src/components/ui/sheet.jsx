@@ -5,7 +5,7 @@ import { XIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof SheetPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Root>} props
  * @returns {JSX.Element}
  */
 function Sheet({ ...props }) {
@@ -13,7 +13,7 @@ function Sheet({ ...props }) {
 }
 
 /**
- * @param {React.ComponentProps<typeof SheetPrimitive.Trigger>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Trigger>} props
  * @returns {JSX.Element}
  */
 function SheetTrigger({
@@ -23,7 +23,7 @@ function SheetTrigger({
 }
 
 /**
- * @param {React.ComponentProps<typeof SheetPrimitive.Close>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Close>} props
  * @returns {JSX.Element}
  */
 function SheetClose({
@@ -33,7 +33,7 @@ function SheetClose({
 }
 
 /**
- * @param {React.ComponentProps<typeof SheetPrimitive.Portal>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Portal>} props
  * @returns {JSX.Element}
  */
 function SheetPortal({
@@ -43,7 +43,7 @@ function SheetPortal({
 }
 
 /**
- * @param {React.ComponentProps<typeof SheetPrimitive.Overlay>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Overlay>} props
  * @returns {JSX.Element}
  */
 function SheetOverlay({
@@ -63,7 +63,7 @@ function SheetOverlay({
 }
 
 /**
- * @param {React.ComponentProps<typeof SheetPrimitive.Content> & { side?: 'top' | 'right' | 'bottom' | 'left' }} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Content> & { side?: 'top' | 'right' | 'bottom' | 'left' }} props
  * @returns {JSX.Element}
  */
 function SheetContent({
@@ -130,7 +130,7 @@ function SheetFooter({ className, ...props }) {
 }
 
 /**
- * @param {React.ComponentProps<typeof SheetPrimitive.Title>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Title>} props
  * @returns {JSX.Element}
  */
 function SheetTitle({
@@ -147,7 +147,7 @@ function SheetTitle({
 }
 
 /**
- * @param {React.ComponentProps<typeof SheetPrimitive.Description>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Description>} props
  * @returns {JSX.Element}
  */
 function SheetDescription({

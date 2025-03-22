@@ -5,7 +5,7 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof SelectPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-select').Root>} props
  * @returns {JSX.Element}
  */
 function Select({
@@ -15,7 +15,7 @@ function Select({
 }
 
 /**
- * @param {React.ComponentProps<typeof SelectPrimitive.Group>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-select').Group>} props
  * @returns {JSX.Element}
  */
 function SelectGroup({
@@ -25,7 +25,7 @@ function SelectGroup({
 }
 
 /**
- * @param {React.ComponentProps<typeof SelectPrimitive.Value>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-select').Value>} props
  * @returns {JSX.Element}
  */
 function SelectValue({
@@ -35,7 +35,7 @@ function SelectValue({
 }
 
 /**
- * @param {React.ComponentProps<typeof SelectPrimitive.Trigger> & { size?: 'sm' | 'default' }} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-select').Trigger> & { size?: 'sm' | 'default' }} props
  * @returns {JSX.Element}
  */
 function SelectTrigger({
@@ -63,7 +63,7 @@ function SelectTrigger({
 }
 
 /**
- * @param {React.ComponentProps<typeof SelectPrimitive.Content>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-select').Content>} props
  * @returns {JSX.Element}
  */
 function SelectContent({
@@ -102,7 +102,7 @@ function SelectContent({
 }
 
 /**
- * @param {React.ComponentProps<typeof SelectPrimitive.Label>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-select').Label>} props
  * @returns {JSX.Element}
  */
 function SelectLabel({
@@ -119,7 +119,7 @@ function SelectLabel({
 }
 
 /**
- * @param {React.ComponentProps<typeof SelectPrimitive.Item>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-select').Item>} props
  * @returns {JSX.Element}
  */
 function SelectItem({
@@ -147,7 +147,7 @@ function SelectItem({
 }
 
 /**
- * @param {React.ComponentProps<typeof SelectPrimitive.Separator>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-select').Separator>} props
  * @returns {JSX.Element}
  */
 function SelectSeparator({
@@ -164,7 +164,7 @@ function SelectSeparator({
 }
 
 /**
- * @param {React.ComponentProps<typeof SelectPrimitive.ScrollUpButton>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-select').ScrollUpButton>} props
  * @returns {JSX.Element}
  */
 function SelectScrollUpButton({
@@ -186,7 +186,7 @@ function SelectScrollUpButton({
 }
 
 /**
- * @param {React.ComponentProps<typeof SelectPrimitive.ScrollDownButton>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-select').ScrollDownButton>} props
  * @returns {JSX.Element}
  */
 function SelectScrollDownButton({

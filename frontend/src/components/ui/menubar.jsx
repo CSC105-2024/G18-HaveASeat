@@ -5,7 +5,7 @@ import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof MenubarPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-menubar').Root>} props
  * @returns {JSX.Element}
  */
 function Menubar({
@@ -25,7 +25,7 @@ function Menubar({
 }
 
 /**
- * @param {React.ComponentProps<typeof MenubarPrimitive.Menu>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-menubar').Menu>} props
  * @returns {JSX.Element}
  */
 function MenubarMenu({
@@ -35,7 +35,7 @@ function MenubarMenu({
 }
 
 /**
- * @param {React.ComponentProps<typeof MenubarPrimitive.Group>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-menubar').Group>} props
  * @returns {JSX.Element}
  */
 function MenubarGroup({
@@ -45,7 +45,7 @@ function MenubarGroup({
 }
 
 /**
- * @param {React.ComponentProps<typeof MenubarPrimitive.Portal>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-menubar').Portal>} props
  * @returns {JSX.Element}
  */
 function MenubarPortal({
@@ -55,7 +55,7 @@ function MenubarPortal({
 }
 
 /**
- * @param {React.ComponentProps<typeof MenubarPrimitive.RadioGroup>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-menubar').RadioGroup>} props
  * @returns {JSX.Element}
  */
 function MenubarRadioGroup({
@@ -67,7 +67,7 @@ function MenubarRadioGroup({
 }
 
 /**
- * @param {React.ComponentProps<typeof MenubarPrimitive.Trigger>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-menubar').Trigger>} props
  * @returns {JSX.Element}
  */
 function MenubarTrigger({
@@ -87,7 +87,7 @@ function MenubarTrigger({
 }
 
 /**
- * @param {React.ComponentProps<typeof MenubarPrimitive.Content>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-menubar').Content>} props
  * @returns {JSX.Element}
  */
 function MenubarContent({
@@ -115,7 +115,7 @@ function MenubarContent({
 }
 
 /**
- * @param {React.ComponentProps<typeof MenubarPrimitive.Item> & { inset?: boolean, variant?: 'default' | 'destructive' }} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-menubar').Item> & { inset?: boolean, variant?: 'default' | 'destructive' }} props
  * @returns {JSX.Element}
  */
 function MenubarItem({
@@ -139,7 +139,7 @@ function MenubarItem({
 }
 
 /**
- * @param {React.ComponentProps<typeof MenubarPrimitive.CheckboxItem>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-menubar').CheckboxItem>} props
  * @returns {JSX.Element}
  */
 function MenubarCheckboxItem({
@@ -169,7 +169,7 @@ function MenubarCheckboxItem({
 }
 
 /**
- * @param {React.ComponentProps<typeof MenubarPrimitive.RadioItem>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-menubar').RadioItem>} props
  * @returns {JSX.Element}
  */
 function MenubarRadioItem({
@@ -197,7 +197,7 @@ function MenubarRadioItem({
 }
 
 /**
- * @param {React.ComponentProps<typeof MenubarPrimitive.Label> & { inset?: boolean }} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-menubar').Label> & { inset?: boolean }} props
  * @returns {JSX.Element}
  */
 function MenubarLabel({
@@ -219,7 +219,7 @@ function MenubarLabel({
 }
 
 /**
- * @param {React.ComponentProps<typeof MenubarPrimitive.Separator>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-menubar').Separator>} props
  * @returns {JSX.Element}
  */
 function MenubarSeparator({
@@ -256,7 +256,7 @@ function MenubarShortcut({
 }
 
 /**
- * @param {React.ComponentProps<typeof MenubarPrimitive.Sub>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-menubar').Sub>} props
  * @returns {JSX.Element}
  */
 function MenubarSub({
@@ -266,7 +266,7 @@ function MenubarSub({
 }
 
 /**
- * @param {React.ComponentProps<typeof MenubarPrimitive.SubTrigger> & { inset?: boolean }} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-menubar').SubTrigger> & { inset?: boolean }} props
  * @returns {JSX.Element}
  */
 function MenubarSubTrigger({
@@ -292,7 +292,7 @@ function MenubarSubTrigger({
 }
 
 /**
- * @param {React.ComponentProps<typeof MenubarPrimitive.SubContent>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-menubar').SubContent>} props
  * @returns {JSX.Element}
  */
 function MenubarSubContent({

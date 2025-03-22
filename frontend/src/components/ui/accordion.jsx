@@ -5,7 +5,7 @@ import { ChevronDownIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof AccordionPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-accordion').Root>} props
  * @returns {JSX.Element}
  */
 function Accordion({
@@ -15,7 +15,7 @@ function Accordion({
 }
 
 /**
- * @param {React.ComponentProps<typeof AccordionPrimitive.Item>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-accordion').Item>} props
  * @returns {JSX.Element}
  */
 function AccordionItem({
@@ -32,7 +32,7 @@ function AccordionItem({
 }
 
 /**
- * @param {React.ComponentProps<typeof AccordionPrimitive.Trigger>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-accordion').Trigger>} props
  * @returns {JSX.Element}
  */
 function AccordionTrigger({
@@ -58,7 +58,7 @@ function AccordionTrigger({
 }
 
 /**
- * @param {React.ComponentProps<typeof AccordionPrimitive.Content>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-accordion').Content>} props
  * @returns {JSX.Element}
  */
 function AccordionContent({
