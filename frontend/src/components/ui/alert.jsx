@@ -1,5 +1,5 @@
 import * as React from "react"
-import { cva } from "class-variance-authority";
+import { cva, VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
@@ -19,6 +19,10 @@ const alertVariants = cva(
   }
 )
 
+/**
+ * @param {React.ComponentProps<"div"> & VariantProps<typeof alertVariants>} props
+ * @returns {JSX.Element}
+ */
 function Alert({
   className,
   variant,
@@ -29,22 +33,32 @@ function Alert({
       data-slot="alert"
       role="alert"
       className={cn(alertVariants({ variant }), className)}
-      {...props} />
-  );
+      {...props}
+    />
+  )
 }
 
-function AlertTitle({
-  className,
-  ...props
-}) {
+/**
+ * @param {React.ComponentProps<"div">} props
+ * @returns {JSX.Element}
+ */
+function AlertTitle({ className, ...props }) {
   return (
     <div
       data-slot="alert-title"
-      className={cn("col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight", className)}
-      {...props} />
-  );
+      className={cn(
+        "col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight",
+        className
+      )}
+      {...props}
+    />
+  )
 }
 
+/**
+ * @param {React.ComponentProps<"div">} props
+ * @returns {JSX.Element}
+ */
 function AlertDescription({
   className,
   ...props
@@ -56,8 +70,9 @@ function AlertDescription({
         "text-muted-foreground col-start-2 grid justify-items-start gap-1 text-sm [&_p]:leading-relaxed",
         className
       )}
-      {...props} />
-  );
+      {...props}
+    />
+  )
 }
 
 export { Alert, AlertTitle, AlertDescription }

@@ -1,9 +1,9 @@
 import React from "react";
 
-function SignInOverlay(props) {
+function Page(props) {
   return (
     <div></div>
   );
 }
 
-export { SignInOverlay };
+export default Page;

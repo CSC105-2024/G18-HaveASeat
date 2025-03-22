@@ -4,16 +4,19 @@ import { ChevronRight, MoreHorizontal } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-function Breadcrumb({
-  ...props
-}) {
-  return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />;
+/**
+ * @param {React.ComponentProps<"nav">} props
+ * @returns {JSX.Element}
+ */
+function Breadcrumb({ ...props }) {
+  return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />
 }
 
-function BreadcrumbList({
-  className,
-  ...props
-}) {
+/**
+ * @param {React.ComponentProps<"ol">} props
+ * @returns {JSX.Element}
+ */
+function BreadcrumbList({ className, ...props }) {
   return (
     <ol
       data-slot="breadcrumb-list"
@@ -21,22 +24,29 @@ function BreadcrumbList({
         "text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm break-words sm:gap-2.5",
         className
       )}
-      {...props} />
-  );
+      {...props}
+    />
+  )
 }
 
-function BreadcrumbItem({
-  className,
-  ...props
-}) {
+/**
+ * @param {React.ComponentProps<"li">} props
+ * @returns {JSX.Element}
+ */
+function BreadcrumbItem({ className, ...props }) {
   return (
     <li
       data-slot="breadcrumb-item"
       className={cn("inline-flex items-center gap-1.5", className)}
-      {...props} />
-  );
+      {...props}
+    />
+  )
 }
 
+/**
+ * @param {React.ComponentProps<"a"> & { asChild?: boolean }} props
+ * @returns {JSX.Element}
+ */
 function BreadcrumbLink({
   asChild,
   className,
@@ -48,14 +58,16 @@ function BreadcrumbLink({
     <Comp
       data-slot="breadcrumb-link"
       className={cn("hover:text-foreground transition-colors", className)}
-      {...props} />
-  );
+      {...props}
+    />
+  )
 }
 
-function BreadcrumbPage({
-  className,
-  ...props
-}) {
+/**
+ * @param {React.ComponentProps<"span">} props
+ * @returns {JSX.Element}
+ */
+function BreadcrumbPage({ className, ...props }) {
   return (
     <span
       data-slot="breadcrumb-page"
@@ -63,10 +75,15 @@ function BreadcrumbPage({
       aria-disabled="true"
       aria-current="page"
       className={cn("text-foreground font-normal", className)}
-      {...props} />
-  );
+      {...props}
+    />
+  )
 }
 
+/**
+ * @param {React.ComponentProps<"li">} props
+ * @returns {JSX.Element}
+ */
 function BreadcrumbSeparator({
   children,
   className,
@@ -78,12 +95,17 @@ function BreadcrumbSeparator({
       role="presentation"
       aria-hidden="true"
       className={cn("[&>svg]:size-3.5", className)}
-      {...props}>
+      {...props}
+    >
       {children ?? <ChevronRight />}
     </li>
-  );
+  )
 }
 
+/**
+ * @param {React.ComponentProps<"span">} props
+ * @returns {JSX.Element}
+ */
 function BreadcrumbEllipsis({
   className,
   ...props
@@ -94,11 +116,12 @@ function BreadcrumbEllipsis({
       role="presentation"
       aria-hidden="true"
       className={cn("flex size-9 items-center justify-center", className)}
-      {...props}>
+      {...props}
+    >
       <MoreHorizontal className="size-4" />
       <span className="sr-only">More</span>
     </span>
-  );
+  )
 }
 
 export {

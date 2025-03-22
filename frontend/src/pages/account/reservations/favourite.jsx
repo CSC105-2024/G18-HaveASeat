@@ -1,9 +1,9 @@
 import React from "react";
 
-function ReservationOverlay() {
+function Page(props) {
   return (
     <div></div>
   );
 }
 
-export { ReservationOverlay };
+export default Page;

@@ -7,6 +7,8 @@ import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback, ErrorLayout } from "@/components/layout/error.jsx";
 import routes from "@/routes.js";
 import usePageMetadata from "@/hooks/use-page-metadata.js";
+import Loading from "@/components/layout/loading.jsx";
+import { ModalProvider } from "@/providers/model.jsx";
 
 export const App = () => {
   const metadata = usePageMetadata();
@@ -26,8 +28,11 @@ export const App = () => {
   }, [metadata]);
 
   return (
-    <Suspense fallback={<p>Loading...</p>}>
-      <Layout>{useRoutes(routes)}</Layout>
+    <Suspense fallback={<Loading />}>
+      <Layout>
+        {useRoutes(routes)}
+        <ModalProvider/>
+      </Layout>
     </Suspense>
   );
 };
