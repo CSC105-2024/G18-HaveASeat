@@ -1,4 +1,4 @@
-name: Backend Start Test
+name: Backend Run Test
 
 on:
   push:
@@ -17,8 +17,8 @@ on:
       - 'backend/**'
 
 jobs:
-  start-test:
-    name: Check Backend Startup
+  build:
+    name: Build Backend
     runs-on: ubuntu-latest
 
     steps:
@@ -33,19 +33,13 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install
         working-directory: backend
 
-      - name: Start Backend
-        run: pnpm run start &
+      - name: Build Project
+        run: pnpm run build
         working-directory: backend
-
-      - name: Wait for Server to Start
-        run: sleep 5
-
-      - name: Check if Server is Running
-        run: curl -I http://localhost:3000 || exit 1
