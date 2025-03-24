@@ -18,7 +18,7 @@ function NavigationBar({ items }) {
         {items.map((item) => (
           <NavigationMenuItem key={item.title}>
             <NavLink
-              to="/"
+              to={item.url}
               className={cn(
                 navigationMenuTriggerStyle(),
                 "bg-transparent hover:bg-zinc-800 hover:text-white",

@@ -25,7 +25,7 @@ export const App = () => {
   const PageContent = useRoutes(routes);
 
   useEffect(() => {
-    if (metadata.title) document.title = metadata.title;
+    if (metadata.title) document.title = metadata.title + " | Have A Seat";
 
     const metaDesc = document.querySelector("meta[name='description']");
     if (metaDesc) {

@@ -22,7 +22,7 @@ const FormSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email address",
   }),
-  password: z.string().min(1, "Please enter a password")
+  password: z.string().min(1, "Please enter a password"),
 });
 
 function SignInOverlay() {
@@ -120,4 +120,53 @@ const useSignInOverlay = createModalHook(
   </Fragment>,
 );
 
-export { useSignInOverlay, SignInOverlay };
+function UserDeleteOverlay(props) {
+  const { closeModal } = useModalStore();
+
+  function onSignOut() {
+    try {
+      //TODO: Implement the logic
+      alert("Are you sure to sign out from our platform?");
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-4 md:flex-row">
+      <Button
+        onClick={onSignOut}
+        className="w-full flex-1"
+        variant="destructive"
+      >
+        Confirm
+      </Button>
+      <Button
+        onClick={() => closeModal("user-sign-out")}
+        className="w-full flex-1"
+        variant="secondary"
+      >
+        Back
+      </Button>
+    </div>
+  );
+}
+
+const useSignOutOverlay = createModalHook(
+  UserDeleteOverlay,
+  "user-sign-out",
+  "Sign Out Confirmation",
+  <Fragment>
+    Are you sure to sign out from our platform?{" "}
+    <span className="text-red-500">
+      We are sad to see you go, but see you again soon!
+    </span>
+  </Fragment>,
+);
+
+export {
+  useSignInOverlay,
+  SignInOverlay,
+  useSignOutOverlay,
+  UserDeleteOverlay,
+};

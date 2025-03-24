@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button.jsx";
 import { useNavigate } from "react-router";
-import { useSignInOverlay } from "@/overlay/user/authentication.jsx";
+import { useSignInOverlay, useSignOutOverlay } from "@/overlay/user/authentication.jsx";
 import { useSignUpOverlay } from "@/overlay/user/add.jsx";
 import { useForgetPasswordOverlay } from "@/overlay/user/forget-password.jsx";
 import { useUserAddOverlay } from "@/overlay/user/add.jsx";
@@ -25,6 +25,7 @@ function Experimental() {
   const {open: openSignInOverlay} = useSignInOverlay();
   const {open: openSignUpOverlay} = useSignUpOverlay();
   const {open: openForgetPasswordOverlay} = useForgetPasswordOverlay();
+  const {open: openSignOutOverlay} = useSignOutOverlay();
 
   // Administrator
   const {open: openUserAddOverlay} = useUserAddOverlay();
@@ -56,7 +57,8 @@ function Experimental() {
         <div className="space-x-2">
           <Button onClick={() => openSignUpOverlay({})}>Sign up</Button>
           <Button onClick={openSignInOverlay} variant="secondary">Sign in</Button>
-          <Button onClick={openForgetPasswordOverlay} variant="destructive">Forget Password</Button>
+          <Button onClick={openForgetPasswordOverlay} variant="outline">Forget Password</Button>
+          <Button onClick={openSignOutOverlay} variant="destructive">Sign out</Button>
         </div>
       </ExperimentalSection>
       <ExperimentalSection title="Administrator">

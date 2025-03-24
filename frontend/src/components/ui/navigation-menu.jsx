@@ -62,7 +62,7 @@ function NavigationMenuItem({
   return (
     <NavigationMenuPrimitive.Item
       data-slot="navigation-menu-item"
-      className={cn("relative", className)}
+      className={cn("relative has-[a[aria-current='page']]:underline underline-offset-8", className)}
       {...props}
     />
   )
