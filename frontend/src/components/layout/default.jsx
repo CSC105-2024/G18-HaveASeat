@@ -16,7 +16,7 @@ import {
   SidebarProvider,
   SidebarTrigger
 } from "@/components/ui/sidebar.jsx";
-import { Navigation } from "@/components/navigation/index.jsx";
+import { Navigation, NavigationProfile } from "@/components/navigation/index.jsx";
 import { Button } from "@/components/ui/button.jsx";
 
 import {
@@ -42,11 +42,10 @@ function Layout({ children }) {
             </div>
           </NavLink>
           <Navigation />
-          <div className="flex-2/12 flex flex-row justify-end gap-4">
-            Profile Here
+          <div className="flex-2/12 flex flex-row items-center justify-end gap-2">
             <SidebarTrigger className="flex md:hidden" />
+            <NavigationProfile />
           </div>
-
         </header>
         <main className="px-4">{children}</main>
       </section>
