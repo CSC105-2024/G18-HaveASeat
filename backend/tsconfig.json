@@ -13,7 +13,9 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "allowImportingTsExtensions": true,
-    "outDir": "./dist",
-    "exclude": ["node_modules"]
-  }
+    "outDir": "./dist"
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }
