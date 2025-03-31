@@ -19,7 +19,7 @@
       "@/*": ["src/*"],
       "@/prisma/*": ["prisma/*"]
     },
-    "moduleResolution": "Node",
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true,
     "resolveJsonModule": true
   },
