@@ -14,4 +14,4 @@ const useBarPromotionImagesOverlay = createModalHook(
   '',
 );
 
-export { useBarPromotionImagesOverlay };
+export { useBarPromotionImagesOverlay, BarPromotionImagesOverlay };

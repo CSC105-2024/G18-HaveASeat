@@ -3,7 +3,7 @@ import { createModalHook } from "@/hooks/use-modal.jsx";
 
 /**
  * @typedef {Object} ReservationAddOverlayProps
- * @property {boolean | undefined} isManual
+ * @property {boolean} [isManual]
  */
 
 /**
@@ -23,4 +23,4 @@ const useReservationAddOverlay = createModalHook(
   '',
 );
 
-export { useReservationAddOverlay };
+export { useReservationAddOverlay, ReservationAddOverlay };

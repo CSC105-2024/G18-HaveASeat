@@ -6,7 +6,7 @@ import * as AvatarPrimitive from "@radix-ui/react-avatar"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof AvatarPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-avatar').Root>} props
  * @returns {JSX.Element}
  */
 function Avatar({
@@ -26,7 +26,7 @@ function Avatar({
 }
 
 /**
- * @param {React.ComponentProps<typeof AvatarPrimitive.Image>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-avatar').Image>} props
  * @returns {JSX.Element}
  */
 function AvatarImage({
@@ -43,7 +43,7 @@ function AvatarImage({
 }
 
 /**
- * @param {React.ComponentProps<typeof AvatarPrimitive.Fallback>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-avatar').Fallback>} props
  * @returns {JSX.Element}
  */
 function AvatarFallback({

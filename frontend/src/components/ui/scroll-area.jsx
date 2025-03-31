@@ -6,7 +6,7 @@ import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof ScrollAreaPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-scroll-area').Root>} props
  * @returns {JSX.Element}
  */
 function ScrollArea({
@@ -33,7 +33,7 @@ function ScrollArea({
 }
 
 /**
- * @param {React.ComponentProps<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-scroll-area').ScrollAreaScrollbar>} props
  * @returns {JSX.Element}
  */
 function ScrollBar({

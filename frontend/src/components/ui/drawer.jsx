@@ -4,7 +4,7 @@ import { Drawer as DrawerPrimitive } from "vaul"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof DrawerPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('vaul').Root>} props
  * @returns {JSX.Element}
  */
 function Drawer({
@@ -14,7 +14,7 @@ function Drawer({
 }
 
 /**
- * @param {React.ComponentProps<typeof DrawerPrimitive.Trigger>} props
+ * @param {React.ComponentProps<typeof import('vaul').Trigger>} props
  * @returns {JSX.Element}
  */
 function DrawerTrigger({
@@ -24,7 +24,7 @@ function DrawerTrigger({
 }
 
 /**
- * @param {React.ComponentProps<typeof DrawerPrimitive.Portal>} props
+ * @param {React.ComponentProps<typeof import('vaul').Portal>} props
  * @returns {JSX.Element}
  */
 function DrawerPortal({
@@ -34,7 +34,7 @@ function DrawerPortal({
 }
 
 /**
- * @param {React.ComponentProps<typeof DrawerPrimitive.Close>} props
+ * @param {React.ComponentProps<typeof import('vaul').Close>} props
  * @returns {JSX.Element}
  */
 function DrawerClose({
@@ -44,7 +44,7 @@ function DrawerClose({
 }
 
 /**
- * @param {React.ComponentProps<typeof DrawerPrimitive.Overlay>} props
+ * @param {React.ComponentProps<typeof import('vaul').Overlay>} props
  * @returns {JSX.Element}
  */
 function DrawerOverlay({
@@ -64,7 +64,7 @@ function DrawerOverlay({
 }
 
 /**
- * @param {React.ComponentProps<typeof DrawerPrimitive.Content>} props
+ * @param {React.ComponentProps<typeof import('vaul').Content>} props
  * @returns {JSX.Element}
  */
 function DrawerContent({
@@ -123,7 +123,7 @@ function DrawerFooter({ className, ...props }) {
 }
 
 /**
- * @param {React.ComponentProps<typeof DrawerPrimitive.Title>} props
+ * @param {React.ComponentProps<typeof import('vaul').Title>} props
  * @returns {JSX.Element}
  */
 function DrawerTitle({
@@ -140,7 +140,7 @@ function DrawerTitle({
 }
 
 /**
- * @param {React.ComponentProps<typeof DrawerPrimitive.Description>} props
+ * @param {React.ComponentProps<typeof import('vaul').Description>} props
  * @returns {JSX.Element}
  */
 function DrawerDescription({

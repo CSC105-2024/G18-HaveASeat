@@ -1,6 +1,6 @@
 import * as React from "react"
 import * as TogglePrimitive from "@radix-ui/react-toggle"
-import { cva, VariantProps } from "class-variance-authority"
+import { cva } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
@@ -33,7 +33,7 @@ const toggleVariants = cva(
  */
 
 /**
- * @param {React.ComponentProps<typeof TogglePrimitive.Root> & ToggleVariants} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-toggle').Root> & ToggleVariants} props
  * @returns {JSX.Element}
  */
 function Toggle({

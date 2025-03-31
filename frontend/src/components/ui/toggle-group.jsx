@@ -13,7 +13,7 @@ const ToggleGroupContext = React.createContext({
 })
 
 /**
- * @param {React.ComponentProps<typeof ToggleGroupPrimitive.Root> & ToggleVariants} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-toggle-group').Root> & ToggleVariants} props
  * @returns {JSX.Element}
  */
 function ToggleGroup({
@@ -42,7 +42,7 @@ function ToggleGroup({
 }
 
 /**
- * @param {React.ComponentProps<typeof ToggleGroupPrimitive.Item> & ToggleVariants} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-toggle-group').Item> & ToggleVariants} props
  * @returns {JSX.Element}
  */
 function ToggleGroupItem({

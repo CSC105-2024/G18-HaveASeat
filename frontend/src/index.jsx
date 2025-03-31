@@ -1,7 +1,12 @@
 import "./global.css";
-import { StrictMode, Suspense, useEffect } from "react";
+import React, { StrictMode, Suspense, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, useRoutes } from "react-router";
+import {
+  BrowserRouter,
+  useLocation,
+  useNavigate,
+  useRoutes,
+} from "react-router";
 import Layout from "@/components/layout/default.jsx";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback, ErrorLayout } from "@/components/layout/error.jsx";
@@ -9,12 +14,18 @@ import routes from "@/routes.js";
 import usePageMetadata from "@/hooks/use-page-metadata.js";
 import Loading from "@/components/layout/loading.jsx";
 import { ModalProvider } from "@/providers/model.jsx";
+import { Toaster } from "@/components/ui/sonner.jsx";
+import { SidebarProvider } from "@/components/ui/sidebar.jsx";
 
 export const App = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const metadata = usePageMetadata();
 
+  const PageContent = useRoutes(routes);
+
   useEffect(() => {
-    if (metadata.title) document.title = metadata.title;
+    if (metadata.title) document.title = metadata.title + " | Have A Seat";
 
     const metaDesc = document.querySelector("meta[name='description']");
     if (metaDesc) {
@@ -27,12 +38,21 @@ export const App = () => {
     }
   }, [metadata]);
 
+  if (location.pathname.startsWith("_/")) {
+    if (!import.meta.env.DEV) {
+      return navigate("/", { replace: true });
+    }
+  }
+
   return (
     <Suspense fallback={<Loading />}>
-      <Layout>
-        {useRoutes(routes)}
-        <ModalProvider/>
-      </Layout>
+      <SidebarProvider defaultOpen={false}>
+        <Layout>
+          {PageContent}
+          <Toaster />
+          <ModalProvider />
+        </Layout>
+      </SidebarProvider>
     </Suspense>
   );
 };
@@ -51,4 +71,4 @@ container.__reactRoot.render(
       </BrowserRouter>
     </ErrorBoundary>
   </StrictMode>,
-)
+);

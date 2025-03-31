@@ -2,7 +2,7 @@ import * as React from "react"
 import * as CollapsiblePrimitive from "@radix-ui/react-collapsible"
 
 /**
- * @param {React.ComponentProps<typeof CollapsiblePrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-collapsible').Root>} props
  * @returns {JSX.Element}
  */
 function Collapsible({
@@ -12,7 +12,7 @@ function Collapsible({
 }
 
 /**
- * @param {React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleTrigger>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-collapsible').CollapsibleTrigger>} props
  * @returns {JSX.Element}
  */
 function CollapsibleTrigger({
@@ -27,7 +27,7 @@ function CollapsibleTrigger({
 }
 
 /**
- * @param {React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleContent>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-collapsible').CollapsibleContent>} props
  * @returns {JSX.Element}
  */
 function CollapsibleContent({

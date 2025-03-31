@@ -5,7 +5,7 @@ import { XIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof DialogPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Root>} props
  * @returns {JSX.Element}
  */
 function Dialog({
@@ -15,7 +15,7 @@ function Dialog({
 }
 
 /**
- * @param {React.ComponentProps<typeof DialogPrimitive.Trigger>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Trigger>} props
  * @returns {JSX.Element}
  */
 function DialogTrigger({
@@ -25,7 +25,7 @@ function DialogTrigger({
 }
 
 /**
- * @param {React.ComponentProps<typeof DialogPrimitive.Portal>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Portal>} props
  * @returns {JSX.Element}
  */
 function DialogPortal({
@@ -35,7 +35,7 @@ function DialogPortal({
 }
 
 /**
- * @param {React.ComponentProps<typeof DialogPrimitive.Close>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Close>} props
  * @returns {JSX.Element}
  */
 function DialogClose({
@@ -45,7 +45,7 @@ function DialogClose({
 }
 
 /**
- * @param {React.ComponentProps<typeof DialogPrimitive.Overlay>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Overlay>} props
  * @returns {JSX.Element}
  */
 function DialogOverlay({
@@ -56,7 +56,7 @@ function DialogOverlay({
     <DialogPrimitive.Overlay
       data-slot="dialog-overlay"
       className={cn(
-        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
+        "overflow-y-auto py-3 grid place-items-center data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
         className
       )}
       {...props}
@@ -65,7 +65,7 @@ function DialogOverlay({
 }
 
 /**
- * @param {React.ComponentProps<typeof DialogPrimitive.Content>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Content>} props
  * @returns {JSX.Element}
  */
 function DialogContent({
@@ -75,21 +75,22 @@ function DialogContent({
 }) {
   return (
     <DialogPortal data-slot="dialog-portal">
-      <DialogOverlay />
-      <DialogPrimitive.Content
-        data-slot="dialog-content"
-        className={cn(
-          "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg",
-          className
-        )}
-        {...props}
-      >
-        {children}
-        <DialogPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4">
-          <XIcon />
-          <span className="sr-only">Close</span>
-        </DialogPrimitive.Close>
-      </DialogPrimitive.Content>
+      <DialogOverlay>
+        <DialogPrimitive.Content
+          data-slot="dialog-content"
+          className={cn(
+            "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 relative z-50 grid w-full max-w-[calc(100%-2rem)] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg",
+            className
+          )}
+          {...props}
+        >
+          {children}
+          <DialogPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4">
+            <XIcon />
+            <span className="sr-only">Close</span>
+          </DialogPrimitive.Close>
+        </DialogPrimitive.Content>
+      </DialogOverlay>
     </DialogPortal>
   )
 }
@@ -126,7 +127,7 @@ function DialogFooter({ className, ...props }) {
 }
 
 /**
- * @param {React.ComponentProps<typeof DialogPrimitive.Title>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Title>} props
  * @returns {JSX.Element}
  */
 function DialogTitle({
@@ -143,7 +144,7 @@ function DialogTitle({
 }
 
 /**
- * @param {React.ComponentProps<typeof DialogPrimitive.Description>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Description>} props
  * @returns {JSX.Element}
  */
 function DialogDescription({

@@ -4,7 +4,7 @@ import * as HoverCardPrimitive from "@radix-ui/react-hover-card"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof HoverCardPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-hover-card').Root>} props
  * @returns {JSX.Element}
  */
 function HoverCard({
@@ -14,7 +14,7 @@ function HoverCard({
 }
 
 /**
- * @param {React.ComponentProps<typeof HoverCardPrimitive.Trigger>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-hover-card').Trigger>} props
  * @returns {JSX.Element}
  */
 function HoverCardTrigger({
@@ -26,7 +26,7 @@ function HoverCardTrigger({
 }
 
 /**
- * @param {React.ComponentProps<typeof HoverCardPrimitive.Content>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-hover-card').Content>} props
  * @returns {JSX.Element}
  */
 function HoverCardContent({

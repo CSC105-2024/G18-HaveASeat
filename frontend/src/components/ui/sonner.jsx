@@ -1,8 +1,8 @@
 import { useTheme } from "next-themes"
-import { Toaster as Sonner, ToasterProps } from "sonner"
+import { Toaster as Sonner } from "sonner"
 
 /**
- * @param {ToasterProps} props
+ * @param {import('sonner').ToasterProps} props
  * @returns {JSX.Element}
  */
 const Toaster = ({ ...props }) => {

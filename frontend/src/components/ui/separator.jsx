@@ -6,7 +6,7 @@ import * as SeparatorPrimitive from "@radix-ui/react-separator"
 import { cn } from "@/lib/utils"
 
 /**
- * @param {React.ComponentProps<typeof SeparatorPrimitive.Root>} props
+ * @param {React.ComponentProps<typeof import('@radix-ui/react-separator').Root>} props
  * @returns {JSX.Element}
  */
 function Separator({
