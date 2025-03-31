@@ -41,10 +41,8 @@ jobs:
         working-directory: backend
 
       - name: Create .env file
-        uses: ozaytsev86/create-env-file@v2.0.0
-        with:
-          ENV_DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        working-directory: backend
+        run: |
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > backend/.env
 
       - name: Generate Prisma Client
         run: pnpm run prisma:generate
