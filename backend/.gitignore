@@ -30,3 +30,9 @@ lerna-debug.log*
 # Build & Generated Files
 dist/
 build/
+
+# Database
+prisma/**/generated/
+prisma/**/migrations/
+prisma/**/*.db
+prisma/**/*.db-journal
