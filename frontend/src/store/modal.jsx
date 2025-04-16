@@ -2,10 +2,10 @@ import { create } from 'zustand';
 
 /**
  * @typedef {Object} ModalData
- * @property {boolean} isOpen - Whether the modal is open.
- * @property {React.ReactNode} content - The modal content.
- * @property {string} title - The modal title.
- * @property {string} [description] - The optional modal description.
+ * @property {boolean} isOpen
+ * @property {React.ReactNode} content
+ * @property {string} title
+ * @property {string} [description]
  */
 
 /**
@@ -22,10 +22,10 @@ export const useModalStore = create((set) => ({
   /**
    * Opens a modal with the given parameters.
    *
-   * @param {string} id - The unique modal ID.
-   * @param {React.ReactNode} content - The content of the modal.
-   * @param {string} title - The title of the modal.
-   * @param {string} [description] - The optional description of the modal.
+   * @param {string} id
+   * @param {React.ReactNode} content
+   * @param {string} title
+   * @param {string} [description]
    */
   openModal: (id, content, title, description) =>
     set((state) => ({
@@ -35,7 +35,7 @@ export const useModalStore = create((set) => ({
   /**
    * Closes a modal by setting its `isOpen` flag to `false`.
    *
-   * @param {string} id - The unique modal ID.
+   * @param {string} id
    */
   closeModal: (id) =>
     set((state) => ({

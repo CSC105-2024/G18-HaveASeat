@@ -1,6 +1,5 @@
 import React from "react";
 import { Button } from "@/components/ui/button.jsx";
-import { useNavigate } from "react-router";
 import { useSignInOverlay, useSignOutOverlay } from "@/overlay/user/authentication.jsx";
 import { useSignUpOverlay } from "@/overlay/user/add.jsx";
 import { useForgetPasswordOverlay } from "@/overlay/user/forget-password.jsx";
@@ -16,11 +15,8 @@ import { useReviewAddOverlay } from "@/overlay/review/add.jsx";
 import { useReviewReportOverlay } from "@/overlay/review/report.jsx";
 import { useReviewDeleteOverlay } from "@/overlay/review/delete.jsx";
 import { useBarPromotionImagesOverlay } from "@/overlay/merchant/images.jsx";
-import { useAccountSettingsOverlay } from "@/overlay/user/edit.jsx";
 
 function Experimental() {
-  const navigate = useNavigate();
-
   // Authentication
   const {open: openSignInOverlay} = useSignInOverlay();
   const {open: openSignUpOverlay} = useSignUpOverlay();
@@ -37,9 +33,6 @@ function Experimental() {
 
   // Merchant
   const {open: openBarPromotionImagesOverlay} = useBarPromotionImagesOverlay();
-
-  // Account
-  const {open: openAccountSettingsOverlay} = useAccountSettingsOverlay();
 
   // Reservations
   const {open: openReservationAddOverlay} = useReservationAddOverlay();
@@ -88,9 +81,6 @@ function Experimental() {
         </div>
       </ExperimentalSection>
       <ExperimentalSection title="User">
-        <div className="space-x-2">
-          <Button onClick={() => openAccountSettingsOverlay({})}>Account Settings</Button>
-        </div>
         <div className="space-x-2">
           <Button onClick={() => openReservationAddOverlay({isManual: false})}>Reservation Make</Button>
           <Button onClick={openReservationCancelOverlay} variant="destructive">Reservation Cancel</Button>

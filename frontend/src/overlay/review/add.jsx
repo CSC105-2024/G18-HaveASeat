@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { createModalHook } from "@/hooks/use-modal.jsx";
-import { Star } from "lucide-react";
+import { IconStar } from "@tabler/icons-react";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -44,7 +44,7 @@ function ReviewAddOverlay({ isReply = false }) {
         <h2 className="text-xl font-semibold mb-2">Rating</h2>
         <div className="flex space-x-1">
           {[1, 2, 3, 4, 5].map((num) => (
-            <Star
+            <IconStar
               key={num}
               onClick={() => setRating(num)}
               className={`w-6 h-6 cursor-pointer transition-colors duration-150 ${

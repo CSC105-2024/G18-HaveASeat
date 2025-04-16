@@ -2,9 +2,11 @@
   "name": "backend",
   "type": "module",
   "scripts": {
-    "dev": "dotenvx run --quiet -- tsx watch src/index.ts",
+    "dev": "dotenvx run --quiet -- tsx watch src --exclude src/types/**/*",
     "build": "dotenvx run --quiet -- tsc",
     "prisma:generate": "prisma generate",
+    "prisma:init": "prisma migrate dev --name init",
+    "prisma:migrate": "prisma migrate dev ",
     "prisma:studio": "prisma studio"
   },
   "dependencies": {
