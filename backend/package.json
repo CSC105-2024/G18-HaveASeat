@@ -7,7 +7,8 @@
     "prisma:generate": "prisma generate",
     "prisma:init": "prisma migrate dev --name init",
     "prisma:migrate": "prisma migrate dev ",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.39.0",
