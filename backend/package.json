@@ -7,20 +7,19 @@
     "prisma:generate": "prisma generate",
     "prisma:init": "prisma migrate dev --name init",
     "prisma:migrate": "prisma migrate dev ",
-    "prisma:studio": "prisma studio",
-    "postinstall": "prisma generate"
+    "prisma:studio": "prisma studio"
   },
   "dependencies": {
-    "@dotenvx/dotenvx": "^1.39.0",
-    "@hono/node-server": "^1.14.0",
+    "@dotenvx/dotenvx": "^1.40.0",
+    "@hono/node-server": "^1.14.1",
     "@hono/zod-validator": "^0.4.3",
-    "@prisma/client": "6.5.0",
-    "hono": "^4.7.5",
+    "@prisma/client": "6.6.0",
+    "hono": "^4.7.7",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/node": "^20.11.17",
-    "prisma": "^6.5.0",
+    "prisma": "6.6.0",
     "tsx": "^4.7.1"
   }
 }
