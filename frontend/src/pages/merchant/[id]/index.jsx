@@ -6,9 +6,10 @@ import { Button, buttonVariants } from "@/components/ui/button.jsx";
 import {
   IconArrowBack,
   IconFlag,
-  IconSettings, IconSparkles,
+  IconSettings,
+  IconSparkles,
   IconStarFilled,
-  IconTrash
+  IconTrash,
 } from "@tabler/icons-react";
 import {
   Select,
@@ -83,25 +84,31 @@ function Page() {
   const { open: openReviewReportOverlay } = useReviewReportOverlay();
   const { open: openReviewDeleteOverlay } = useReviewDeleteOverlay();
 
-  const onSortTypeChange = useCallback((value) => {
-    const lowerValue = value.toLowerCase();
+  const onSortTypeChange = useCallback(
+    (value) => {
+      const lowerValue = value.toLowerCase();
 
-    if (!sortType.find((item) => item.value === lowerValue)) return;
+      if (!sortType.find((item) => item.value === lowerValue)) return;
 
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set("sort", lowerValue);
-    setSearchParams(newParams);
-  }, [searchParams, setSearchParams]);
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set("sort", lowerValue);
+      setSearchParams(newParams);
+    },
+    [searchParams, setSearchParams],
+  );
 
-  const onSortOrderChange = useCallback((value) => {
-    const lowerValue = value.toLowerCase();
+  const onSortOrderChange = useCallback(
+    (value) => {
+      const lowerValue = value.toLowerCase();
 
-    if (!sortOrder.find((item) => item.value === lowerValue)) return;
+      if (!sortOrder.find((item) => item.value === lowerValue)) return;
 
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set("order", lowerValue);
-    setSearchParams(newParams);
-  }, [searchParams, setSearchParams]);
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set("order", lowerValue);
+      setSearchParams(newParams);
+    },
+    [searchParams, setSearchParams],
+  );
 
   return (
     <div className="mx-auto max-w-7xl space-y-8">
@@ -210,14 +217,14 @@ function Page() {
             <Skeleton className="aspect-video flex-1" />
           </div>
           <div className="space-y-4">
-            <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4">
+            <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div className="space-y-2">
                 <div className="flex flex-row items-center gap-2">
                   <h2 className="text-xl font-semibold">Reviews</h2>
                   <span className="flex flex-row items-center gap-2 text-sm">
-                  <IconStarFilled className="size-4 text-yellow-300" />
-                  4.3 (2902 Reviews)
-                </span>
+                    <IconStarFilled className="size-4 text-yellow-300" />
+                    4.3 (2902 Reviews)
+                  </span>
                 </div>
                 <div className="space-x-2">
                   <span className="font-medium">Sort by:</span>
