@@ -3,7 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output = "./generated"
+  output   = "./generated"
 }
 
 datasource db {
@@ -12,19 +12,141 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String
+  id           String         @id @default(uuid())
+  email        String         @unique
+  name         String
   phone_number String
-  birthday DateTime
-  password String
-  role UserRole @default(USER)
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  birthday     DateTime
+  password     String
+  role         UserRole       @default(USER)
+  created_at   DateTime       @default(now())
+  bars         Bar[]          @relation("MerchantBars")
+  favourites   Bar[]
+  reservations Reservation[]
+  reviews      Review[]
+  reports      ReviewReport[]
+  ReviewReply  ReviewReply[]
 }
 
 enum UserRole {
   USER
   MERCHANT
   ADMINISTRATOR
+}
+
+model Bar {
+  id          String      @id @default(uuid())
+  name        String
+  phone       String
+  address     BarAddress?
+  openHours   Json
+  description String?
+  ownerId     String
+  owner       User        @relation(fields: [ownerId], references: [id], name: "MerchantBars")
+  bannerImage String?
+  promoImages BarImage[]
+  floorPlan   String?
+  seats       Seat[]
+  reviews     Review[]
+  created_at  DateTime    @default(now())
+  User        User?       @relation(fields: [userId], references: [id])
+  userId      String?
+}
+
+model BarAddress {
+  id          String @id @default(uuid())
+  barId       String
+  bar         Bar    @relation(fields: [barId], references: [id])
+  address     String
+  subDistrict String
+  district    String
+  province    String
+  zipCode     Int
+
+  @@unique([barId])
+}
+
+model BarImage {
+  id    String @id @default(uuid())
+  barId String
+  bar   Bar    @relation(fields: [barId], references: [id])
+  url   String
+}
+
+model Seat {
+  id           String        @id @default(uuid())
+  number       Int
+  location     String
+  isAvailable  Boolean       @default(true)
+  barId        String
+  bar          Bar           @relation(fields: [barId], references: [id])
+  reservations Reservation[]
+}
+
+model Reservation {
+  id              String          @id @default(uuid())
+  userId          String?
+  user            User?           @relation(fields: [userId], references: [id])
+  customerName    String
+  reservationType ReservationType
+  seatId          String
+  seat            Seat            @relation(fields: [seatId], references: [id])
+  startTime       DateTime
+  endTime         DateTime
+  numberOfGuests  Int
+  numberOfTables  Int
+  createdAt       DateTime        @default(now())
+
+  @@unique([seatId, startTime, endTime])
+}
+
+enum ReservationType {
+  WALK_IN
+  ONLINE
+}
+
+model Review {
+  id          String         @id @default(uuid())
+  userId      String
+  user        User           @relation(fields: [userId], references: [id])
+  barId       String
+  bar         Bar            @relation(fields: [barId], references: [id])
+  rating      Int
+  description String
+  createdAt   DateTime       @default(now())
+  replies     ReviewReply[]
+  reports     ReviewReport[]
+}
+
+model ReviewReply {
+  id         String   @id @default(uuid())
+  reviewId   String
+  review     Review   @relation(fields: [reviewId], references: [id])
+  merchantId String
+  merchant   User     @relation(fields: [merchantId], references: [id])
+  content    String
+  createdAt  DateTime @default(now())
+}
+
+model ReviewReport {
+  id        String       @id @default(uuid())
+  reviewId  String
+  review    Review       @relation(fields: [reviewId], references: [id])
+  userId    String
+  user      User         @relation(fields: [userId], references: [id])
+  reason    ReportReason
+  createdAt DateTime     @default(now())
+}
+
+enum ReportReason {
+  SPAM
+  OFFENSIVE
+  FALSE_INFORMATION
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  IGNORED
+  DELETED
 }

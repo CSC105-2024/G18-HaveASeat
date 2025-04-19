@@ -4,7 +4,8 @@ import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
 
-export default [
+/** @type {import('eslint').Linter.FlatConfig[]} */
+const config =  [
   { ignores: ['dist'] },
   {
     files: ['**/*.{js,jsx}'],
@@ -37,3 +38,5 @@ export default [
     },
   },
 ]
+
+export default config;

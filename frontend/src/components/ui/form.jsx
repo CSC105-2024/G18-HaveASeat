@@ -122,7 +122,14 @@ function FormRequiredLabel({
   ...props
 }) {
   return (
-    <span className={cn("text-red-500 self-center -ml-1.5", className)} {...props}>*</span>
+    <span
+      className={cn("text-red-500 self-center -ml-1.5", className)}
+      aria-hidden="true"
+      role="presentation"
+      {...props}
+    >
+      *
+    </span>
   )
 }
 

@@ -1,23 +1,14 @@
 import React, { Fragment } from "react";
 import { createModalHook } from "@/hooks/use-modal.jsx";
 
-/**
- * @typedef {Object} AccountSettingsOverlayProps
- * @property {boolean} [editMode]
- */
-
-/**
- * @param {AccountSettingsOverlayProps} props
- * @returns {JSX.Element}
- */
-function AccountSettingsOverlay({ editMode = false }) {
+function UserEditOverlay() {
   return <div></div>;
 }
 
-const useAccountSettingsOverlay = createModalHook(
-  AccountSettingsOverlay,
+const useUserEditOverlay = createModalHook(
+  UserEditOverlay,
   "user-edit",
-  ({ editMode }) => (editMode ? "Edit User" : "Account Settings"),
+  "Edit User",
   <Fragment>
     After making changes or edits, be sure to save.{" "}
     <span className="text-red-500">*Required fields.</span>
@@ -25,8 +16,6 @@ const useAccountSettingsOverlay = createModalHook(
 );
 
 export {
-  useAccountSettingsOverlay,
-  AccountSettingsOverlay,
-  useAccountSettingsOverlay as useUserEditOverlay,
-  AccountSettingsOverlay as UserEditOverlay,
+  useUserEditOverlay,
+  UserEditOverlay,
 };

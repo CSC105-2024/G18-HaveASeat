@@ -120,7 +120,7 @@ const useSignInOverlay = createModalHook(
   </Fragment>,
 );
 
-function UserDeleteOverlay(props) {
+function UserSignOutOverlay(props) {
   const { closeModal } = useModalStore();
 
   function onSignOut() {
@@ -153,9 +153,9 @@ function UserDeleteOverlay(props) {
 }
 
 const useSignOutOverlay = createModalHook(
-  UserDeleteOverlay,
+  UserSignOutOverlay,
   "user-sign-out",
-  "Sign Out Confirmation",
+  "Sign Out",
   <Fragment>
     Are you sure to sign out from our platform?{" "}
     <span className="text-red-500">
@@ -168,5 +168,5 @@ export {
   useSignInOverlay,
   SignInOverlay,
   useSignOutOverlay,
-  UserDeleteOverlay,
+  UserSignOutOverlay,
 };
