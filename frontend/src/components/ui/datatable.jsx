@@ -26,7 +26,12 @@ import {
   IconChevronsRight,
   IconEyeOff,
   IconAdjustmentsHorizontal,
-} from '@tabler/icons-react';
+  IconArrowsSort,
+  IconSortAscendingLetters,
+  IconSortDescendingLetters,
+  IconCalendarUp,
+  IconCalendarDown, IconSortDescendingNumbers, IconSortAscendingNumbers
+} from "@tabler/icons-react";
 import {
   Select,
   SelectContent,
@@ -79,6 +84,32 @@ function getSortingPhrase(order, type) {
 }
 
 /**
+ * @param {Object} props
+ * @param {('ascending'|'descending')} props.order
+ * @param {('string'|'date'|'numeric')} props.type
+ * @returns {JSX.Element}
+ */
+function SortingIcon({ order, type }) {
+  let Icon = null;
+
+  if (type === 'string') {
+    Icon = order === 'ascending'
+      ? IconSortAscendingLetters
+      : IconSortDescendingLetters;
+  } else if (type === 'date') {
+    Icon = order === 'ascending'
+      ? IconCalendarUp
+      : IconCalendarDown;
+  } else if (type === 'numeric') {
+    Icon = order === 'ascending'
+      ? IconSortAscendingNumbers
+      : IconSortDescendingNumbers;
+  }
+
+  return <Icon className="size-3.5 text-muted-foreground/70" />
+}
+
+/**
  * @template TData
  * @template TValue
  * @param {Object} props
@@ -108,22 +139,22 @@ export function DataTableColumnHeader({ column, title, className, type = 'numeri
             ) : column.getIsSorted() === 'asc' ? (
               <IconArrowUp className="size-4" />
             ) : (
-              <IconFilter className="size-4" />
+              <IconArrowsSort className="size-4" />
             )}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-            <IconArrowUp className="mr-2 size-3.5 text-muted-foreground/70" />
+            <SortingIcon order="ascending" type={type} />
             {getSortingPhrase('ascending', type)}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-            <IconArrowDown className="mr-2 size-3.5 text-muted-foreground/70" />
+            <SortingIcon order="descending" type={type} />
             {getSortingPhrase('descending', type)}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-            <IconEyeOff className="mr-2 size-3.5 text-muted-foreground/70" />
+            <IconEyeOff className="size-3.5 text-muted-foreground/70" />
             Hide
           </DropdownMenuItem>
         </DropdownMenuContent>
