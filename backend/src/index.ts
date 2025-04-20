@@ -13,30 +13,28 @@ const app = new Hono<{
   Bindings: {
     DATABASE_URL: string
   },
-  Variables: {
-
-  }
+  Variables: {}
 }>({ strict: true });
 
 app.use(compress());
 app.use(trimTrailingSlash());
 app.use(logger());
 
-app.use('*', serveStatic({ root: '../public' }))
+app.use("*", serveStatic({ root: "../public" }));
 
 loadRoutes(app);
 
 db.$connect()
   .then(() => {
-    console.log("Connected to the database");
+    console.log("\x1b[44m[Database]\x1b[0m \x1b[32mConnected to the database\x1b[0m");
   })
   .catch((error) => {
-    console.error("Error connecting to the database:", error);
+    console.error("\x1b[44m[Prisma]\x1b[0m \x1b[31mError connecting to the database:\x1b[0m", error);
   });
 
 serve({
   fetch: app.fetch,
   port: process.env.PORT as (number | undefined) || 3000
 }, (info) => {
-  console.log(`Server is running on http://localhost:${info.port}`);
+  console.log(`\x1b[31m[Hono]\x1b[0m Server is running on http://localhost:${info.port}`);
 });
