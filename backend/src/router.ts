@@ -44,7 +44,6 @@ async function registerRoute(app: Hono, baseDir: string, routeFile: string): Pro
 
   try {
     const fileUrl = pathToFileURL(fullPath)
-    console.log(`Loading route from: ${fileUrl}`)
 
     const module = await import(fileUrl)
     const handler = module.default
@@ -54,7 +53,7 @@ async function registerRoute(app: Hono, baseDir: string, routeFile: string): Pro
       return
     }
 
-    console.log(`Registering ${method.toUpperCase()} ${routePath}`)
+    console.log(`\x1b[46m[Router]\x1b[0m \x1b[37m${method.toUpperCase()}\x1b[0m \t ${routePath}`)
 
     switch (method) {
       case 'get':
@@ -80,7 +79,7 @@ async function registerRoute(app: Hono, baseDir: string, routeFile: string): Pro
         break
     }
   } catch (err) {
-    console.error(`Error loading route ${routeFile}:`, err)
+    console.error(`\x1b[31m[Router Error]\x1b[0m Error loading route ${routeFile}:`, err)
   }
 }
 

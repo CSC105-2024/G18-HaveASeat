@@ -8,7 +8,7 @@ export default async function (c: Context) {
     const user = c.get('user');
     return c.json({});
   } catch (error) {
-    console.error('Page error:', error)
-    return c.json({ error: 'Internal server error' }, 500)
-  }
+      console.error('Page error:', error)
+      return c.json({ error: 'Internal server error' }, 500)
+    }
 }
