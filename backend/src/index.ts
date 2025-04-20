@@ -5,7 +5,10 @@ import { compress } from "hono/compress";
 import { logger } from "hono/logger";
 import { serveStatic } from "@hono/node-server/serve-static";
 import * as process from "node:process";
+import { getPrisma } from "@/lib/prisma.js";
+import { loadRoutes } from "@/router.ts";
 
+const db = getPrisma();
 const app = new Hono<{
   Bindings: {
     DATABASE_URL: string
@@ -21,9 +24,15 @@ app.use(logger());
 
 app.use('*', serveStatic({ root: '../public' }))
 
-app.get("/", (c) => {
-  return c.text("Hello Hono!");
-});
+loadRoutes(app);
+
+db.$connect()
+  .then(() => {
+    console.log("Connected to the database");
+  })
+  .catch((error) => {
+    console.error("Error connecting to the database:", error);
+  });
 
 serve({
   fetch: app.fetch,
