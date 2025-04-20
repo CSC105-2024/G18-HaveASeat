@@ -66,7 +66,7 @@ function Page() {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       floor_plan: undefined,
-      zone: [{ name: "", amount: 1 }],
+      zone: [],
     },
   });
 
