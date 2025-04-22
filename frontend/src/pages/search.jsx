@@ -58,7 +58,7 @@ function Page() {
         <div className="flex-1">
           <Input
             placeholder="Search"
-            className="w-full text-sm rounded-xl bg-gray-200 border  focus:ring-0" />
+            className="w-full text-sm rounded-xl bg-gray-200 border focus:ring-0" />
         </div>
         <div className="h-10 w-px bg-gray-400 mx-4" />
 
@@ -88,7 +88,7 @@ function Page() {
     </div>
 
     <section className="px-6 py-6"><></>
-        <h2 className="text-xl font-semibold mb-4">Results</h2>
+        <h2 className="text-xl font-semibold mb-4">Search Results</h2>
         <div className="grid sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {[
             {
