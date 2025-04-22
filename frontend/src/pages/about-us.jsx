@@ -15,15 +15,18 @@ function Page(props) {
     <div className="bg-white text-black">
       {/* Hero Banner Section */}
       <section
-        className="relative w-full h-[300px] bg-cover bg-center bg-no-repeat"
+        className="relative w-full h-[300px] bg-cover bg-center bg-no-repeat rounded-3xl"
         style={{
           backgroundImage: "url(https://i.pinimg.com/736x/a5/9e/5a/a59e5a03148fb899661ad2b1639f54d8.jpg)"
         }}
       >
-        <div className="absolute inset-0 bg-black/50 flex justify-center items-center">
-          <h1 className="text-white text-5xl font-bold text-center px-4">
-            Have A Seat
+        <div className="absolute inset-0 bg-black/50 flex flex-col justify-center items-center text-center rounded-3xl">
+          <h1 className="text-white text-4xl font-bold mb-2">
+            Get to Know <span className="text-yellow-400">Have a Seat</span> Better
           </h1>
+          <p className="text-white text-base mt-2">
+          Get to know who we are and what we’re all about.
+          </p>
         </div>
       </section>
 
