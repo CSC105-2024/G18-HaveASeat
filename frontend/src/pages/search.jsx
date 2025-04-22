@@ -40,7 +40,7 @@ function Page() {
     <><div className="bg-white text-black">
       {/* Hero Section */}
       <section
-        className="relative w-[95%] max-w-11xl mx-auto h-[250px] bg-cover bg-center bg-no-repeat -mb-6 rounded-3xl overflow-hidden shadow-lg z-1"
+        className="relative w-[95%] max-w-11xl mx-auto h-[280px] bg-cover bg-center bg-no-repeat -mb-6 rounded-3xl overflow-hidden shadow-lg z-1"
         style={{ backgroundImage: "url(https://i.pinimg.com/736x/a5/9e/5a/a59e5a03148fb899661ad2b1639f54d8.jpg)" }}
       >
         <div className="absolute inset-0 bg-black/60 flex flex-col justify-center items-center text-center px-4 ">
@@ -58,7 +58,7 @@ function Page() {
         <div className="flex-1">
           <Input
             placeholder="Search"
-            className="w-full text-sm rounded-xl bg-gray-200 border border-black focus:ring-0" />
+            className="w-full text-sm rounded-xl bg-gray-200 border  focus:ring-0" />
         </div>
         <div className="h-10 w-px bg-gray-400 mx-4" />
 
