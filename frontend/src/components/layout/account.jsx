@@ -13,13 +13,16 @@ function AccountLayout({ children }) {
 
   return (
     <div className="mx-auto max-w-7xl space-y-8">
-      <section className="flex flex-row items-center gap-4 rounded-lg bg-gray-50 px-4 py-16">
-        <Avatar className="size-12">
-          <AvatarFallback className="font-semibold">F</AvatarFallback>
-        </Avatar>
-        <div className="space-x-4">
-          <h1 className="text-xl font-semibold">Nicole Bars</h1>
-          <span className="text-sm">A member since 2025</span>
+      <section className="relative rounded-lg overflow-hidden bg-gray-50 py-20 px-12 bg-(image:--background-banner-secondary) bg-cover bg-center bg-no-repeat shadow-lg">
+        <div
+          className="absolute inset-0 flex flex-row  gap-4 px-8 items-center bg-black/10 backdrop-blur-sm text-white">
+          <Avatar className="size-12 text-black">
+            <AvatarFallback className="font-semibold">F</AvatarFallback>
+          </Avatar>
+          <div className="space-x-4">
+            <h1 className="text-xl font-semibold">Nicole Bars</h1>
+            <span className="text-sm">A member since 2025</span>
+          </div>
         </div>
       </section>
       <section className="flex flex-col md:flex-row gap-8">

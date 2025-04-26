@@ -67,6 +67,9 @@ export const getColumns = () => {
           dateStyle: 'long',
         }).format(row.original.created_at);
       },
+      meta: {
+        className: "max-md:hidden"
+      }
     },
     {
       id: 'actions',

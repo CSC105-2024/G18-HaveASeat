@@ -157,6 +157,10 @@
     --font-poppins: "Poppins", sans-serif;
     --font-noto-sans-thai: "Noto Sans Thai", sans-serif;
     --font-default: "Poppins", "Noto Sans Thai", sans-serif;
+
+    --background-banner-primary: url('/images/banner/primary.png');
+    --background-banner-secondary: url('/images/banner/secondary.jpg');
+    --background-banner-decoration: url('/images/banner/decoration.jpg');
 }
 
 @layer base {
