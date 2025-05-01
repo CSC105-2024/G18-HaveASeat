@@ -1,10 +1,31 @@
 import type { Context } from "hono";
+import { getPrisma } from "@/lib/prisma.ts";
 
 export default async function (c: Context) {
   try {
-    return c.json({});
+    const prisma = getPrisma();
+    const id = c.req.param("id");
+
+    const review = await prisma.review.findUnique({
+      where: { id },
+      include: {
+        user: true,
+      },
+    });
+
+    if (!review) {
+      return c.json({
+        success: false,
+        error: "Review not found"
+      }, 404);
+    }
+
+    return c.json({
+      success: true,
+      data: review
+    });
   } catch (error) {
-    console.error('Page error:', error)
-    return c.json({ error: 'Internal server error' }, 500)
+    console.error("Page error:", error);
+    return c.json({ success: false, error: "Internal server error" }, 500);
   }
 }
