@@ -1,14 +1,47 @@
 import type { Context } from "hono";
+import { getPrisma } from "@/lib/prisma.ts";
 import { authMiddleware } from "@/middlewares/auth.middleware.js";
 
 export default async function (c: Context) {
-  await authMiddleware(c, async () => {})
-
   try {
-    const user = c.get('user');
-    return c.json({});
+    await authMiddleware(c, async () => { });
+
+    const prisma = getPrisma();
+    const user = c.get("user");
+
+    const reports = await prisma.reviewReport.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        review: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            bar: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return c.json({ success: true, data: reports });
   } catch (error) {
-    console.error('Page error:', error)
-    return c.json({ error: 'Internal server error' }, 500)
+    console.error("Page error:", error);
+    return c.json({ success: false, error: "Internal server error" }, 500);
   }
 }
