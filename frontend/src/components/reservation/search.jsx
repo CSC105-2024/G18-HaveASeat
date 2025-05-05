@@ -37,7 +37,13 @@ import {
 } from "@/components/ui/drawer";
 import { cn } from "@/lib/utils.js";
 import { useMediaQuery } from "@/hooks/use-media-query.js";
-import { format, setHours, setMilliseconds, setMinutes, setSeconds } from "date-fns";
+import {
+  format,
+  setHours,
+  setMilliseconds,
+  setMinutes,
+  setSeconds,
+} from "date-fns";
 import { Calendar } from "@/components/ui/calendar.jsx";
 import {
   Sheet,
@@ -147,8 +153,12 @@ function ReservationPlaceSearch({ className, ...props }) {
   const valuesFromQuery = {
     name: searchParams.name || "",
     date: searchParams.date ? new Date(searchParams.date) : new Date(),
-    provinceId: searchParams.provinceId ? parseInt(searchParams.provinceId, 10) : -1,
-    locationId: searchParams.locationId ? parseInt(searchParams.locationId, 10) : -1,
+    provinceId: searchParams.provinceId
+      ? parseInt(searchParams.provinceId, 10)
+      : -1,
+    locationId: searchParams.locationId
+      ? parseInt(searchParams.locationId, 10)
+      : -1,
   };
 
   // Merge priority: state > query > fallback
@@ -167,13 +177,13 @@ function ReservationPlaceSearch({ className, ...props }) {
 
   const [selectedProvinceId, setSelectedProvinceId] = useState(
     /** @type {string | null} */
-    state.selectedProvinceId ?? searchParams.provinceId ?? ""
+    state.selectedProvinceId ?? searchParams.provinceId ?? "",
   );
   const [selectedLocation, setSelectedLocation] = useState(
     /** @type {number | null} */
-    state.selectedLocation ?? searchParams.locationId
+    (state.selectedLocation ?? searchParams.locationId)
       ? parseInt(searchParams.locationId, 10)
-      : null
+      : null,
   );
 
   const [openProvince, setOpenProvince] = useState(false);
@@ -192,14 +202,20 @@ function ReservationPlaceSearch({ className, ...props }) {
   ];
 
   useEffect(() => {
-    if (selectedProvinceId.length < 0 || isNaN(parseInt(selectedProvinceId))) return;
-    form.setValue('provinceId', Number(selectedProvinceId));
+    if (selectedProvinceId.length < 0 || isNaN(parseInt(selectedProvinceId)))
+      return;
+    form.setValue("provinceId", Number(selectedProvinceId));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedProvinceId]);
 
   useEffect(() => {
-    if (!selectedLocation || !selectedLocation?.value || isNaN(parseInt(selectedLocation?.value))) return;
-    form.setValue('locationId', Number(selectedLocation.value));
+    if (
+      !selectedLocation ||
+      !selectedLocation?.value ||
+      isNaN(parseInt(selectedLocation?.value))
+    )
+      return;
+    form.setValue("locationId", Number(selectedLocation.value));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedLocation]);
 
@@ -262,17 +278,20 @@ function ReservationPlaceSearch({ className, ...props }) {
 
     const serializedValues = {
       ...rawValues,
-      date: rawValues.date instanceof Date ? rawValues.date.toISOString() : rawValues.date,
+      date:
+        rawValues.date instanceof Date
+          ? rawValues.date.toISOString()
+          : rawValues.date,
     };
 
     const queryString = new URLSearchParams(serializedValues).toString();
 
     navigate(`/search?${queryString}`, {
-      replace: location.pathname === '/search',
+      replace: location.pathname === "/search",
       state: {
         selectedProvinceId,
         selectedLocation,
-        values: rawValues
+        values: rawValues,
       },
     });
   }
@@ -350,11 +369,11 @@ function ReservationPlaceSearch({ className, ...props }) {
                               setSeconds(
                                 setMinutes(
                                   setHours(date, current.getHours()),
-                                  current.getMinutes()
+                                  current.getMinutes(),
                                 ),
-                                current.getSeconds()
+                                current.getSeconds(),
                               ),
-                              current.getMilliseconds()
+                              0,
                             );
 
                             field.onChange(updatedDate);
@@ -374,7 +393,7 @@ function ReservationPlaceSearch({ className, ...props }) {
                 name="date"
                 render={({ field }) => (
                   <FormItem className="">
-                    <FormLabel className="max-md:hidden md:invisible font-medium">
+                    <FormLabel className="font-medium max-md:hidden md:invisible">
                       Time
                     </FormLabel>
                     <FormControl>
@@ -388,14 +407,14 @@ function ReservationPlaceSearch({ className, ...props }) {
                               .split(":")
                               .map(Number);
 
-                            const updatedDate = setMinutes(
-                              setHours(field.value, hours),
-                              minutes,
+                            const updatedDate = setMilliseconds(
+                              setMinutes(setHours(field.value, hours), minutes),
+                              0,
                             );
 
                             field.onChange(updatedDate);
                           }}
-                          className="pl-8 text-sm [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:left-1 [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:z-10"
+                          className="pl-8 text-sm [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:left-1 [&::-webkit-calendar-picker-indicator]:z-10 [&::-webkit-calendar-picker-indicator]:opacity-0"
                         />
                         <IconClock className="absolute top-2.5 left-3 h-4 w-4 text-gray-400" />
                       </div>
