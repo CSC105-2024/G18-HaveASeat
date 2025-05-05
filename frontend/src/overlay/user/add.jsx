@@ -56,9 +56,6 @@ const FormSchema = z
       ),
     password: z.string().min(8, "Please enter at least 8 characters"),
     rePassword: z.string().min(1, "Please enter a password confirmation"),
-    role: z.enum(["customer", "merchant"], {
-      message: "Please select a valid role your account",
-    }),
   })
   .refine((data) => data.password === data.rePassword, {
     message: "Passwords do not match",
@@ -91,7 +88,6 @@ function SignUpOverlay({ addMode = false }) {
       ),
       password: "",
       rePassword: "",
-      role: "customer",
     },
   });
 
@@ -251,32 +247,6 @@ function SignUpOverlay({ addMode = false }) {
                 )}
               />
             </div>
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>
-                    Role <FormRequiredLabel />
-                  </FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select role for your account" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="customer">Customer</SelectItem>
-                      <SelectItem value="merchant">Merchant</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
           </div>
           <div className="flex flex-col md:flex-row gap-4">
             <Button type="submit" className="w-full flex-1">

@@ -18,59 +18,53 @@ model User {
   phone_number String
   birthday     DateTime
   password     String
-  role         UserRole       @default(USER)
+  isAdmin      Boolean        @default(false)
   created_at   DateTime       @default(now())
-  bars         Bar[]          @relation("MerchantBars")
-  favourites   Bar[]
+  merchant     Merchant[]     @relation("MerchantBars")
+  favourites   Merchant[]
   reservations Reservation[]
   reviews      Review[]
   reports      ReviewReport[]
   ReviewReply  ReviewReply[]
 }
 
-enum UserRole {
-  USER
-  MERCHANT
-  ADMINISTRATOR
-}
-
-model Bar {
-  id          String      @id @default(uuid())
+model Merchant {
+  id          String           @id @default(uuid())
   name        String
   phone       String
-  address     BarAddress?
+  address     MerchantAddress?
   openHours   Json
   description String?
   ownerId     String
-  owner       User        @relation(fields: [ownerId], references: [id], name: "MerchantBars")
+  owner       User             @relation(fields: [ownerId], references: [id], name: "MerchantBars")
   bannerImage String?
-  promoImages BarImage[]
+  promoImages MerchantImage[]
   floorPlan   String?
   seats       Seat[]
   reviews     Review[]
-  created_at  DateTime    @default(now())
-  User        User?       @relation(fields: [userId], references: [id])
+  created_at  DateTime         @default(now())
+  User        User?            @relation(fields: [userId], references: [id])
   userId      String?
 }
 
-model BarAddress {
-  id          String @id @default(uuid())
-  barId       String
-  bar         Bar    @relation(fields: [barId], references: [id])
+model MerchantAddress {
+  id          String   @id @default(uuid())
+  merchantId  String
+  merchant    Merchant @relation(fields: [merchantId], references: [id])
   address     String
   subDistrict String
   district    String
   province    String
   zipCode     Int
 
-  @@unique([barId])
+  @@unique([merchantId])
 }
 
-model BarImage {
-  id    String @id @default(uuid())
-  barId String
-  bar   Bar    @relation(fields: [barId], references: [id])
-  url   String
+model MerchantImage {
+  id         String   @id @default(uuid())
+  merchantId String
+  merchant   Merchant @relation(fields: [merchantId], references: [id])
+  url        String
 }
 
 model Seat {
@@ -78,8 +72,8 @@ model Seat {
   number       Int
   location     String
   isAvailable  Boolean       @default(true)
-  barId        String
-  bar          Bar           @relation(fields: [barId], references: [id])
+  merchantId   String
+  merchant     Merchant      @relation(fields: [merchantId], references: [id])
   reservations Reservation[]
 }
 
@@ -109,8 +103,8 @@ model Review {
   id          String         @id @default(uuid())
   userId      String
   user        User           @relation(fields: [userId], references: [id])
-  barId       String
-  bar         Bar            @relation(fields: [barId], references: [id])
+  merchantId  String
+  merchant    Merchant       @relation(fields: [merchantId], references: [id])
   rating      Int
   description String
   createdAt   DateTime       @default(now())

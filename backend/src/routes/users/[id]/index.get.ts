@@ -1,8 +1,9 @@
 import type { Context } from "hono";
 import { getPrisma } from "@/lib/prisma.ts";
 import { authMiddleware } from "@/middlewares/auth.middleware.js";
+import type { AppEnv } from "@/types/env.js";
 
-export default async function (c: Context) {
+export default async function (c: Context<AppEnv>) {
   try {
     await authMiddleware(c, async () => {}); 
 
@@ -12,13 +13,7 @@ export default async function (c: Context) {
     const user = await prisma.user.findUnique({
       where: { id },
       select: {
-        id: true,
-        name: true,
-        email: true,
-        phone_number: true,
-        birthday: true,
-        role: true,
-        created_at: true,
+        password: false,
         reservations: {
           select: {
             id: true,
@@ -26,7 +21,7 @@ export default async function (c: Context) {
             endTime: true,
             seat: {
               include: {
-                bar: {
+                merchant: {
                   select: {
                     id: true,
                     name: true
@@ -38,7 +33,7 @@ export default async function (c: Context) {
         },
         reviews: {
           include: {
-            bar: {
+            merchant: {
               select: {
                 id: true,
                 name: true

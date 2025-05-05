@@ -13,13 +13,15 @@ function AdministratorLayout({ children }) {
 
   return (
     <div className="mx-auto max-w-7xl space-y-8">
-      <section className="flex flex-row items-center gap-4 rounded-lg bg-gray-50 px-8 py-16">
-        <div className="space-y-2">
-          <h1 className="ml-1 text-xl font-semibold">Welcome back, Nicole Bar!</h1>
-          <div className="flex flex-row flex-wrap gap-2 text-sm">
-            <Badge variant="secondary">
-              <span className="font-medium">Administrator</span>{" "}
-            </Badge>
+      <section className="relative rounded-lg overflow-hidden bg-gray-50 py-20 px-12 bg-(image:--background-banner-decoration) bg-cover bg-center bg-no-repeat shadow-lg">
+        <div className="absolute inset-0 flex flex-row  gap-4 px-8 items-center bg-black/10 backdrop-blur-sm text-white">
+          <div className="space-y-2">
+            <h1 className="ml-1 text-xl font-semibold">Welcome back, Nicole Bar!</h1>
+            <div className="flex flex-row flex-wrap gap-2 text-sm">
+              <Badge variant="secondary">
+                <span className="font-medium">Administrator</span>{" "}
+              </Badge>
+            </div>
           </div>
         </div>
       </section>

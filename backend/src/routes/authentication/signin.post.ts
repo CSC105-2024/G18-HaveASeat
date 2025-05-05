@@ -1,9 +1,10 @@
 import type { Context } from "hono";
-import { User } from "@/models/user.model.js";
+import { UserModel } from "@/models/user.model.js";
 import bcrypt from "bcryptjs";
-import { createToken } from "@/middlewares/auth.middleware.js";
+import { createTokenPair } from "@/middlewares/auth.middleware.js";
+import type { AppEnv } from "@/types/env.js";
 
-export default async function(c: Context) {
+export default async function(c: Context<AppEnv>) {
   try {
     const { email, password } = await c.req.json()
 
@@ -11,28 +12,28 @@ export default async function(c: Context) {
       return c.json({ error: 'Email and password are required' }, 400)
     }
 
-    const user = await User.findByEmail(email)
+    const user = await UserModel.findByEmail(email)
 
     if (!user) {
       return c.json({ error: 'Invalid credentials' }, 401)
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.passwordHash)
+    const isPasswordValid = await bcrypt.compare(password, user.password)
 
     if (!isPasswordValid) {
       return c.json({ error: 'Invalid credentials' }, 401)
     }
 
-    // @ts-ignore
-    const token = await createToken(user)
+    const { accessToken, refreshToken } = await createTokenPair(user);
 
     return c.json({
-      token,
+      accessToken,
+      refreshToken,
       user: {
         id: user.id,
         email: user.email,
         name: user.name,
-        role: user.role
+        isAdmin: user.isAdmin
       }
     })
   } catch (error) {

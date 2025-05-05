@@ -14,7 +14,7 @@ import { getColumns } from "./_data";
 /**
  * Customer data table component
  *
- * @template {User} TData
+ * @template {UserModel} TData
  * @template TValue
  * @param {Object} props
  * @param {TData[]} props.data

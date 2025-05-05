@@ -1,7 +1,8 @@
 import type { Context } from "hono";
 import { authMiddleware } from "@/middlewares/auth.middleware.js";
+import type { AppEnv } from "@/types/env.js";
 
-export default async function (c: Context) {
+export default async function (c: Context<AppEnv>) {
   await authMiddleware(c, async () => {})
 
   try {

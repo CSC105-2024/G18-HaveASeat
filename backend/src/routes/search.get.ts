@@ -1,12 +1,13 @@
 import type { Context } from "hono";
 import { getPrisma } from "@/lib/prisma.ts";
+import type { AppEnv } from "@/types/env.js";
 
-export default async function (c: Context) {
+export default async function (c: Context<AppEnv>) {
   try {
     const prisma = getPrisma();
     const keyword = (c.req.query("q") || "").toLowerCase();
 
-    const results = await prisma.bar.findMany({
+    const results = await prisma.merchant.findMany({
       where: {
         name: {
           contains: keyword,

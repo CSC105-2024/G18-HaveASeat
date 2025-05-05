@@ -83,7 +83,7 @@ function NavigationProfile() {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="relative mx-4 h-8 w-8 rounded-full"
+                className="relative mx-4 h-8 w-8 rounded-full mx-0"
               >
                 <Avatar className="h-8 w-8">
                   <AvatarFallback className="bg-transparent font-semibold text-zinc-900">

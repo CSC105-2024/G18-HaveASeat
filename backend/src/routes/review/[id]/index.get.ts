@@ -1,7 +1,8 @@
 import type { Context } from "hono";
 import { getPrisma } from "@/lib/prisma.ts";
+import type { AppEnv } from "@/types/env.js";
 
-export default async function (c: Context) {
+export default async function (c: Context<AppEnv>) {
   try {
     const prisma = getPrisma();
     const id = c.req.param("id");

@@ -1,34 +1,30 @@
-interface UserData {
-  id?: string | number;
-  email: string;
-  passwordHash: string;
-  name: string;
-  role: string;
-}
+import type { User } from "@/prisma/generated/index.js";
+import { getPrisma } from "@/lib/prisma.js";
 
-const users: Record<string, UserData> = {}
-let nextId = 1
-
-export class User {
-  static async findByEmail(email: string): Promise<UserData | null> {
-    return Object.values(users).find(user => user.email === email) || null
+export class UserModel {
+  static async findByEmail(email: string): Promise<User | null> {
+    return await getPrisma().user.findUnique({
+      where: {
+        email
+      },
+    }) || null
   }
 
-  static async findById(id: string | number): Promise<UserData | null> {
-    return users[id as string] || null
+  static async findById(id: string): Promise<User | null> {
+    return await getPrisma().user.findUnique({
+      where: {
+        id
+      },
+    }) || null
   }
 
-  static async create(userData: Omit<UserData, 'id'>): Promise<UserData> {
-    const id = String(nextId++)
-    const newUser = { ...userData, id }
-    users[id] = newUser
-    return newUser
-  }
-
-  static async findAll(): Promise<UserData[]> {
-    return Object.values(users).map(user => {
-      const { passwordHash, ...rest } = user
-      return rest as UserData
+  static async create(userData: Omit<User, 'id' | 'created_at'>): Promise<User> {
+    return getPrisma().user.create({
+      data: userData
     })
+  }
+
+  static async findAll(): Promise<User[]> {
+    return getPrisma().user.findMany();
   }
 }

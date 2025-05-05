@@ -14,7 +14,7 @@ import { useReservationCancelOverlay } from "@/overlay/reservation/cancel.jsx";
 import { useReviewAddOverlay } from "@/overlay/review/add.jsx";
 import { useReviewReportOverlay } from "@/overlay/review/report.jsx";
 import { useReviewDeleteOverlay } from "@/overlay/review/delete.jsx";
-import { useBarPromotionImagesOverlay } from "@/overlay/merchant/images.jsx";
+import { useUserFavouriteOverlay } from "@/overlay/user/favourite.jsx";
 
 function Experimental() {
   // Authentication
@@ -31,10 +31,8 @@ function Experimental() {
   const {open: openReportIgnoreOverlay} = useReportIgnoreOverlay();
   const {open: openReportDeleteOverlay} = useReportDeleteOverlay();
 
-  // Merchant
-  const {open: openBarPromotionImagesOverlay} = useBarPromotionImagesOverlay();
-
   // Reservations
+  const {open: openUserFavouriteOverlay} = useUserFavouriteOverlay();
   const {open: openReservationAddOverlay} = useReservationAddOverlay();
   const {open: openReservationMarkAsCompleteOverlay} = useReservationMarkAsCompleteOverlay();
   const {open: openReservationCancelOverlay} = useReservationCancelOverlay();
@@ -76,12 +74,11 @@ function Experimental() {
           <Button onClick={openReviewReportOverlay} variant="secondary">Review Report</Button>
           <Button onClick={openReviewDeleteOverlay} variant="destructive">Review Delete</Button>
         </div>
-        <div className="space-x-2">
-          <Button onClick={openBarPromotionImagesOverlay}>Promotion Images</Button>
-        </div>
       </ExperimentalSection>
       <ExperimentalSection title="User">
         <div className="space-x-2">
+          <Button onClick={() => openUserFavouriteOverlay({isDelete: false})}>Place Favourite</Button>
+          <Button onClick={() => openUserFavouriteOverlay({isDelete: true})} variant="destructive">Place Remove Favourite</Button>
           <Button onClick={() => openReservationAddOverlay({isManual: false})}>Reservation Make</Button>
           <Button onClick={openReservationCancelOverlay} variant="destructive">Reservation Cancel</Button>
         </div>

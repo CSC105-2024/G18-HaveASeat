@@ -19,7 +19,7 @@ import { useReportDeleteOverlay } from "@/overlay/report/delete.jsx";
  * @typedef {Object} Report
  * @property {string} id
  * @property {string} content
- * @property {User} author
+ * @property {UserModel} author
  * @property {Date} created_at
  */
 
@@ -45,6 +45,13 @@ export const getColumns = () => {
               )}
             </div>
             <p className="whitespace-break-spaces">{row.original.content}</p>
+            <Badge variant="destructive" className="md:hidden">
+              {
+                Intl.DateTimeFormat("en-US", {
+                  dateStyle: "long",
+                }).format(row.original.created_at)
+              }
+            </Badge>
           </div>
         );
       },
@@ -66,6 +73,9 @@ export const getColumns = () => {
           dateStyle: "long",
         }).format(row.original.created_at);
       },
+      meta: {
+        className: "max-md:hidden"
+      }
     },
     {
       id: "actions",

@@ -30,7 +30,7 @@ import { useReservationCancelOverlay } from "@/overlay/reservation/cancel.jsx";
  * @property {string} [note]
  * @property {"ONLINE"|"ONSITE"} type
  * @property {string} [reserved_for]
- * @property {User} [reserved_by]
+ * @property {UserModel} [reserved_by]
  * @property {Date} reserved_start
  * @property {Date} reserved_end
  * @property {Date} created_at

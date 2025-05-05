@@ -1,24 +1,17 @@
 import type { Context } from "hono";
 import { getPrisma } from "@/lib/prisma.ts";
+import type { AppEnv } from "@/types/env.js";
 
-export default async function (c: Context) {
+export default async function (c: Context<AppEnv>) {
   try {
     const prisma = getPrisma();
     const id = c.req.param("id");
 
-    const merchant = await prisma.user.findUnique({
+    const merchant = await prisma.merchant.findUnique({
       where: { id },
-      include: {
-        bars: {
-          include: {
-            promoImages: true,
-            address: true,
-          },
-        },
-      },
     });
 
-    if (!merchant || merchant.role !== "MERCHANT") {
+    if (!merchant) {
       return c.json({ success: false, error: "Merchant not found" }, 404);
     }
 
