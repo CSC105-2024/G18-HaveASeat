@@ -1,30 +1,23 @@
 import type { Context } from 'hono'
 import { authMiddleware } from '@/middlewares/auth.middleware.ts'
-import { User } from "@/models/user.model.js";
+import { UserModel } from "@/models/user.model.js";
+import type { AppEnv } from "@/types/env.js";
 
-export default async function (c: Context) {
+export default async function (c: Context<AppEnv>) {
   await authMiddleware(c, async () => {})
 
   try {
-    const user = c.get('user')
+    const currentUser = c.get('user')
 
     // Find complete user details
-    const userDetails = await User.findById(user.id)
-
-    if (!userDetails) {
-      return c.json({ error: 'User not found' }, 404)
+    const user = await UserModel.findById(currentUser.id)
+    if (!user) {
+      return c.json({ success: false, error: 'User not found' }, 404)
     }
 
-    return c.json({
-      user: {
-        id: userDetails.id,
-        email: userDetails.email,
-        name: userDetails.name,
-        role: userDetails.role
-      }
-    })
+    return c.json({ success: true, data: user });
   } catch (error) {
     console.error('Profile error:', error)
-    return c.json({ error: 'Internal server error' }, 500)
+    return c.json({ success: false, error: 'Internal server error' }, 500)
   }
 }

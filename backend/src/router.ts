@@ -1,11 +1,11 @@
-import { Hono } from 'hono'
+import { type Env, Hono } from "hono";
 import fs from 'fs'
 import path from 'path'
 import process from 'process'
 
 type HttpMethod = 'get' | 'post' | 'put' | 'delete' | 'patch' | 'options' | 'head'
 
-export function loadRoutes(app: Hono<any>): void {
+export function loadRoutes<T extends Env>(app: Hono<T>): void {
   const routesDir = path.join(process.cwd(), 'src', 'routes')
 
   if (!fs.existsSync(routesDir)) {
@@ -13,10 +13,10 @@ export function loadRoutes(app: Hono<any>): void {
     return
   }
 
-  walkRoutes(app, routesDir, '')
+  walkRoutes<T>(app, routesDir, '')
 }
 
-function walkRoutes(app: Hono, baseDir: string, currentPath: string): void {
+function walkRoutes<T extends Env>(app: Hono<T>, baseDir: string, currentPath: string): void {
   const routesDir = path.join(baseDir, currentPath)
   const files = fs.readdirSync(routesDir)
 
@@ -25,14 +25,14 @@ function walkRoutes(app: Hono, baseDir: string, currentPath: string): void {
     const stats = fs.statSync(filePath)
 
     if (stats.isDirectory()) {
-      walkRoutes(app, baseDir, path.join(currentPath, file))
+      walkRoutes<T>(app, baseDir, path.join(currentPath, file))
     } else if (stats.isFile() && file.endsWith('.ts')) {
-      registerRoute(app, baseDir, path.join(currentPath, file))
+      registerRoute<T>(app, baseDir, path.join(currentPath, file))
     }
   })
 }
 
-async function registerRoute(app: Hono, baseDir: string, routeFile: string): Promise<void> {
+async function registerRoute<T extends Env>(app: Hono<T>, baseDir: string, routeFile: string): Promise<void> {
   const { routePath, method } = parseRoutePath(routeFile)
 
   if (!method) {

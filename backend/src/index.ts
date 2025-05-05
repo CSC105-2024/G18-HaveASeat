@@ -7,14 +7,10 @@ import { serveStatic } from "@hono/node-server/serve-static";
 import * as process from "node:process";
 import { getPrisma } from "@/lib/prisma.js";
 import { loadRoutes } from "@/router.ts";
+import type { AppEnv } from "@/types/env.js";
 
 const db = getPrisma();
-const app = new Hono<{
-  Bindings: {
-    DATABASE_URL: string
-  },
-  Variables: {}
-}>({ strict: true });
+const app = new Hono<AppEnv>({ strict: true });
 
 app.use(compress());
 app.use(trimTrailingSlash());

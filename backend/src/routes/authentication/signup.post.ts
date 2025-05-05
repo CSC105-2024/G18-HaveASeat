@@ -1,17 +1,18 @@
 import type { Context } from "hono";
-import { User } from "@/models/user.model.js";
+import { UserModel } from "@/models/user.model.js";
 import bcrypt from "bcryptjs";
-import { createToken } from "@/middlewares/auth.middleware.js";
+import { createTokenPair } from "@/middlewares/auth.middleware.js";
+import type { AppEnv } from "@/types/env.js";
 
-export default async function(c: Context) {
+export default async function(c: Context<AppEnv>) {
   try {
-    const { email, password, name } = await c.req.json()
+    const { email, password, name, phone_number, birthday } = await c.req.json()
 
     if (!email || !password || !name) {
       return c.json({ error: 'Email, password, and name are required' }, 400)
     }
 
-    const existingUser = await User.findByEmail(email)
+    const existingUser = await UserModel.findByEmail(email)
 
     if (existingUser) {
       return c.json({ error: 'User already exists with this email' }, 409)
@@ -19,23 +20,25 @@ export default async function(c: Context) {
 
     const passwordHash = await bcrypt.hash(password, 10)
 
-    const user = await User.create({
+    const user = await UserModel.create({
       email,
-      passwordHash,
+      password: passwordHash,
       name,
-      role: 'user'
+      phone_number,
+      birthday,
+      isAdmin: false
     })
 
-    // @ts-ignore
-    const token = await createToken(user)
+    const { accessToken, refreshToken } = await createTokenPair(user);
 
     return c.json({
-      token,
+      accessToken,
+      refreshToken,
       user: {
         id: user.id,
         email: user.email,
         name: user.name,
-        role: user.role
+        isAdmin: user.isAdmin
       }
     }, 201)
   } catch (error) {

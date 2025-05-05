@@ -1,8 +1,9 @@
 import type { Context } from "hono";
 import { getPrisma } from "@/lib/prisma.ts";
 import { authMiddleware } from "@/middlewares/auth.middleware.js";
+import type { AppEnv } from "@/types/env.js";
 
-export default async function (c: Context) {
+export default async function (c: Context<AppEnv>) {
   try {
     await authMiddleware(c, async () => { });
 
@@ -29,10 +30,10 @@ export default async function (c: Context) {
 
     const seat = await prisma.seat.findUnique({
       where: { id: seatId },
-      include: { bar: true }
+      include: { merchant: true }
     });
 
-    if (!seat || seat.bar.ownerId !== merchantId) {
+    if (!seat || seat.merchant.ownerId !== merchantId) {
       return c.json({ success: false, error: "Unauthorized to reserve this seat" }, 403);
     }
 

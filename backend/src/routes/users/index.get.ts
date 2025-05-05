@@ -1,22 +1,17 @@
 import type { Context } from "hono";
 import { getPrisma } from "@/lib/prisma.ts";
 import { authMiddleware } from "@/middlewares/auth.middleware.js";
+import type { AppEnv } from "@/types/env.js";
 
-export default async function (c: Context) {
+export default async function (c: Context<AppEnv>) {
   try {
     await authMiddleware(c, async () => {}); 
 
     const prisma = getPrisma();
 
     const users = await prisma.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        phone_number: true,
-        birthday: true,
-        role: true,
-        created_at: true,
+      omit: {
+        password: true,
       },
       orderBy: {
         created_at: "desc",

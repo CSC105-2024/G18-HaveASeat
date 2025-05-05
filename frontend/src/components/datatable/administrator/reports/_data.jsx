@@ -19,7 +19,7 @@ import { useReportDeleteOverlay } from "@/overlay/report/delete.jsx";
  * @typedef {Object} Report
  * @property {string} id
  * @property {string} content
- * @property {User} author
+ * @property {UserModel} author
  * @property {Date} created_at
  */
 

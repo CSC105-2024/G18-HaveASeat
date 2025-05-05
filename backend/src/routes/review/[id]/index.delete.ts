@@ -1,10 +1,11 @@
 import type { Context } from "hono";
 import { authMiddleware } from "@/middlewares/auth.middleware.js";
 import { getPrisma } from "@/lib/prisma.ts";
+import type { AppEnv } from "@/types/env.js";
 
 const prisma = getPrisma();
 
-export default async function (c: Context) {
+export default async function (c: Context<AppEnv>) {
   await authMiddleware(c, async () => {})
 
   try {

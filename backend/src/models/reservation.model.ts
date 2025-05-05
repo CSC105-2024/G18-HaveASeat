@@ -1,4 +1,4 @@
-export class Reservation {
+export class ReservationModel {
   static async findById(id: string | number) {
 
   }
