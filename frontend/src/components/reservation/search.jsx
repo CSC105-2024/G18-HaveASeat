@@ -121,10 +121,6 @@ function ReservationPlaceSearch({
     setTime(e.target.value);
   };
 
-  const formattedDateTime = date
-    ? `${format(date, "PPP")} at ${time}`
-    : "Select date and time";
-
   const [selectedProvinceId, setSelectedProvinceId] = useState("");
   const [selectedLocation, setSelectedLocation] = useState(null);
 

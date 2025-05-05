@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/tooltip";
 import { MerchantBanner } from "@/components/merchant/banner.jsx";
 import { MerchantReviewSection } from "@/components/merchant/review.jsx";
+import { useReservationAddOverlay } from "@/overlay/reservation/add.jsx";
 
 export const merchantData = {
   name: "Summy Bar",
@@ -36,6 +37,7 @@ function Page() {
   const { id } = useParams();
 
   const { open: openUserFavouriteOverlay } = useUserFavouriteOverlay();
+  const { open: openReservationAddOverlay } = useReservationAddOverlay();
 
   return (
     <div className="mx-auto max-w-7xl space-y-8">
@@ -61,12 +63,12 @@ function Page() {
                     <p>Favourite</p>
                   </TooltipContent>
                 </Tooltip>
-                <Link
-                  to={`/merchant/${id}/reservation`}
-                  className={cn(buttonVariants(), "w-full flex-1")}
+                <Button
+                  className="w-full flex-1"
+                  onClick={() => openReservationAddOverlay({})}
                 >
                   Make A Reservation
-                </Link>
+                </Button>
               </div>
               {/*TODO: Check user role*/}
               <Link

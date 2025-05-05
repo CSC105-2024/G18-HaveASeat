@@ -81,15 +81,3 @@ For production deployments:
 pnpm prisma migrate deploy
 ```
 
----
-
-## Switching Between Package Managers
-
-If you need to change package managers, first remove existing dependencies:
-
-```sh
-rm -rf node_modules pnpm-lock.yaml package-lock.json yarn.lock bun.lockb
-```
-
-Then, reinstall using your preferred package manager.
-
