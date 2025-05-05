@@ -28,7 +28,7 @@ function UserFavouriteOverlay({isDelete}) {
   return (
     <div className="flex flex-col md:flex-row gap-4">
       {!isDelete ? (
-        <Button onClick={onDelete} className="w-full flex-1">
+        <Button onClick={onDelete} className="w-full flex-1 bg-red-500 hover:bg-red-400">
           <IconHeartFilled/>
           Favourite
         </Button>
