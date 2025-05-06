@@ -1,5 +1,11 @@
 # G18-HaveASeat
 
+## Project Structure
+
+This project is divided into two main parts: **frontend** and **backend**. Each part has its own dependencies, setup instructions, and documentation located in `README.md`.
+
+---
+
 ## Installation
 
 ### **Ensure Corepack is Enabled**
