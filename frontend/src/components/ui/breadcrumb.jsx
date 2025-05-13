@@ -1,15 +1,15 @@
-import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
-import { IconChevronRight, IconDots } from "@tabler/icons-react"
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { IconChevronRight, IconDots } from "@tabler/icons-react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 /**
  * @param {React.ComponentProps<"nav">} props
  * @returns {JSX.Element}
  */
 function Breadcrumb({ ...props }) {
-  return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />
+  return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />;
 }
 
 /**
@@ -22,11 +22,11 @@ function BreadcrumbList({ className, ...props }) {
       data-slot="breadcrumb-list"
       className={cn(
         "text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm break-words sm:gap-2.5",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 /**
@@ -40,19 +40,15 @@ function BreadcrumbItem({ className, ...props }) {
       className={cn("inline-flex items-center gap-1.5", className)}
       {...props}
     />
-  )
+  );
 }
 
 /**
  * @param {React.ComponentProps<"a"> & { asChild?: boolean }} props
  * @returns {JSX.Element}
  */
-function BreadcrumbLink({
-  asChild,
-  className,
-  ...props
-}) {
-  const Comp = asChild ? Slot : "a"
+function BreadcrumbLink({ asChild, className, ...props }) {
+  const Comp = asChild ? Slot : "a";
 
   return (
     <Comp
@@ -60,7 +56,7 @@ function BreadcrumbLink({
       className={cn("hover:text-foreground transition-colors", className)}
       {...props}
     />
-  )
+  );
 }
 
 /**
@@ -77,18 +73,14 @@ function BreadcrumbPage({ className, ...props }) {
       className={cn("text-foreground font-normal", className)}
       {...props}
     />
-  )
+  );
 }
 
 /**
  * @param {React.ComponentProps<"li">} props
  * @returns {JSX.Element}
  */
-function BreadcrumbSeparator({
-  children,
-  className,
-  ...props
-}) {
+function BreadcrumbSeparator({ children, className, ...props }) {
   return (
     <li
       data-slot="breadcrumb-separator"
@@ -99,17 +91,14 @@ function BreadcrumbSeparator({
     >
       {children ?? <IconChevronRight />}
     </li>
-  )
+  );
 }
 
 /**
  * @param {React.ComponentProps<"span">} props
  * @returns {JSX.Element}
  */
-function BreadcrumbEllipsis({
-  className,
-  ...props
-}) {
+function BreadcrumbEllipsis({ className, ...props }) {
   return (
     <span
       data-slot="breadcrumb-ellipsis"
@@ -121,7 +110,7 @@ function BreadcrumbEllipsis({
       <IconDots className="size-4" />
       <span className="sr-only">More</span>
     </span>
-  )
+  );
 }
 
 export {
@@ -132,4 +121,4 @@ export {
   BreadcrumbPage,
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
-}
+};

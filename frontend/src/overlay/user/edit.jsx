@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { createModalHook } from "@/hooks/use-modal.jsx";
 import { useModalStore } from "@/store/modal.jsx";
 import { useForm } from "react-hook-form";
@@ -11,41 +11,59 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormRequiredLabel
+  FormRequiredLabel,
 } from "@/components/ui/form.jsx";
 import { Input } from "@/components/ui/input.jsx";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover.jsx";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover.jsx";
 import { Button } from "@/components/ui/button.jsx";
 import { cn } from "@/lib/utils.js";
 import { format } from "date-fns";
 import { IconCalendarWeekFilled } from "@tabler/icons-react";
 import { Calendar } from "@/components/ui/calendar.jsx";
 import { z } from "zod";
+import axiosInstance from "@/lib/axios.js";
 
-const FormSchema = z
-  .object({
-    name: z.string().min(1, "Name is required"),
-    phone: z
-      .string()
-      .regex(/^[0-9]{9,10}$/, "Please enter a valid phone number"),
-    email: z.string().email({
-      message: "Please enter a valid email address",
-    }),
-    dob: z
-      .date({
-        required_error: "A date of birth is required",
-      })
-      .max(
-        new Date(
-          new Date().getFullYear() - 18,
-          new Date().getMonth(),
-          new Date().getDate(),
-        ),
-        "You must be at least 18 years old to use this platform",
+const FormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  phone: z
+    .string()
+    .regex(/|^\d{9,10}$/, "Please enter a valid phone number (e.g. 0812345678)")
+    .optional(),
+  email: z.string().email({
+    message: "Please enter a valid email address",
+  }),
+  dob: z
+    .date({
+      required_error: "A date of birth is required",
+    })
+    .max(
+      new Date(
+        new Date().getFullYear() - 18,
+        new Date().getMonth(),
+        new Date().getDate(),
       ),
-  })
+      "You must be at least 18 years old to use this platform",
+    ),
+});
 
-function UserEditOverlay() {
+/**
+ * @typedef {Object} UserEditOverlayProps
+ * @property {boolean} [userId]
+ * @property {boolean} [userData]
+ * @property {boolean} [onSuccess]
+ */
+
+/**
+ * @param {Object} UserEditOverlayProps
+ * @returns {Element}
+ */
+function UserEditOverlay({ userId, userData, onSuccess }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingUser, setIsLoadingUser] = useState(false);
   const { closeModal } = useModalStore();
 
   /** @type {import("react-hook-form").UseFormReturn<z.infer<typeof formSchema>>} */
@@ -63,17 +81,85 @@ function UserEditOverlay() {
     },
   });
 
+  useEffect(() => {
+    if (userId && !userData) {
+      setIsLoadingUser(true);
+      axiosInstance
+        .get(`/users/${userId}`)
+        .then((response) => {
+          const user = response.data;
+          form.reset({
+            name: user.name || "",
+            phone: user.phoneNumber || "",
+            email: user.email || "",
+            dob: user.birthday ? new Date(user.birthday) : new Date(),
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching user:", error);
+          toast.error("Failed to load user data");
+        })
+        .finally(() => {
+          setIsLoadingUser(false);
+        });
+    } else if (userData) {
+      form.reset({
+        name: userData.name || "",
+        phone: userData.phoneNumber || "",
+        email: userData.email || "",
+        dob: userData.birthday ? new Date(userData.birthday) : new Date(),
+      });
+    }
+  }, [userId, userData]);
+
   /**
    * @param {ReturnType<typeof FormSchema["parse"]>} data
    */
-  function onSubmit(data) {
-    toast.message("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-full rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function onSubmit(data) {
+    if (!userId) {
+      toast.error("No user ID provided");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const updateData = {
+        name: data.name,
+        phoneNumber: data.phone,
+        email: data.email,
+        birthday: data.dob,
+      };
+
+      const response = await axiosInstance.put(`/users/${userId}`, updateData);
+
+      toast.success("User updated successfully");
+      closeModal("user-edit");
+
+      if (onSuccess) {
+        onSuccess(response.data);
+      }
+    } catch (error) {
+      console.error("Update user error:", error);
+      if (error.response?.status === 404) {
+        toast.error("User not found");
+      } else if (error.response?.status === 403) {
+        toast.error("You don't have permission to edit this user");
+      } else if (error.response?.status === 400) {
+        toast.error("Invalid data provided");
+      } else {
+        toast.error("Failed to update user");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  if (isLoadingUser) {
+    return (
+      <div className="flex items-center justify-center py-8">
+        <span>Loading user data...</span>
+      </div>
+    );
   }
 
   return (
@@ -101,9 +187,7 @@ function UserEditOverlay() {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Phone Number <FormRequiredLabel />
-                  </FormLabel>
+                  <FormLabel>Phone Number</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter your phone number" {...field} />
                   </FormControl>
@@ -177,7 +261,7 @@ function UserEditOverlay() {
                               new Date().getDate(),
                             )
                           }
-                          initialFocus
+                          autoFocus={true}
                         />
                       </PopoverContent>
                     </Popover>
@@ -187,11 +271,21 @@ function UserEditOverlay() {
               />
             </div>
           </div>
-          <div className="flex flex-col md:flex-row gap-4">
-            <Button type="submit" className="w-full flex-1">
-              Confirm
+          <div className="flex flex-col gap-4 md:flex-row">
+            <Button
+              type="submit"
+              className="w-full flex-1"
+              disabled={isLoading}
+            >
+              {isLoading ? "Updating..." : "Confirm"}
             </Button>
-            <Button type="button" className="w-full flex-1" variant="secondary" onClick={() => closeModal('user-edit')}>
+            <Button
+              type="button"
+              className="w-full flex-1"
+              variant="secondary"
+              onClick={() => closeModal("user-edit")}
+              disabled={isLoading}
+            >
               Exit without saving
             </Button>
           </div>
@@ -211,7 +305,4 @@ const useUserEditOverlay = createModalHook(
   </Fragment>,
 );
 
-export {
-  useUserEditOverlay,
-  UserEditOverlay,
-};
+export { useUserEditOverlay, UserEditOverlay };

@@ -12,7 +12,6 @@ function usePageMetadata() {
 
     if (!currentRoute) return {};
 
-    // If generateMetadata function exists, execute it with route parameters.
     if (typeof currentRoute.generateMetadata === "function") {
       return currentRoute.generateMetadata(location);
     }

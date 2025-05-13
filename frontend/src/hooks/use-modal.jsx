@@ -21,33 +21,36 @@ export const createModalHook = (ModalContent, modalId, title, description) => {
      * @template T
      * @param {T} props - Props to pass to the modal.
      */
-    const open = useCallback((props) => {
-      /**
-       * Resolves content dynamically.
-       *
-       * @template T
-       * @param {string | React.ReactNode | ((props: T) => string | React.ReactNode)} content - The content generator function or value.
-       * @returns {string} - Resolved content.
-       */
-      const resolveContent = (content) => {
-        if (typeof content === "function") {
-          return content(props);
-        }
-        return content;
-      };
+    const open = useCallback(
+      (props) => {
+        /**
+         * Resolves content dynamically.
+         *
+         * @template T
+         * @param {string | React.ReactNode | ((props: T) => string | React.ReactNode)} content - The content generator function or value.
+         * @returns {string} - Resolved content.
+         */
+        const resolveContent = (content) => {
+          if (typeof content === "function") {
+            return content(props);
+          }
+          return content;
+        };
 
-      const modalTitle = resolveContent(title);
-      const modalDescription = description
-        ? resolveContent(description)
-        : undefined;
+        const modalTitle = resolveContent(title);
+        const modalDescription = description
+          ? resolveContent(description)
+          : undefined;
 
-      openModal(
-        modalId,
-        <ModalContent {...props} />,
-        modalTitle,
-        modalDescription,
-      );
-    }, [openModal]);
+        openModal(
+          modalId,
+          <ModalContent {...props} />,
+          modalTitle,
+          modalDescription,
+        );
+      },
+      [openModal],
+    );
 
     /**
      * Closes the modal.

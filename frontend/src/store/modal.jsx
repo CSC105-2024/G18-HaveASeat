@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 /**
  * @typedef {Object} ModalData
@@ -15,7 +15,7 @@ import { create } from 'zustand';
  * @property {(id: string) => void} closeModal - Function to close a modal.
  */
 
-/** @type {import('zustand').useStore<ModalStore>} */
+/** @type {import("zustand").useStore<ModalStore>} */
 export const useModalStore = create((set) => ({
   modals: {},
 
@@ -29,7 +29,10 @@ export const useModalStore = create((set) => ({
    */
   openModal: (id, content, title, description) =>
     set((state) => ({
-      modals: { ...state.modals, [id]: { isOpen: true, content, title, description } },
+      modals: {
+        ...state.modals,
+        [id]: { isOpen: true, content, title, description },
+      },
     })),
 
   /**

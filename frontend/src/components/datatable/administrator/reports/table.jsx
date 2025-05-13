@@ -18,10 +18,11 @@ import { getColumns } from "./_data";
  * @template TValue
  * @param {Object} props
  * @param {TData[]} props.data
+ * @param {() => void} props.onRefresh
  * @returns {JSX.Element}
  */
-function ReportDataTable({ data }) {
-  const columns = getColumns();
+function ReportDataTable({ data, onRefresh }) {
+  const columns = getColumns({ onRefresh });
 
   const [sorting, setSorting] = React.useState(
     /** @type {import("@tanstack/react-table").SortingState}  */ [],
@@ -56,7 +57,11 @@ function ReportDataTable({ data }) {
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} filterColumn="content" placeholder="Search" />
+      <DataTableToolbar
+        table={table}
+        filterColumn="content"
+        placeholder="Search report details"
+      />
       <div>
         <Table>
           <TableHeader>
@@ -111,7 +116,7 @@ function ReportDataTable({ data }) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results found.
+                  No reports found.
                 </TableCell>
               </TableRow>
             )}

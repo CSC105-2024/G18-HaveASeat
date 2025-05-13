@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  IconCalendarCog,
-  IconClipboard,
-  IconFlag3,
-  IconPhotoCog,
-  IconUsersGroup,
-  IconWorldCog
-} from "@tabler/icons-react";
+import { IconFlag3, IconUsersGroup } from "@tabler/icons-react";
 import { AdministratorSidebar } from "./sidebar.jsx";
 import { AdministratorSheet } from "./sheet.jsx";
 
@@ -23,18 +16,14 @@ const managementMenu = [
     pathname: "/administrator/report",
     icon: IconFlag3,
     title: "Reports Management",
-  }
+  },
 ];
 
 function AdministratorNavigation() {
   return (
     <React.Fragment>
-      <AdministratorSheet
-        managementMenu={managementMenu}
-      />
-      <AdministratorSidebar
-        managementMenu={managementMenu}
-      />
+      <AdministratorSheet managementMenu={managementMenu} />
+      <AdministratorSidebar managementMenu={managementMenu} />
     </React.Fragment>
   );
 }

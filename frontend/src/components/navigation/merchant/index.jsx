@@ -1,5 +1,12 @@
 import React from "react";
-import { IconCalendarCog, IconChevronsLeft, IconClipboard, IconPhotoCog, IconWorldCog } from "@tabler/icons-react";
+import {
+  IconCalendarCog,
+  IconChevronsLeft,
+  IconClipboard,
+  IconLayoutDashboard,
+  IconPhotoCog,
+  IconWorldCog
+} from "@tabler/icons-react";
 import { MerchantSidebar } from "./sidebar.jsx";
 import { MerchantSheet } from "./sheet.jsx";
 
@@ -11,7 +18,7 @@ const uncategorizedMenu = [
     pathname: "/merchant/%id%",
     icon: IconChevronsLeft,
     title: "Back to My Merchant",
-  }
+  },
 ];
 
 /**
@@ -19,10 +26,15 @@ const uncategorizedMenu = [
  */
 const reservationsMenu = [
   {
+    pathname: "/merchant/%id%/dashboard",
+    icon: IconLayoutDashboard,
+    title: "Dashboard",
+  },
+  {
     pathname: "/merchant/%id%/reservations",
     icon: IconClipboard,
     title: "Reservations List",
-  }
+  },
 ];
 
 /**
@@ -30,7 +42,7 @@ const reservationsMenu = [
  */
 const settingsMenu = [
   {
-    pathname: "/merchant/%id%/settings",
+    pathname: "/merchant/%id%/settings/overview",
     icon: IconWorldCog,
     title: "Overview",
   },
@@ -50,7 +62,7 @@ function MerchantNavigation({ merchantId }) {
   /**
    * @type {MenuEntry[]}
    */
-  const merchantUncategorizedMenu = uncategorizedMenu.map(item => ({
+  const merchantUncategorizedMenu = uncategorizedMenu.map((item) => ({
     ...item,
     pathname: item.pathname.replace("%id%", merchantId),
   }));
@@ -58,7 +70,7 @@ function MerchantNavigation({ merchantId }) {
   /**
    * @type {MenuEntry[]}
    */
-  const merchantReservationsMenu = reservationsMenu.map(item => ({
+  const merchantReservationsMenu = reservationsMenu.map((item) => ({
     ...item,
     pathname: item.pathname.replace("%id%", merchantId),
   }));
@@ -66,7 +78,7 @@ function MerchantNavigation({ merchantId }) {
   /**
    * @type {MenuEntry[]}
    */
-  const merchantSettingsMenu = settingsMenu.map(item => ({
+  const merchantSettingsMenu = settingsMenu.map((item) => ({
     ...item,
     pathname: item.pathname.replace("%id%", merchantId),
   }));

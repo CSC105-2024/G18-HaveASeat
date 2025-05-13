@@ -9,9 +9,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
+  useSidebar
 } from "@/components/ui/sidebar.jsx";
-import { IconPicnicTable, IconSquareRoundedX } from "@tabler/icons-react";
+import { IconSquareRoundedX } from "@tabler/icons-react";
 import { NavLink, useLocation } from "react-router";
 import { Button } from "@/components/ui/button.jsx";
 import { cn } from "@/lib/utils.js";

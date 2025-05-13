@@ -1,5 +1,7 @@
 function randomSplashText() {
-  return splashSentences[Math.floor(Math.random() * (splashSentences.length - 1)) + 1];
+  return splashSentences[
+    Math.floor(Math.random() * (splashSentences.length - 1)) + 1
+  ];
 }
 
 export { randomSplashText };
@@ -101,5 +103,5 @@ const splashSentences = [
   "The scientist's groundbreaking discovery changed the field forever.",
   "Autumn colors transformed the landscape into a vibrant canvas.",
   "The robot performed complex tasks with precision and efficiency.",
-  "Whales breached the surface of the ocean in spectacular displays."
+  "Whales breached the surface of the ocean in spectacular displays.",
 ];

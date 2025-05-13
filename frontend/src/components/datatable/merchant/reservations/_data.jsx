@@ -12,40 +12,65 @@ import {
 } from "@/components/ui/dropdown-menu.jsx";
 import { Button } from "@/components/ui/button.jsx";
 import { IconCloudNetwork, IconDots, IconWalk } from "@tabler/icons-react";
-import { useReservationMarkAsCompleteOverlay } from "@/overlay/reservation/mark-as-complete.jsx";
+import { useReservationMarkAsCompleteOverlay } from "@/overlay/reservation/mark-complete.jsx";
 import { useReservationCancelOverlay } from "@/overlay/reservation/cancel.jsx";
+import { format } from "date-fns";
+import { useReservationNoShowOverlay } from "@/overlay/reservation/mark-no-show.jsx";
+import { useReservationCheckInOverlay } from "@/overlay/reservation/mark-checkin.jsx";
 
 /**
- * @typedef {Object} Zone
+ * @typedef {Object} Seat
  * @property {string} id
- * @property {name} name
+ * @property {number} number
+ * @property {string} location
  */
 
 /**
  * @typedef {Object} Reservation
  * @property {string} id
- * @property {number} guest
- * @property {number} table
- * @property {Zone[]} zone
+ * @property {string} [userId]
+ * @property {string} customerName
+ * @property {"WALK_IN"|"ONLINE"} reservationType
+ * @property {string} seatId
+ * @property {Seat} seat
+ * @property {Date} startTime
+ * @property {Date} endTime
+ * @property {number} numberOfGuests
+ * @property {number} numberOfTables
  * @property {string} [note]
- * @property {"ONLINE"|"ONSITE"} type
- * @property {string} [reserved_for]
- * @property {UserModel} [reserved_by]
- * @property {Date} reserved_start
- * @property {Date} reserved_end
- * @property {Date} created_at
+ * @property {"COMPLETED"|"CANCELLED"|"NO_SHOW"|"PENDING"} status
+ * @property {Date} createdAt
  */
 
-const StatusFacetedFilterOptions = [
+const TypeFacetedFilterOptions = [
   {
-    label: 'Online',
-    value: 'ONLINE',
+    label: "Online",
+    value: "ONLINE",
     icon: IconCloudNetwork,
   },
   {
-    label: 'Walk-in',
-    value: 'ONSITE',
+    label: "Walk-in",
+    value: "WALK_IN",
     icon: IconWalk,
+  },
+];
+
+const StatusFacetedFilterOptions = [
+  {
+    label: "Completed",
+    value: "COMPLETED",
+  },
+  {
+    label: "Cancelled",
+    value: "CANCELLED",
+  },
+  {
+    label: "No Show",
+    value: "NO_SHOW",
+  },
+  {
+    label: "Pending",
+    value: "PENDING",
   },
 ];
 
@@ -53,121 +78,207 @@ const StatusFacetedFilterOptions = [
  * Get faceted filters for the table
  *
  * @template {Reservation} TData
- * @param {import('@tanstack/react-table').Table<TData>} table
- * @returns {Array<import('@/components/ui/datatable').DataTableFacetedFilterProps<TData, any>>}
+ * @param {import("@tanstack/react-table").Table<TData>} table
+ * @returns {Array<import("@/components/ui/datatable").DataTableFacetedFilterProps<TData, any>>}
  */
-export const getFacetedFilters = (
-  table
-) => {
-  /** @type {import('@/components/ui/datatable').DataTableFacetedFilterProps<TData, any>[]} */
-  const status = [
+export const getFacetedFilters = (table) => {
+  /** @type {import("@/components/ui/datatable").DataTableFacetedFilterProps<TData, any>[]} */
+  const filters = [
     {
-      column: table.getColumn('Type'),
-      title: 'Type',
+      column: table.getColumn("reservationType"),
+      title: "Type",
+      options: TypeFacetedFilterOptions,
+    },
+    {
+      column: table.getColumn("status"),
+      title: "Status",
       options: StatusFacetedFilterOptions,
     },
   ];
 
-  return [...status];
+  return filters;
 };
 
 /**
  * @return {import("@tanstack/react-table").ColumnDef<Reservation>[]}
  */
-export const getColumns = () => {
+export const getColumns = (onRefresh) => {
   return [
     {
-      id: "detail",
-      header: "Details",
+      id: "customer",
+      header: "Customer",
       enableHiding: false,
-      enableSorting: false,
+      enableSorting: true,
+      accessorKey: "customerName",
       cell: ({ row }) => {
         return (
-          <div className="space-y-4">
-            <div className="flex space-x-2">
-              <span className="max-w-[500px] truncate font-medium capitalize">
-                {row.original.author.name}
-              </span>
-              {row.original.author.isAdmin && (
-                <Badge variant="destructive">Administrator</Badge>
+          <div className="space-y-1">
+            <span className="font-medium">{row.original.customerName}</span>
+            <div className="flex items-center gap-2">
+              <Badge
+                variant={
+                  row.original.reservationType === "ONLINE"
+                    ? "default"
+                    : "secondary"
+                }
+              >
+                {row.original.reservationType === "ONLINE"
+                  ? "Online"
+                  : "Walk-in"}
+              </Badge>
+              {row.original.status && (
+                <Badge
+                  variant={
+                    row.original.status === "COMPLETED"
+                      ? "success"
+                      : row.original.status === "CANCELLED"
+                        ? "destructive"
+                        : row.original.status === "NO_SHOW"
+                          ? "warning"
+                          : row.original.status === "CHECKED_IN"
+                            ? "info"
+                            : "outline"
+                  }
+                >
+                  {row.original.status}
+                </Badge>
               )}
             </div>
-            <p className="whitespace-break-spaces">{row.original.content}</p>
           </div>
         );
       },
     },
     {
-      id: "Type",
-      accessorKey: "type",
+      id: "details",
+      header: "Reservation Details",
+      enableHiding: false,
+      enableSorting: false,
+      cell: ({ row }) => {
+        return (
+          <div className="space-y-1">
+            <div className="text-sm">
+              <span className="font-medium">Guests:</span>{" "}
+              {row.original.numberOfGuests}
+            </div>
+            <div className="text-sm">
+              <span className="font-medium">Tables:</span>{" "}
+              {row.original.numberOfTables}
+            </div>
+            <div className="text-sm">
+              <span className="font-medium">Seat:</span>{" "}
+              {row.original.seat?.number} ({row.original.seat?.location})
+            </div>
+            {row.original.note && (
+              <div className="text-sm">
+                <span className="font-medium">Note:</span> {row.original.note}
+              </div>
+            )}
+          </div>
+        );
+      },
+    },
+    {
+      id: "startTime",
+      header: ({ column }) => {
+        return (
+          <DataTableColumnHeader column={column} title="Time" type="date" />
+        );
+      },
+      accessorKey: "startTime",
+      enableSorting: true,
+      cell: ({ row }) => {
+        const startTime = new Date(row.original.startTime);
+        const endTime = new Date(row.original.endTime);
+
+        return (
+          <div className="space-y-1">
+            <div className="text-sm">
+              <span className="font-medium">Date:</span>{" "}
+              {format(startTime, "MMM dd, yyyy")}
+            </div>
+            <div className="text-sm">
+              <span className="font-medium">Time:</span>{" "}
+              {format(startTime, "h:mm a")} - {format(endTime, "h:mm a")}
+            </div>
+            <div className="text-muted-foreground text-xs">
+              Reserved on{" "}
+              {format(new Date(row.original.createdAt), "MMM dd, yyyy")}
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      id: "reservationType",
+      accessorKey: "reservationType",
       header: "Type",
-      cell: ({ row }) => {
-        switch (row.original.type) {
-          case "ONLINE":
-            return "Online";
-          case "ONSITE":
-            return "Walk-in";
-          default:
-            return "Unknown";
-        }
-      },
+      enableSorting: true,
+      enableHiding: true,
     },
     {
-      id: "Reserved Date",
-      accessorKey: "reserved_at",
-      header: ({ column }) => {
-        return (
-          <DataTableColumnHeader
-            column={column}
-            title="Reserved Date"
-            type="date"
-          />
-        );
-      },
+      id: "status",
+      accessorKey: "status",
+      header: "Status",
+      enableSorting: true,
+      enableHiding: true,
       cell: ({ row }) => {
-        const startDate = Intl.DateTimeFormat("en-US", {
-          dateStyle: "long",
-        }).format(row.original.reserved_start);
-
-        const endDate = Intl.DateTimeFormat("en-US", {
-          dateStyle: "long",
-        }).format(row.original.reserved_end);
-
-        return `${startDate} - ${endDate}`;
-      },
-    },
-    {
-      id: "Reserved At",
-      accessorKey: "created_at",
-      header: ({ column }) => {
-        return (
-          <DataTableColumnHeader
-            column={column}
-            title="Reserved At"
-            type="date"
-          />
-        );
-      },
-      cell: ({ row }) => {
-        return Intl.DateTimeFormat("en-US", {
-          dateStyle: "long",
-        }).format(row.original.created_at);
+        return row.original.status || "PENDING";
       },
     },
     {
       id: "actions",
       cell: ({ row }) => {
         const data = row.original;
+        const isPending = data.status === "PENDING";
+        const isCheckIn = data.status === "CHECKED_IN";
 
-        const { open: openReservationMarkAsCompleteOverlay } = useReservationMarkAsCompleteOverlay();
-        const { open: openReservationCancelOverlay } = useReservationCancelOverlay();
+        const { open: openReservationMarkAsCompleteOverlay } =
+          useReservationMarkAsCompleteOverlay();
+        const { open: openReservationCancelOverlay } =
+          useReservationCancelOverlay();
+        const { open: openReservationNoShowOverlay } =
+          useReservationNoShowOverlay();
+        const { open: openReservationCheckInOverlay } =
+          useReservationCheckInOverlay();
 
         function onReservationMarkAsComplete() {
-          openReservationMarkAsCompleteOverlay({});
+          openReservationMarkAsCompleteOverlay({
+            reservationId: data.id,
+            customerName: data.customerName,
+            onSuccess: () => {
+              if (onRefresh) onRefresh();
+            },
+          });
         }
 
         function onReservationCancel() {
-          openReservationCancelOverlay({});
+          openReservationCancelOverlay({
+            reservation: data,
+            customerName: data.customerName,
+            onSuccess: () => {
+              if (onRefresh) onRefresh();
+            },
+          });
+        }
+
+        function onReservationMarkAsNoShow() {
+          openReservationNoShowOverlay({
+            reservationId: data.id,
+            customerName: data.customerName,
+            onSuccess: () => {
+              if (onRefresh) onRefresh();
+            },
+          });
+        }
+
+        function onReservationMarkAsCheckedIn() {
+          openReservationCheckInOverlay({
+            reservationId: data.id,
+            customerName: data.customerName,
+            onSuccess: () => {
+              if (onRefresh) onRefresh();
+            },
+          });
         }
 
         return (
@@ -180,15 +291,42 @@ export const getColumns = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Manage</DropdownMenuLabel>
-              <DropdownMenuItem onClick={onReservationMarkAsComplete}>
-                Mark As Complete
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={onReservationCancel}
-                className="text-red-500"
-              >
-                Cancel
-              </DropdownMenuItem>
+              {isPending && (
+                <>
+                  <DropdownMenuItem
+                    onClick={onReservationMarkAsCheckedIn}
+                    disabled={!isPending}
+                  >
+                    Mark As Checked in
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={onReservationMarkAsNoShow}
+                    disabled={!isPending}
+                  >
+                    Mark As No Show
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={onReservationCancel}
+                    className="text-red-500"
+                    disabled={!isPending}
+                  >
+                    Cancel
+                  </DropdownMenuItem>
+                </>
+              )}
+              {isCheckIn && (
+                <DropdownMenuItem
+                  onClick={onReservationMarkAsComplete}
+                  disabled={!isPending}
+                >
+                  Mark As Complete
+                </DropdownMenuItem>
+              )}
+              {!isPending && (
+                <DropdownMenuItem disabled>
+                  Already {data.status.toLowerCase()}
+                </DropdownMenuItem>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         );

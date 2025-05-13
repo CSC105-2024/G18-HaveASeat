@@ -6,28 +6,28 @@ import type { AppEnv } from "@/types/env.js";
 
 export default async function(c: Context<AppEnv>) {
   try {
-    const { email, password, name, phone_number, birthday } = await c.req.json()
+    const { email, password, name, phoneNumber, birthday } = await c.req.json();
 
     if (!email || !password || !name) {
-      return c.json({ error: 'Email, password, and name are required' }, 400)
+      return c.json({ error: "Email, password, and name are required" }, 400);
     }
 
-    const existingUser = await UserModel.findByEmail(email)
+    const existingUser = await UserModel.findByEmail(email);
 
     if (existingUser) {
-      return c.json({ error: 'User already exists with this email' }, 409)
+      return c.json({ error: "User already exists with this email" }, 409);
     }
 
-    const passwordHash = await bcrypt.hash(password, 10)
+    const passwordHash = await bcrypt.hash(password, 10);
 
     const user = await UserModel.create({
       email,
       password: passwordHash,
       name,
-      phone_number,
+      phoneNumber,
       birthday,
       isAdmin: false
-    })
+    });
 
     const { accessToken, refreshToken } = await createTokenPair(user);
 
@@ -40,9 +40,9 @@ export default async function(c: Context<AppEnv>) {
         name: user.name,
         isAdmin: user.isAdmin
       }
-    }, 201)
+    }, 201);
   } catch (error) {
-    console.error('Sign Up error:', error)
-    return c.json({ error: 'Internal server error' }, 500)
+    console.error("Sign Up error:", error);
+    return c.json({ error: "Internal server error" }, 500);
   }
 }

@@ -1,9 +1,7 @@
 import React from "react";
 import { Link } from "react-router";
 import { cn } from "@/lib/utils.js";
-import { Button, buttonVariants } from "@/components/ui/button.jsx";
-import { IconLogout } from "@tabler/icons-react";
-import { useSignOutOverlay } from "@/overlay/user/authentication.jsx";
+import { buttonVariants } from "@/components/ui/button.jsx";
 
 /**
  * @param {MenuEntry[]} managementMenu
@@ -43,4 +41,4 @@ function AdministratorSidebar({ managementMenu = [] }) {
   );
 }
 
-export {AdministratorSidebar};
+export { AdministratorSidebar };

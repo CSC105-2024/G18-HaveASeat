@@ -3,46 +3,63 @@ import { getPrisma } from "@/lib/prisma.ts";
 import { authMiddleware } from "@/middlewares/auth.middleware.js";
 import type { AppEnv } from "@/types/env.js";
 
-export default async function (c: Context<AppEnv>) {
+export default async function(c: Context<AppEnv>) {
   try {
-    await authMiddleware(c, async () => { });
+    await authMiddleware(c, async () => {
+    });
 
     const prisma = getPrisma();
     const user = c.get("user");
 
+
+    if (!user.isAdmin) {
+      return c.json({
+        success: false,
+        error: "Only administrators can view reports"
+      }, 403);
+    }
+
+
     const reports = await prisma.reviewReport.findMany({
+      where: {
+        status: "PENDING"
+      },
       include: {
         user: {
           select: {
             id: true,
-            name: true,
-          },
+            name: true
+          }
         },
         review: {
           include: {
             user: {
               select: {
                 id: true,
-                name: true,
-              },
+                name: true
+              }
             },
             merchant: {
               select: {
                 id: true,
                 name: true,
-              },
-            },
-          },
-        },
+                ownerId: true
+              }
+            }
+          }
+        }
       },
       orderBy: {
-        createdAt: "desc",
-      },
+        createdAt: "desc"
+      }
     });
 
-    return c.json({ success: true, data: reports });
+    return c.json({
+      success: true,
+      data: reports
+    });
   } catch (error) {
-    console.error("Page error:", error);
+    console.error("Report list error:", error);
     return c.json({ success: false, error: "Internal server error" }, 500);
   }
 }

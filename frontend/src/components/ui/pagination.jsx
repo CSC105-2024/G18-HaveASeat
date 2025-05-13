@@ -1,15 +1,11 @@
-import * as React from "react"
-import {
-  IconChevronLeft,
-  IconChevronRight,
-  IconDots,
-} from "@tabler/icons-react"
+import * as React from "react";
+import { IconChevronLeft, IconChevronRight, IconDots } from "@tabler/icons-react";
 
-import { cn } from "@/lib/utils"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils";
+import { Button, buttonVariants } from "@/components/ui/button";
 
 /**
- * @param {React.ComponentProps<'nav'>} props
+ * @param {React.ComponentProps<"nav">} props
  * @returns {JSX.Element}
  */
 function Pagination({ className, ...props }) {
@@ -21,51 +17,43 @@ function Pagination({ className, ...props }) {
       className={cn("mx-auto flex w-full justify-center", className)}
       {...props}
     />
-  )
+  );
 }
 
 /**
- * @param {React.ComponentProps<'ul'>} props
+ * @param {React.ComponentProps<"ul">} props
  * @returns {JSX.Element}
  */
-function PaginationContent({
-  className,
-  ...props
-}) {
+function PaginationContent({ className, ...props }) {
   return (
     <ul
       data-slot="pagination-content"
       className={cn("flex flex-row items-center gap-1", className)}
       {...props}
     />
-  )
+  );
 }
 
 /**
- * @param {React.ComponentProps<'li'>} props
+ * @param {React.ComponentProps<"li">} props
  * @returns {JSX.Element}
  */
 function PaginationItem({ ...props }) {
-  return <li data-slot="pagination-item" {...props} />
+  return <li data-slot="pagination-item" {...props} />;
 }
 
 /**
  * @typedef PaginationLinkProps
  * @property {boolean | undefined} [isActive]
- * @property {React.ComponentProps<typeof Button>['size']} [size]
- * @extends {React.ComponentProps<'a'>}
+ * @property {React.ComponentProps<typeof Button>["size"]} [size]
+ * @extends {React.ComponentProps<"a">}
  */
 
 /**
  * @param {PaginationLinkProps} props
  * @returns {JSX.Element}
  */
-function PaginationLink({
-  className,
-  isActive,
-  size = "icon",
-  ...props
-}) {
+function PaginationLink({ className, isActive, size = "icon", ...props }) {
   return (
     <a
       aria-current={isActive ? "page" : undefined}
@@ -76,21 +64,18 @@ function PaginationLink({
           variant: isActive ? "outline" : "ghost",
           size,
         }),
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 /**
  * @param {React.ComponentProps<typeof PaginationLink>} props
  * @returns {JSX.Element}
  */
-function PaginationPrevious({
-  className,
-  ...props
-}) {
+function PaginationPrevious({ className, ...props }) {
   return (
     <PaginationLink
       aria-label="Go to previous page"
@@ -101,17 +86,14 @@ function PaginationPrevious({
       <IconChevronLeft />
       <span className="hidden sm:block">Previous</span>
     </PaginationLink>
-  )
+  );
 }
 
 /**
  * @param {React.ComponentProps<typeof PaginationLink>} props
  * @returns {JSX.Element}
  */
-function PaginationNext({
-  className,
-  ...props
-}) {
+function PaginationNext({ className, ...props }) {
   return (
     <PaginationLink
       aria-label="Go to next page"
@@ -122,17 +104,14 @@ function PaginationNext({
       <span className="hidden sm:block">Next</span>
       <IconChevronRight />
     </PaginationLink>
-  )
+  );
 }
 
 /**
- * @param {React.ComponentProps<'span'>} props
+ * @param {React.ComponentProps<"span">} props
  * @returns {JSX.Element}
  */
-function PaginationEllipsis({
-  className,
-  ...props
-}) {
+function PaginationEllipsis({ className, ...props }) {
   return (
     <span
       aria-hidden
@@ -143,7 +122,7 @@ function PaginationEllipsis({
       <IconDots className="size-4" />
       <span className="sr-only">More pages</span>
     </span>
-  )
+  );
 }
 
 export {
@@ -154,4 +133,4 @@ export {
   PaginationPrevious,
   PaginationNext,
   PaginationEllipsis,
-}
+};

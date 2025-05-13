@@ -80,4 +80,4 @@ function AccountSidebar({ reservationsMenu = [], accountMenu = [] }) {
   );
 }
 
-export {AccountSidebar};
+export { AccountSidebar };

@@ -6,22 +6,22 @@ import type { AppEnv } from "@/types/env.js";
 
 export default async function(c: Context<AppEnv>) {
   try {
-    const { email, password } = await c.req.json()
+    const { email, password } = await c.req.json();
 
     if (!email || !password) {
-      return c.json({ error: 'Email and password are required' }, 400)
+      return c.json({ error: "Email and password are required" }, 400);
     }
 
-    const user = await UserModel.findByEmail(email)
+    const user = await UserModel.findByEmail(email);
 
     if (!user) {
-      return c.json({ error: 'Invalid credentials' }, 401)
+      return c.json({ error: "Invalid credentials" }, 401);
     }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password)
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return c.json({ error: 'Invalid credentials' }, 401)
+      return c.json({ error: "Invalid credentials" }, 401);
     }
 
     const { accessToken, refreshToken } = await createTokenPair(user);
@@ -35,9 +35,9 @@ export default async function(c: Context<AppEnv>) {
         name: user.name,
         isAdmin: user.isAdmin
       }
-    })
+    });
   } catch (error) {
-    console.error('Sign In error:', error)
-    return c.json({ error: 'Internal server error' }, 500)
+    console.error("Sign In error:", error);
+    return c.json({ error: "Internal server error" }, 500);
   }
 }

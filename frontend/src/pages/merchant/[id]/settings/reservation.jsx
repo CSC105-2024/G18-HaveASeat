@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import MerchantLayout from "@/components/layout/merchant.jsx";
 import { Separator } from "@/components/ui/separator.jsx";
@@ -23,19 +23,21 @@ import {
 import { Button } from "@/components/ui/button.jsx";
 import { Input } from "@/components/ui/input.jsx";
 import { IconPhotoQuestion, IconPlus, IconTrash } from "@tabler/icons-react";
+import axiosInstance from "@/lib/axios";
+import { constructAPIUrl } from "@/lib/url.js";
 
 const FormSchema = z.object({
   floor_plan: z
-    .instanceof(File, {
-      message: "Floor Plan image is required",
-    })
-    .refine((files) => {
-      return files?.size <= MAX_FILE_SIZE;
+    .any()
+    .optional()
+    .refine((file) => {
+      if (!file || file === undefined) return true;
+      return file.size <= MAX_FILE_SIZE;
     }, `Image must be less than ${MAX_FILE_MB}MB`)
-    .refine(
-      (files) => ACCEPTED_IMAGE_MIME_TYPES.includes(files?.type),
-      "Only JPEG, PNG, WebP, and GIF formats are supported",
-    ),
+    .refine((file) => {
+      if (!file || file === undefined) return true;
+      return ACCEPTED_IMAGE_MIME_TYPES.includes(file.type);
+    }, "Only JPEG, PNG, WebP, and GIF formats are supported"),
   zone: z
     .array(
       z.object({
@@ -56,12 +58,12 @@ const FormSchema = z.object({
 
 function Page() {
   const { id } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
 
-  const [floorPlanImagePreview, setFloorPlanImagePreview] = useState(
-    /** @type {File|null} */ null,
-  );
+  const [floorPlanImagePreview, setFloorPlanImagePreview] = useState(null);
+  const [existingFloorPlan, setExistingFloorPlan] = useState(null);
 
-  /** @type {import("react-hook-form").UseFormReturn<z.infer<typeof FormSchema>>} */
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -75,17 +77,92 @@ function Page() {
     name: "zone",
   });
 
-  /**
-   * @param {ReturnType<typeof FormSchema["parse"]>} data
-   */
-  function onSubmitForm(data) {
-    toast.message("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-full rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  useEffect(() => {
+    const fetchReservationData = async () => {
+      try {
+        setIsFetching(true);
+        const response = await axiosInstance.get(
+          `/merchant/${id}/settings/reservation`,
+        );
+        const data = response.data;
+
+        if (data.floor_plan) {
+          setExistingFloorPlan(data.floor_plan);
+        }
+
+        if (data.zones && data.zones.length > 0) {
+          form.setValue("zone", data.zones);
+        } else {
+          append({ name: "", amount: 0 });
+        }
+      } catch (error) {
+        console.error("Error fetching reservation data:", error);
+        toast.error("Failed to load reservation data");
+
+        append({ name: "", amount: 0 });
+      } finally {
+        setIsFetching(false);
+      }
+    };
+
+    if (id) {
+      fetchReservationData();
+    }
+  }, [id, append, form]);
+
+  async function onSubmitForm(data) {
+    setIsLoading(true);
+    try {
+      const formData = new FormData();
+
+      if (data.floor_plan instanceof File) {
+        formData.append("floor_plan", data.floor_plan);
+      }
+
+      formData.append("zones", JSON.stringify(data.zone));
+
+      await axiosInstance.patch(
+        `/merchant/${id}/settings/reservation`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+
+      toast.success("Reservation settings updated successfully");
+
+      const response = await axiosInstance.get(
+        `/merchant/${id}/settings/reservation`,
+      );
+      const newData = response.data;
+
+      if (newData.floor_plan) {
+        setExistingFloorPlan(newData.floor_plan);
+        setFloorPlanImagePreview(null);
+        form.setValue("floor_plan", undefined);
+      }
+
+      if (newData.zones) {
+        form.setValue("zone", newData.zones);
+      }
+    } catch (error) {
+      console.error("Error updating reservation:", error);
+      toast.error("Failed to update reservation settings");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  if (isFetching) {
+    return (
+      <MerchantLayout>
+        <div className="flex min-h-[400px] items-center justify-center">
+          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-gray-900"></div>
+        </div>
+      </MerchantLayout>
+    );
   }
 
   return (
@@ -112,6 +189,12 @@ function Page() {
                           alt="Uploaded Image"
                           className="absolute aspect-video h-full w-full rounded object-contain select-none"
                         />
+                      ) : existingFloorPlan ? (
+                        <img
+                          src={constructAPIUrl(existingFloorPlan)}
+                          alt="Current Floor Plan"
+                          className="absolute aspect-video h-full w-full rounded object-contain select-none"
+                        />
                       ) : (
                         <div className="flex h-full items-center justify-center">
                           <IconPhotoQuestion className="size-8 text-gray-400/50" />
@@ -134,7 +217,9 @@ function Page() {
                               accept={ACCEPTED_IMAGE_MIME_TYPES.join(",")}
                               onChange={(e) => {
                                 field.onChange(e.target.files?.[0]);
-                                setFloorPlanImagePreview(e.target.files?.[0] || null);
+                                setFloorPlanImagePreview(
+                                  e.target.files?.[0] || null,
+                                );
                               }}
                               name={field.name}
                               ref={field.ref}
@@ -230,11 +315,21 @@ function Page() {
                         </div>
                       </div>
                     ))}
+
+                    {form.formState.errors.zone?.root?.message && (
+                      <p className="text-sm text-red-500">
+                        {form.formState.errors.zone.root.message}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <div className="flex flex-col gap-4 md:flex-row">
-                  <Button type="submit" className="w-full flex-1">
-                    Save
+                  <Button
+                    type="submit"
+                    className="w-full flex-1"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Saving..." : "Save"}
                   </Button>
                 </div>
               </form>

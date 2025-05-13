@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { createModalHook } from "@/hooks/use-modal.jsx";
 import { useModalStore } from "@/store/modal.jsx";
 import { useForm } from "react-hook-form";
@@ -17,6 +17,8 @@ import { Input } from "@/components/ui/input.jsx";
 import { Button } from "@/components/ui/button.jsx";
 import { useForgetPasswordOverlay } from "@/overlay/user/forget-password.jsx";
 import { z } from "zod";
+import axiosInstance from "@/lib/axios.js";
+import { useAuthStore } from "@/store/auth.js";
 
 const FormSchema = z.object({
   email: z.string().email({
@@ -26,8 +28,10 @@ const FormSchema = z.object({
 });
 
 function SignInOverlay() {
+  const [isLoading, setIsLoading] = useState(false);
   const { open: openForgetPasswordOverlay } = useForgetPasswordOverlay();
   const { closeModal } = useModalStore();
+  const { login } = useAuthStore();
 
   /** @type {import("react-hook-form").UseFormReturn<z.infer<typeof formSchema>>} */
   const form = useForm({
@@ -41,14 +45,25 @@ function SignInOverlay() {
   /**
    * @param {ReturnType<typeof FormSchema["parse"]>} data
    */
-  function onSubmit(data) {
-    toast.message("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-full rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function onSubmit(data) {
+    setIsLoading(true);
+    try {
+      const response = await axiosInstance.post("/authentication/signin", data);
+      const { accessToken, refreshToken, user } = response.data;
+
+      await login(user, accessToken, refreshToken);
+      toast.success("Successfully signed in!");
+      closeModal("sign-in");
+    } catch (error) {
+      console.error("Sign in error:", error);
+      if (error.response?.status === 401) {
+        toast.error("Invalid credentials");
+      } else {
+        toast.error("An error occurred during sign in");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   function onSwapOverlay() {
@@ -86,7 +101,11 @@ function SignInOverlay() {
                     Password <FormRequiredLabel />
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your password" {...field} />
+                    <Input
+                      placeholder="Enter your password"
+                      type="password"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -94,8 +113,8 @@ function SignInOverlay() {
             />
           </div>
           <div className="space-y-4">
-            <Button type="submit" className="w-full">
-              Sign in
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Signing in..." : "Sign in"}
             </Button>
             <span
               onClick={onSwapOverlay}
@@ -122,14 +141,12 @@ const useSignInOverlay = createModalHook(
 
 function UserSignOutOverlay(props) {
   const { closeModal } = useModalStore();
+  const { logout } = useAuthStore();
 
   function onSignOut() {
-    try {
-      //TODO: Implement the logic
-      alert("Are you sure to sign out from our platform?");
-    } catch (e) {
-      console.error(e);
-    }
+    logout();
+    toast.success("Successfully signed out");
+    closeModal("user-sign-out");
   }
 
   return (

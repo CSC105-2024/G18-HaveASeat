@@ -7,7 +7,10 @@ import { buttonVariants } from "@/components/ui/button.jsx";
 
 function Page() {
   return (
-    <div data-status="404" className="fade-in fade-out flex flex-1 flex-col items-center justify-center gap-8 text-center">
+    <div
+      data-status="404"
+      className="fade-in fade-out flex flex-1 flex-col items-center justify-center gap-8 text-center"
+    >
       <div className="space-y-4">
         <h1 className="text-5xl font-bold">Page Not Found</h1>
         <span>{randomSplashText()}</span>
@@ -19,7 +22,10 @@ function Page() {
           <Skeleton className="h-4 w-[200px]" />
         </div>
       </div>
-      <NavLink to="/" className={cn("font-mono text-xl", buttonVariants({size: "lg"}))}>
+      <NavLink
+        to="/"
+        className={cn("font-mono text-xl", buttonVariants({ size: "lg" }))}
+      >
         Go Back to Home Page
       </NavLink>
     </div>

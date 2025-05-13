@@ -8,7 +8,9 @@ const routes = pages.map((route) => {
   if (route.path === "/") {
     pageModule = pageModules[`./pages/index.jsx`];
   } else {
-    pageModule = pageModules[`./pages/${route.path}.jsx`] || pageModules[`./pages/${route.path}/index.jsx`];
+    pageModule =
+      pageModules[`./pages/${route.path}.jsx`] ||
+      pageModules[`./pages/${route.path}/index.jsx`];
   }
 
   return {

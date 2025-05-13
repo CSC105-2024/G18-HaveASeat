@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { createModalHook } from "@/hooks/use-modal.jsx";
 import { z } from "zod";
 import { useModalStore } from "@/store/modal.jsx";
@@ -25,20 +25,19 @@ import {
 } from "@/components/ui/popover.jsx";
 import { IconCalendarWeekFilled } from "@tabler/icons-react";
 import { Calendar } from "@/components/ui/calendar.jsx";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select.jsx";
+import { useAuthStore } from "@/store/auth.js";
+import axiosInstance from "@/lib/axios.js";
 
 const FormSchema = z
   .object({
     name: z.string().min(1, "Name is required"),
     phone: z
       .string()
-      .regex(/^[0-9]{9,10}$/, "Please enter a valid phone number"),
+      .regex(
+        /|^\d{9,10}$/,
+        "Please enter a valid phone number (e.g. 0812345678)",
+      )
+      .optional(),
     email: z.string().email({
       message: "Please enter a valid email address",
     }),
@@ -72,7 +71,9 @@ const FormSchema = z
  * @returns {JSX.Element}
  */
 function SignUpOverlay({ addMode = false }) {
+  const [isLoading, setIsLoading] = useState(false);
   const { closeModal } = useModalStore();
+  const { login } = useAuthStore();
 
   /** @type {import("react-hook-form").UseFormReturn<z.infer<typeof formSchema>>} */
   const form = useForm({
@@ -94,19 +95,48 @@ function SignUpOverlay({ addMode = false }) {
   /**
    * @param {ReturnType<typeof FormSchema["parse"]>} data
    */
-  function onSubmit(data) {
-    toast.message("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-full rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function onSubmit(data) {
+    setIsLoading(true);
+    try {
+      const formattedData = {
+        email: data.email,
+        password: data.password,
+        name: data.name,
+        phoneNumber: data.phone,
+        birthday: data.dob,
+      };
+
+      const response = await axiosInstance.post(
+        "/authentication/signup",
+        formattedData,
+      );
+      const { accessToken, refreshToken, user } = response.data;
+
+      if (!addMode) {
+        await login(user, accessToken, refreshToken);
+        toast.success("Account created successfully!");
+      } else {
+        toast.success("User added successfully!");
+      }
+
+      closeModal("user-add");
+    } catch (error) {
+      console.error("Sign up error:", error);
+      if (error.response?.status === 409) {
+        toast.error("User already exists with this email");
+      } else if (error.response?.status === 400) {
+        toast.error("Please check your input and try again");
+      } else {
+        toast.error("An error occurred during sign up");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
     <div className="space-y-4 pt-4">
-      {!addMode && (<h1 className="text-xl font-semibold">Sign Up</h1>)}
+      {!addMode && <h1 className="text-xl font-semibold">Sign Up</h1>}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="space-y-8">
@@ -130,9 +160,7 @@ function SignUpOverlay({ addMode = false }) {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Phone Number <FormRequiredLabel />
-                  </FormLabel>
+                  <FormLabel>Phone Number</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter your phone number" {...field} />
                   </FormControl>
@@ -206,7 +234,7 @@ function SignUpOverlay({ addMode = false }) {
                               new Date().getDate(),
                             )
                           }
-                          initialFocus
+                          autoFocus={true}
                         />
                       </PopoverContent>
                     </Popover>
@@ -225,7 +253,11 @@ function SignUpOverlay({ addMode = false }) {
                       Password <FormRequiredLabel />
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your password" {...field} />
+                      <Input
+                        placeholder="Enter your password"
+                        type="password"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -240,7 +272,11 @@ function SignUpOverlay({ addMode = false }) {
                       Re - Password <FormRequiredLabel />
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Confirm your password" {...field} />
+                      <Input
+                        placeholder="Confirm your password"
+                        type="password"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -248,12 +284,21 @@ function SignUpOverlay({ addMode = false }) {
               />
             </div>
           </div>
-          <div className="flex flex-col md:flex-row gap-4">
-            <Button type="submit" className="w-full flex-1">
-              {addMode ? "Confirm" : "Sign Up" }
+          <div className="flex flex-col gap-4 md:flex-row">
+            <Button
+              type="submit"
+              className="w-full flex-1"
+              disabled={isLoading}
+            >
+              {isLoading ? "Processing..." : addMode ? "Confirm" : "Sign Up"}
             </Button>
             {addMode && (
-              <Button type="button" className="w-full flex-1" variant="secondary" onClick={() => closeModal('user-add')}>
+              <Button
+                type="button"
+                className="w-full flex-1"
+                variant="secondary"
+                onClick={() => closeModal("user-add")}
+              >
                 Exit without saving
               </Button>
             )}

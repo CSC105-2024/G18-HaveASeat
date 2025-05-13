@@ -4,7 +4,7 @@ let isRefreshing = false;
 let failedQueue = [];
 
 const processQueue = (error, token = null) => {
-  failedQueue.forEach(prom => {
+  failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
     } else {
@@ -16,35 +16,48 @@ const processQueue = (error, token = null) => {
 };
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
 });
 
-// Add JWT to every request
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem("accessToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
-// Handle 401 responses and token refresh
 axiosInstance.interceptors.response.use(
-  response => response,
+  (response) => response,
   async (error) => {
+    if (!error.response) {
+      console.error("Network error or no response:", error);
+      return Promise.reject(error);
+    }
+
     const originalRequest = error.config;
+    const { useAuthStore } = await import("@/store/auth");
+
+    if (
+      error.config.url?.includes("/authentication/") ||
+      error.config.url === "/user"
+    ) {
+      if (error.response.status === 401) {
+        useAuthStore.getState().logout();
+      }
+      return Promise.reject(error);
+    }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
-        // Queue requests while refreshing
-        return new Promise(function(resolve, reject) {
+        return new Promise(function (resolve, reject) {
           failedQueue.push({ resolve, reject });
         })
           .then((token) => {
-            originalRequest.headers.Authorization = 'Bearer ' + token;
+            originalRequest.headers.Authorization = "Bearer " + token;
             return axiosInstance(originalRequest);
           })
           .catch((err) => Promise.reject(err));
@@ -53,21 +66,26 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
       isRefreshing = true;
 
-      const refreshToken = localStorage.getItem('refreshToken');
+      const refreshToken = localStorage.getItem("refreshToken");
+
+      if (!refreshToken) {
+        useAuthStore.getState().logout();
+        return Promise.reject(error);
+      }
 
       try {
         const { data } = await axios.post(
           `${import.meta.env.VITE_API_URL}/authentication/refresh`,
-          { refreshToken }
+          { refreshToken },
         );
 
-        localStorage.setItem('accessToken', data.accessToken);
+        localStorage.setItem("accessToken", data.accessToken);
         processQueue(null, data.accessToken);
-        originalRequest.headers.Authorization = 'Bearer ' + data.accessToken;
+        originalRequest.headers.Authorization = "Bearer " + data.accessToken;
         return axiosInstance(originalRequest);
       } catch (err) {
         processQueue(err, null);
-        // Optional: logout user or redirect
+        useAuthStore.getState().logout();
         return Promise.reject(err);
       } finally {
         isRefreshing = false;
@@ -75,7 +93,7 @@ axiosInstance.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosInstance;

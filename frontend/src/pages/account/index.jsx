@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AccountLayout from "@/components/layout/account.jsx";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,10 +25,16 @@ import { format } from "date-fns";
 import { IconCalendarWeekFilled } from "@tabler/icons-react";
 import { Calendar } from "@/components/ui/calendar.jsx";
 import { Separator } from "@/components/ui/separator.jsx";
+import { useAuthStore } from "@/store/auth.js";
+import Loading from "@/components/layout/loading.jsx";
+import axiosInstance from "@/lib/axios.js";
 
 const FormSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  phone: z.string().regex(/^[0-9]{9,10}$/, "Please enter a valid phone number"),
+  phone: z
+    .string()
+    .regex(/|^\d{9,10}$/, "Please enter a valid phone number (e.g. 0812345678)")
+    .optional(),
   email: z.string().email({
     message: "Please enter a valid email address",
   }),
@@ -47,6 +53,9 @@ const FormSchema = z.object({
 });
 
 function Page() {
+  const [isLoading, setIsLoading] = useState(false);
+  const { user, updateUser } = useAuthStore();
+
   /** @type {import("react-hook-form").UseFormReturn<z.infer<typeof FormSchema>>} */
   const form = useForm({
     resolver: zodResolver(FormSchema),
@@ -62,17 +71,51 @@ function Page() {
     },
   });
 
+  useEffect(() => {
+    if (user) {
+      form.reset({
+        name: user.name || "",
+        phone: user.phoneNumber || "",
+        email: user.email || "",
+        dob: user.birthday ? new Date(user.birthday) : new Date(),
+      });
+    }
+  }, [user, form]);
+
   /**
    * @param {ReturnType<typeof FormSchema["parse"]>} data
    */
-  function onSubmitForm(data) {
-    toast.message("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-full rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function onSubmitForm(data) {
+    setIsLoading(true);
+    try {
+      const formattedData = {
+        name: data.name,
+        phoneNumber: data.phone,
+        email: data.email,
+        birthday: data.dob,
+      };
+
+      await axiosInstance.put(`/user/settings`, formattedData);
+
+      await updateUser();
+
+      toast.success("Personal information updated successfully");
+    } catch (error) {
+      console.error("Update personal info error:", error);
+      if (error.response?.status === 400) {
+        toast.error("Invalid data provided");
+      } else if (error.response?.status === 403) {
+        toast.error("You don't have permission to update this information");
+      } else {
+        toast.error("Failed to update personal information");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  if (!user) {
+    return <Loading />;
   }
 
   return (
@@ -158,7 +201,7 @@ function Page() {
                                   variant={"outline"}
                                   className={cn(
                                     "pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground"
+                                    !field.value && "text-muted-foreground",
                                   )}
                                 >
                                   {field.value ? (
@@ -170,7 +213,10 @@ function Page() {
                                 </Button>
                               </FormControl>
                             </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
+                            <PopoverContent
+                              className="w-auto p-0"
+                              align="start"
+                            >
                               <Calendar
                                 mode="single"
                                 selected={field.value}
@@ -184,13 +230,15 @@ function Page() {
                                   return date > maxDate || date < minDate;
                                 }}
                                 defaultMonth={
-                                  new Date(
-                                    new Date().getFullYear() - 18,
-                                    new Date().getMonth(),
-                                    new Date().getDate()
-                                  )
+                                  user.birthday
+                                    ? new Date(user.birthday)
+                                    : new Date(
+                                        new Date().getFullYear() - 18,
+                                        new Date().getMonth(),
+                                        new Date().getDate(),
+                                      )
                                 }
-                                initialFocus
+                                autoFocus={true}
                               />
                             </PopoverContent>
                           </Popover>
@@ -201,8 +249,12 @@ function Page() {
                   </div>
                 </div>
                 <div className="flex flex-col gap-4 md:flex-row">
-                  <Button type="submit" className="w-full flex-1">
-                    Save
+                  <Button
+                    type="submit"
+                    className="w-full flex-1"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Saving..." : "Save"}
                   </Button>
                 </div>
               </form>
