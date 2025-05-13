@@ -1,39 +1,31 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import { DataTableColumnHeader } from '@/components/ui/datatable';
-import { Badge } from '@/components/ui/badge';
-import React from 'react';
+import { DataTableColumnHeader } from "@/components/ui/datatable";
+import { Badge } from "@/components/ui/badge";
+import React from "react";
 import {
   DropdownMenu,
-  DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu.jsx";
 import { Button } from "@/components/ui/button.jsx";
-import { IconDots, IconDotsCircleHorizontal } from "@tabler/icons-react";
+import { IconDots } from "@tabler/icons-react";
 import { useUserEditOverlay } from "@/overlay/user/edit.jsx";
 import { useUserDeleteOverlay } from "@/overlay/user/delete.jsx";
 
 /**
- * @typedef {Object} User
- * @property {string} id
- * @property {string} name
- * @property {string} phone
- * @property {string} email
- * @property {Date} dob
- * @property {boolean} isAdmin
- * @property {Date} created_at
+ * @param {Object} props
+ * @param {() => void} props.onRefresh
+ * @return {import("@tanstack/react-table").ColumnDef<User>[]}
  */
-
-/**
- * @return {import('@tanstack/react-table').ColumnDef<User>[]}
- */
-export const getColumns = () => {
+export const getColumns = ({ onRefresh }) => {
   return [
     {
-      id: 'name',
-      accessorKey: 'name',
-      header: 'Name',
+      id: "name",
+      accessorKey: "name",
+      header: "Name",
       enableHiding: false,
       cell: ({ row }) => {
         return (
@@ -42,17 +34,28 @@ export const getColumns = () => {
               {row.original.name}
             </span>
             {row.original.isAdmin && (
-              <Badge variant="destructive">
-                Administrator
-              </Badge>
+              <Badge variant="destructive">Administrator</Badge>
             )}
           </div>
         );
       },
     },
     {
-      id: 'Member Since',
-      accessorKey: 'created_at',
+      id: "Email",
+      accessorKey: "email",
+      header: "Email",
+      cell: ({ row }) => {
+        return (
+          <div className="max-w-[300px] truncate">{row.original.email}</div>
+        );
+      },
+      meta: {
+        className: "max-lg:hidden",
+      },
+    },
+    {
+      id: "Member Since",
+      accessorKey: "createdAt",
       header: ({ column }) => {
         return (
           <DataTableColumnHeader
@@ -63,16 +66,17 @@ export const getColumns = () => {
         );
       },
       cell: ({ row }) => {
-        return Intl.DateTimeFormat('en-US', {
-          dateStyle: 'long',
-        }).format(row.original.created_at);
+        const date = row.original.createdAt;
+        return Intl.DateTimeFormat("en-US", {
+          dateStyle: "long",
+        }).format(new Date(date));
       },
       meta: {
-        className: "max-md:hidden"
-      }
+        className: "max-md:hidden",
+      },
     },
     {
-      id: 'actions',
+      id: "actions",
       cell: ({ row }) => {
         const data = row.original;
 
@@ -80,11 +84,22 @@ export const getColumns = () => {
         const { open: openUserDeleteOverlay } = useUserDeleteOverlay();
 
         function onUserEdit() {
-          openUserEditOverlay({ editMode: true });
+          openUserEditOverlay({
+            userId: data.id,
+            userData: data,
+            onSuccess: (updatedUser) => {
+              onRefresh();
+            },
+          });
         }
 
         function onUserDelete() {
-          openUserDeleteOverlay({});
+          openUserDeleteOverlay({
+            userId: data.id,
+            onSuccess: () => {
+              onRefresh();
+            },
+          });
         }
 
         return (
@@ -97,9 +112,7 @@ export const getColumns = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Manage</DropdownMenuLabel>
-              <DropdownMenuItem onClick={onUserEdit}>
-                Edit
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={onUserEdit}>Edit</DropdownMenuItem>
               <DropdownMenuItem onClick={onUserDelete} className="text-red-500">
                 Delete
               </DropdownMenuItem>

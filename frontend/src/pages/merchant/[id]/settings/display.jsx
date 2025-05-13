@@ -11,7 +11,12 @@ import {
   MAX_FILE_SIZE,
 } from "@/constants/file.js";
 import { toast } from "sonner";
-import { IconAlertCircle, IconPhotoQuestion, IconUpload, IconX } from "@tabler/icons-react";
+import {
+  IconAlertCircle,
+  IconPhotoQuestion,
+  IconUpload,
+  IconX,
+} from "@tabler/icons-react";
 import {
   Form,
   FormControl,
@@ -25,24 +30,23 @@ import { Input } from "@/components/ui/input.jsx";
 import { Button } from "@/components/ui/button.jsx";
 import { CardContent } from "@/components/ui/card.jsx";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.jsx";
+import axiosInstance from "@/lib/axios";
+import { constructAPIUrl } from "@/lib/url.js";
 
 const MAX_IMAGES = 8;
 
 const FormSchema = z.object({
   banner: z
-    .instanceof(File, {
-      message: "Banner image is required",
-    })
-    .refine((files) => {
-      return files;
-    }, "Banner image is required")
-    .refine((files) => {
-      return files?.size <= MAX_FILE_SIZE;
+    .any()
+    .optional()
+    .refine((file) => {
+      if (!file || file === undefined) return true;
+      return file.size <= MAX_FILE_SIZE;
     }, `Banner image must not be over ${MAX_FILE_MB}MB`)
-    .refine(
-      (files) => ACCEPTED_IMAGE_MIME_TYPES.includes(files?.type),
-      "Please recheck the supported file type again",
-    ),
+    .refine((file) => {
+      if (!file || file === undefined) return true;
+      return ACCEPTED_IMAGE_MIME_TYPES.includes(file.type);
+    }, "Please check the supported file type again"),
   images: z
     .array(
       z
@@ -63,14 +67,15 @@ const FormSchema = z.object({
 
 function Page() {
   const { id } = useParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
 
-  const [bannerImagePreview, setBannerImagePreview] = useState(
-    /** @type {File|null} */ null,
-  );
+  const [bannerImagePreview, setBannerImagePreview] = useState(null);
+  const [existingBanner, setExistingBanner] = useState(null);
   const [imagePreviews, setImagePreviews] = useState([]);
+  const [existingImages, setExistingImages] = useState([]);
   const [imageErrors, setImageErrors] = useState([]);
 
-  /** @type {import("react-hook-form").UseFormReturn<z.infer<typeof FormSchema>>} */
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -79,6 +84,35 @@ function Page() {
     },
   });
 
+  useEffect(() => {
+    const fetchDisplayData = async () => {
+      try {
+        setIsFetching(true);
+        const response = await axiosInstance.get(
+          `/merchant/${id}/settings/display`,
+        );
+        const data = response.data;
+
+        if (data.banner) {
+          setExistingBanner(data.banner);
+        }
+
+        if (data.images && data.images.length > 0) {
+          setExistingImages(data.images);
+        }
+      } catch (error) {
+        console.error("Error fetching display data:", error);
+        toast.error("Failed to load display data");
+      } finally {
+        setIsFetching(false);
+      }
+    };
+
+    if (id) {
+      fetchDisplayData();
+    }
+  }, [id]);
+
   const handleImagesChange = (e, onChange) => {
     setImageErrors([]);
     form.clearErrors("images");
@@ -86,10 +120,13 @@ function Page() {
     const files = Array.from(e.target.files);
     const currentImages = form.getValues("images") || [];
 
-    if (currentImages.length + files.length > MAX_IMAGES) {
+    if (
+      currentImages.length + files.length + existingImages.length >
+      MAX_IMAGES
+    ) {
       form.setError("images", {
         type: "manual",
-        message: `You can upload a maximum of ${MAX_IMAGES} images`
+        message: `You can upload a maximum of ${MAX_IMAGES} images total`,
       });
       return;
     }
@@ -98,20 +135,18 @@ function Page() {
     const newPreviews = [...imagePreviews];
     const newErrors = [...imageErrors];
 
-    files.forEach(file => {
+    files.forEach((file) => {
       if (file.size > MAX_FILE_SIZE) {
         newErrors.push({
           name: file.name,
-          message: `Image "${file.name}" must be less than ${MAX_FILE_MB}MB`
+          message: `Image "${file.name}" must be less than ${MAX_FILE_MB}MB`,
         });
-      }
-      else if (!ACCEPTED_IMAGE_MIME_TYPES.includes(file.type)) {
+      } else if (!ACCEPTED_IMAGE_MIME_TYPES.includes(file.type)) {
         newErrors.push({
           name: file.name,
-          message: `Image "${file.name}" must be JPEG, PNG, WebP, or GIF format`
+          message: `Image "${file.name}" must be JPEG, PNG, WebP, or GIF format`,
         });
-      }
-      else {
+      } else {
         newImages.push(file);
 
         const reader = new FileReader();
@@ -120,7 +155,7 @@ function Page() {
             url: e.target.result,
             name: file.name,
             file: file,
-            index: newPreviews.length
+            index: newPreviews.length,
           });
           setImagePreviews([...newPreviews]);
         };
@@ -146,17 +181,70 @@ function Page() {
     setImagePreviews(newPreviews);
   };
 
-  /**
-   * @param {ReturnType<typeof FormSchema["parse"]>} data
-   */
-  function onSubmitForm(data) {
-    toast.message("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-full rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  const removeExistingImage = (imageId) => {
+    setExistingImages(existingImages.filter((img) => img.id !== imageId));
+  };
+
+  async function onSubmitForm(data) {
+    setIsLoading(true);
+    try {
+      const formData = new FormData();
+
+      if (data.banner instanceof File) {
+        formData.append("banner", data.banner);
+      }
+
+      if (data.images && data.images.length > 0) {
+        data.images.forEach((image, index) => {
+          formData.append(`images`, image);
+        });
+      }
+
+      formData.append(
+        "existingImages",
+        JSON.stringify(existingImages.map((img) => img.id)),
+      );
+
+      await axiosInstance.patch(`/merchant/${id}/settings/display`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      toast.success("Display settings updated successfully");
+
+      const response = await axiosInstance.get(
+        `/merchant/${id}/settings/display`,
+      );
+      const newData = response.data;
+
+      if (newData.banner) {
+        setExistingBanner(newData.banner);
+        setBannerImagePreview(null);
+        form.setValue("banner", undefined);
+      }
+
+      if (newData.images) {
+        setExistingImages(newData.images);
+        setImagePreviews([]);
+        form.setValue("images", []);
+      }
+    } catch (error) {
+      console.error("Error updating display:", error);
+      toast.error("Failed to update display settings");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  if (isFetching) {
+    return (
+      <MerchantLayout>
+        <div className="flex min-h-[400px] items-center justify-center">
+          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-gray-900"></div>
+        </div>
+      </MerchantLayout>
+    );
   }
 
   return (
@@ -181,6 +269,12 @@ function Page() {
                         <img
                           src={URL.createObjectURL(bannerImagePreview)}
                           alt="Uploaded Image"
+                          className="absolute aspect-video h-full w-full rounded object-contain select-none"
+                        />
+                      ) : existingBanner ? (
+                        <img
+                          src={constructAPIUrl(existingBanner)}
+                          alt="Current Banner"
                           className="absolute aspect-video h-full w-full rounded object-contain select-none"
                         />
                       ) : (
@@ -248,12 +342,20 @@ function Page() {
                                     .getElementById("image-upload")
                                     ?.click()
                                 }
-                                disabled={imagePreviews.length >= MAX_IMAGES}
+                                disabled={
+                                  imagePreviews.length +
+                                    existingImages.length >=
+                                  MAX_IMAGES
+                                }
                               >
                                 <div className="flex flex-col items-center gap-2">
                                   <IconUpload className="size-6" />
-                                  <span className="touch-device:hidden">Click to upload</span>
-                                  <span className="not-touch-device:hidden">Tap to upload</span>
+                                  <span className="touch-device:hidden">
+                                    Click to upload
+                                  </span>
+                                  <span className="not-touch-device:hidden">
+                                    Tap to upload
+                                  </span>
                                   <span className="text-xs text-gray-500">
                                     JPEG, PNG, WebP, GIF (max {MAX_FILE_MB}MB)
                                   </span>
@@ -274,13 +376,16 @@ function Page() {
                             </div>
 
                             {imageErrors.length > 0 && (
-                              <Alert variant="destructive" className="bg-red-50">
+                              <Alert
+                                variant="destructive"
+                                className="bg-red-50"
+                              >
                                 <IconAlertCircle className="h-4 w-4" />
                                 <AlertTitle>
                                   Some images couldn't be uploaded
                                 </AlertTitle>
                                 <AlertDescription className="space-y-2">
-                                  <ul className="text-sm list-disc pl-5">
+                                  <ul className="list-disc pl-5 text-sm">
                                     {imageErrors.map((error, idx) => (
                                       <li key={idx}>{error.message}</li>
                                     ))}
@@ -291,8 +396,39 @@ function Page() {
 
                             <FormMessage />
 
-                            {imagePreviews.length > 0 && (
+                            {(existingImages.length > 0 ||
+                              imagePreviews.length > 0) && (
                               <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+                                {existingImages.map((image) => (
+                                  <div
+                                    key={image.id}
+                                    className="group relative overflow-hidden"
+                                  >
+                                    <div className="relative aspect-video overflow-hidden">
+                                      <img
+                                        src={constructAPIUrl(image.url)}
+                                        alt={`Existing image`}
+                                        className="h-full w-full rounded object-cover"
+                                      />
+                                      <Button
+                                        type="button"
+                                        variant="destructive"
+                                        size="icon"
+                                        className="absolute top-2 right-2 size-6 opacity-80 hover:opacity-100"
+                                        onClick={() =>
+                                          removeExistingImage(image.id)
+                                        }
+                                      >
+                                        <IconX className="h-4 w-4" />
+                                      </Button>
+                                    </div>
+                                    <CardContent className="p-2">
+                                      <p className="truncate text-xs">
+                                        Existing image
+                                      </p>
+                                    </CardContent>
+                                  </div>
+                                ))}
                                 {imagePreviews.map((preview, index) => (
                                   <div
                                     key={index}
@@ -302,7 +438,7 @@ function Page() {
                                       <img
                                         src={preview.url}
                                         alt={`Preview ${index}`}
-                                        className="h-full w-full object-cover rounded"
+                                        className="h-full w-full rounded object-cover"
                                       />
                                       <Button
                                         type="button"
@@ -334,8 +470,12 @@ function Page() {
                   />
                 </div>
                 <div className="flex flex-col gap-4 md:flex-row">
-                  <Button type="submit" className="w-full flex-1">
-                    Save
+                  <Button
+                    type="submit"
+                    className="w-full flex-1"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Saving..." : "Save"}
                   </Button>
                 </div>
               </form>

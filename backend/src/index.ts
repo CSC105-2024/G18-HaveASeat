@@ -8,6 +8,9 @@ import * as process from "node:process";
 import { getPrisma } from "@/lib/prisma.js";
 import { loadRoutes } from "@/router.ts";
 import type { AppEnv } from "@/types/env.js";
+import { cors } from "hono/cors";
+import { CronJob } from "cron";
+import { checkCurrentReservations, updateReservationStatuses } from "@/lib/reservation.js";
 
 const db = getPrisma();
 const app = new Hono<AppEnv>({ strict: true });
@@ -16,7 +19,20 @@ app.use(compress());
 app.use(trimTrailingSlash());
 app.use(logger());
 
-app.use("*", serveStatic({ root: "../public" }));
+app.get(
+  "/uploads/*",
+  serveStatic({
+    root: "./",
+    rewriteRequestPath: (path) =>
+      path.replace(/^\/uploads/, "/uploads")
+  })
+);
+
+app.use("*", cors({
+  origin: [
+    "http://localhost:5173"
+  ]
+}));
 
 loadRoutes(app);
 
@@ -34,3 +50,11 @@ serve({
 }, (info) => {
   console.log(`\x1b[31m[Hono]\x1b[0m Server is running on http://localhost:${info.port}`);
 });
+
+const reservationCleanupJob = new CronJob("*/5 * * * *", async () => {
+  const prisma = getPrisma();
+  await updateReservationStatuses(prisma);
+  await checkCurrentReservations(prisma);
+});
+
+reservationCleanupJob.start();

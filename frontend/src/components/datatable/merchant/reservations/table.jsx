@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -12,28 +12,37 @@ import { DataTablePagination, DataTableToolbar } from "@/components/ui/datatable
 import { getColumns, getFacetedFilters } from "./_data";
 
 /**
- * Customer data table component
+ * Reservation data table component
  *
- * @template {UserModel} TData
- * @template TValue
  * @param {Object} props
- * @param {TData[]} props.data
+ * @param {Array} props.data - The reservation data
+ * @param {Function} props.onRefresh - Callback to refresh data
  * @returns {JSX.Element}
  */
-function ReservationDataTable({ data }) {
-  const columns = getColumns();
+function ReservationDataTable({ data, onRefresh }) {
+  const columns = getColumns(onRefresh);
 
-  const [sorting, setSorting] = React.useState(
-    /** @type {import("@tanstack/react-table").SortingState}  */ [],
+  const [sorting, setSorting] = useState(
+    /** @type {import("@tanstack/react-table").SortingState}  */ ([
+      {
+        id: "startTime",
+        desc: true,
+      },
+    ]),
   );
-  const [columnFilters, setColumnFilters] = React.useState(
-    /** @type {import("@tanstack/react-table").ColumnFiltersState} */
-    [],
+
+  const [columnFilters, setColumnFilters] = useState(
+    /** @type {import("@tanstack/react-table").ColumnFiltersState} */ ([]),
   );
-  const [columnVisibility, setColumnVisibility] = React.useState(
-    /** @type {import("@tanstack/react-table").VisibilityState} */ {},
+
+  const [columnVisibility, setColumnVisibility] = useState(
+    /** @type {import("@tanstack/react-table").VisibilityState} */ ({
+      reservationType: false,
+      status: false,
+    }),
   );
-  const [rowSelection, setRowSelection] = React.useState({});
+
+  const [rowSelection, setRowSelection] = useState({});
 
   const table = useReactTable({
     data,
@@ -52,6 +61,11 @@ function ReservationDataTable({ data }) {
       columnVisibility,
       rowSelection,
     },
+    initialState: {
+      pagination: {
+        pageSize: 10,
+      },
+    },
   });
 
   const facetedFilters = getFacetedFilters(table);
@@ -59,11 +73,11 @@ function ReservationDataTable({ data }) {
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} facetedFilters={facetedFilters} />
-      <div>
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="">
+              <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead
@@ -87,12 +101,18 @@ function ReservationDataTable({ data }) {
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className="cursor-pointer"
                   data-state={row.getIsSelected() && "selected"}
-                  onClick={() => {
-                    table.resetRowSelection();
-                    row.toggleSelected(!row.getIsSelected());
-                  }}
+                  className={
+                    row.original.status === "CANCELLED"
+                      ? "bg-red-50/50"
+                      : row.original.status === "COMPLETED"
+                        ? "bg-green-50/50"
+                        : row.original.status === "NO_SHOW"
+                          ? "bg-yellow-50/50"
+                          : row.original.status === "CHECKED_IN"
+                            ? "bg-blue-50/50"
+                            : ""
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell

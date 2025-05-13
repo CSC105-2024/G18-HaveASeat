@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AccountLayout from "@/components/layout/account.jsx";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,12 +16,16 @@ import {
 import { Input } from "@/components/ui/input.jsx";
 import { Button } from "@/components/ui/button.jsx";
 import { Separator } from "@/components/ui/separator.jsx";
+import { useAuthStore } from "@/store/auth.js";
+import axiosInstance from "@/lib/axios.js";
 
 const FormSchema = z
   .object({
     password: z.string().min(1, "Please enter your current password"),
     newPassword: z.string().min(8, "Please enter at least 8 characters"),
-    reNewPassword: z.string().min(1, "Please enter a new password confirmation"),
+    reNewPassword: z
+      .string()
+      .min(1, "Please enter a new password confirmation"),
   })
   .refine((data) => data.newPassword === data.reNewPassword, {
     message: "New passwords do not match",
@@ -29,6 +33,9 @@ const FormSchema = z
   });
 
 function Page() {
+  const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuthStore();
+
   /** @type {import("react-hook-form").UseFormReturn<z.infer<typeof FormSchema>>} */
   const form = useForm({
     resolver: zodResolver(FormSchema),
@@ -42,14 +49,33 @@ function Page() {
   /**
    * @param {ReturnType<typeof FormSchema["parse"]>} data
    */
-  function onSubmitForm(data) {
-    toast.message("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-full rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  async function onSubmitForm(data) {
+    if (!user) {
+      toast.error("User not found");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await axiosInstance.post(`/user/settings/security`, {
+        currentPassword: data.password,
+        newPassword: data.newPassword,
+      });
+
+      toast.success("Password changed successfully");
+      form.reset();
+    } catch (error) {
+      console.error("Change password error:", error);
+      if (error.response?.status === 400) {
+        toast.error("Current password is incorrect");
+      } else if (error.response?.status === 403) {
+        toast.error("You don't have permission to change the password");
+      } else {
+        toast.error("Failed to change password");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -79,6 +105,7 @@ function Page() {
                         <FormControl>
                           <Input
                             placeholder="Enter your current password"
+                            type="password"
                             {...field}
                           />
                         </FormControl>
@@ -98,6 +125,7 @@ function Page() {
                           <FormControl>
                             <Input
                               placeholder="Enter your new password"
+                              type="password"
                               {...field}
                             />
                           </FormControl>
@@ -116,6 +144,7 @@ function Page() {
                           <FormControl>
                             <Input
                               placeholder="Confirm your new password"
+                              type="password"
                               {...field}
                             />
                           </FormControl>
@@ -126,8 +155,12 @@ function Page() {
                   </div>
                 </div>
                 <div className="flex flex-col gap-4 md:flex-row">
-                  <Button type="submit" className="w-full flex-1">
-                    Change Password
+                  <Button
+                    type="submit"
+                    className="w-full flex-1"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Changing Password..." : "Change Password"}
                   </Button>
                 </div>
               </form>

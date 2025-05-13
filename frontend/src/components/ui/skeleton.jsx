@@ -1,8 +1,8 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+import * as React from "react";
+import { cn } from "@/lib/utils";
 
 /**
- * @param {React.ComponentProps<'div'>} props
+ * @param {React.ComponentProps<"div">} props
  * @returns {JSX.Element}
  */
 function Skeleton({ className, ...props }) {
@@ -12,7 +12,7 @@ function Skeleton({ className, ...props }) {
       className={cn("bg-accent animate-pulse rounded-md", className)}
       {...props}
     />
-  )
+  );
 }
 
-export { Skeleton }
+export { Skeleton };

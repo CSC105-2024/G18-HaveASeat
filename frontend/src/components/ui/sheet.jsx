@@ -1,77 +1,63 @@
-import * as React from "react"
-import * as SheetPrimitive from "@radix-ui/react-dialog"
-import { IconX } from "@tabler/icons-react"
+import * as React from "react";
+import * as SheetPrimitive from "@radix-ui/react-dialog";
+import { IconX } from "@tabler/icons-react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Root>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-dialog").Root>} props
  * @returns {JSX.Element}
  */
 function Sheet({ ...props }) {
-  return <SheetPrimitive.Root data-slot="sheet" {...props} />
+  return <SheetPrimitive.Root data-slot="sheet" {...props} />;
 }
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Trigger>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-dialog").Trigger>} props
  * @returns {JSX.Element}
  */
-function SheetTrigger({
-  ...props
-}) {
-  return <SheetPrimitive.Trigger data-slot="sheet-trigger" {...props} />
+function SheetTrigger({ ...props }) {
+  return <SheetPrimitive.Trigger data-slot="sheet-trigger" {...props} />;
 }
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Close>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-dialog").Close>} props
  * @returns {JSX.Element}
  */
-function SheetClose({
-  ...props
-}) {
-  return <SheetPrimitive.Close data-slot="sheet-close" {...props} />
+function SheetClose({ ...props }) {
+  return <SheetPrimitive.Close data-slot="sheet-close" {...props} />;
 }
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Portal>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-dialog").Portal>} props
  * @returns {JSX.Element}
  */
-function SheetPortal({
-  ...props
-}) {
-  return <SheetPrimitive.Portal data-slot="sheet-portal" {...props} />
+function SheetPortal({ ...props }) {
+  return <SheetPrimitive.Portal data-slot="sheet-portal" {...props} />;
 }
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Overlay>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-dialog").Overlay>} props
  * @returns {JSX.Element}
  */
-function SheetOverlay({
-  className,
-  ...props
-}) {
+function SheetOverlay({ className, ...props }) {
   return (
     <SheetPrimitive.Overlay
       data-slot="sheet-overlay"
       className={cn(
         "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Content> & { side?: 'top' | 'right' | 'bottom' | 'left' }} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-dialog").Content> & { side?: "top" | "right" | "bottom" | "left" }} props
  * @returns {JSX.Element}
  */
-function SheetContent({
-  className,
-  children,
-  side = "right",
-  ...props
-}) {
+function SheetContent({ className, children, side = "right", ...props }) {
   return (
     <SheetPortal>
       <SheetOverlay />
@@ -87,7 +73,7 @@ function SheetContent({
             "data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top inset-x-0 top-0 h-auto border-b",
           side === "bottom" &&
             "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom inset-x-0 bottom-0 h-auto border-t",
-          className
+          className,
         )}
         {...props}
       >
@@ -98,11 +84,11 @@ function SheetContent({
         </SheetPrimitive.Close>
       </SheetPrimitive.Content>
     </SheetPortal>
-  )
+  );
 }
 
 /**
- * @param {React.ComponentProps<'div'>} props
+ * @param {React.ComponentProps<"div">} props
  * @returns {JSX.Element}
  */
 function SheetHeader({ className, ...props }) {
@@ -112,11 +98,11 @@ function SheetHeader({ className, ...props }) {
       className={cn("flex flex-col gap-1.5 p-4", className)}
       {...props}
     />
-  )
+  );
 }
 
 /**
- * @param {React.ComponentProps<'div'>} props
+ * @param {React.ComponentProps<"div">} props
  * @returns {JSX.Element}
  */
 function SheetFooter({ className, ...props }) {
@@ -126,41 +112,35 @@ function SheetFooter({ className, ...props }) {
       className={cn("mt-auto flex flex-col gap-2 p-4", className)}
       {...props}
     />
-  )
+  );
 }
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Title>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-dialog").Title>} props
  * @returns {JSX.Element}
  */
-function SheetTitle({
-  className,
-  ...props
-}) {
+function SheetTitle({ className, ...props }) {
   return (
     <SheetPrimitive.Title
       data-slot="sheet-title"
       className={cn("text-foreground font-semibold", className)}
       {...props}
     />
-  )
+  );
 }
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Description>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-dialog").Description>} props
  * @returns {JSX.Element}
  */
-function SheetDescription({
-  className,
-  ...props
-}) {
+function SheetDescription({ className, ...props }) {
   return (
     <SheetPrimitive.Description
       data-slot="sheet-description"
       className={cn("text-muted-foreground text-sm", className)}
       {...props}
     />
-  )
+  );
 }
 
 export {
@@ -172,4 +152,4 @@ export {
   SheetFooter,
   SheetTitle,
   SheetDescription,
-}
+};

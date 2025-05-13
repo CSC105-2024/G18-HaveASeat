@@ -6,22 +6,22 @@ export class UserModel {
     return await getPrisma().user.findUnique({
       where: {
         email
-      },
-    }) || null
+      }
+    }) || null;
   }
 
   static async findById(id: string): Promise<User | null> {
     return await getPrisma().user.findUnique({
       where: {
         id
-      },
-    }) || null
+      }
+    }) || null;
   }
 
-  static async create(userData: Omit<User, 'id' | 'created_at'>): Promise<User> {
+  static async create(userData: Omit<User, "id" | "createdAt">): Promise<User> {
     return getPrisma().user.create({
       data: userData
-    })
+    });
   }
 
   static async findAll(): Promise<User[]> {

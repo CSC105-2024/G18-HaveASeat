@@ -1,5 +1,5 @@
 import React from "react";
-import { IconDeviceIpadQuestion, IconHome, IconLayout2Filled, IconSearch } from "@tabler/icons-react";
+import { IconHome, IconLayout2Filled, IconSearch } from "@tabler/icons-react";
 import { NavigationBar } from "./navigation.jsx";
 import { NavigationSheet } from "./sheet.jsx";
 

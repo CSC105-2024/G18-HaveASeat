@@ -18,10 +18,11 @@ import { getColumns } from "./_data";
  * @template TValue
  * @param {Object} props
  * @param {TData[]} props.data
+ * @param {() => void} props.onRefresh
  * @returns {JSX.Element}
  */
-function UserDataTable({ data }) {
-  const columns = getColumns();
+function UserDataTable({ data, onRefresh }) {
+  const columns = getColumns({ onRefresh });
 
   const [sorting, setSorting] = React.useState(
     /** @type {import("@tanstack/react-table").SortingState}  */ [],
@@ -56,7 +57,11 @@ function UserDataTable({ data }) {
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} filterColumn="name" placeholder="Search" />
+      <DataTableToolbar
+        table={table}
+        filterColumn="name"
+        placeholder="Search user's name"
+      />
       <div>
         <Table>
           <TableHeader>
@@ -111,7 +116,7 @@ function UserDataTable({ data }) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results found.
+                  No users found.
                 </TableCell>
               </TableRow>
             )}

@@ -1,42 +1,36 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
-import { IconCircle } from "@tabler/icons-react"
+import * as React from "react";
+import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
+import { IconCircle } from "@tabler/icons-react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-radio-group').Root>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-radio-group").Root>} props
  * @returns {JSX.Element}
  */
-function RadioGroup({
-  className,
-  ...props
-}) {
+function RadioGroup({ className, ...props }) {
   return (
     <RadioGroupPrimitive.Root
       data-slot="radio-group"
       className={cn("grid gap-3", className)}
       {...props}
     />
-  )
+  );
 }
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-radio-group').Item>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-radio-group").Item>} props
  * @returns {JSX.Element}
  */
-function RadioGroupItem({
-  className,
-  ...props
-}) {
+function RadioGroupItem({ className, ...props }) {
   return (
     <RadioGroupPrimitive.Item
       data-slot="radio-group-item"
       className={cn(
         "border-input text-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 aspect-square size-4 shrink-0 rounded-full border shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50",
-        className
+        className,
       )}
       {...props}
     >
@@ -47,7 +41,7 @@ function RadioGroupItem({
         <IconCircle className="fill-primary absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
-  )
+  );
 }
 
-export { RadioGroup, RadioGroupItem }
+export { RadioGroup, RadioGroupItem };

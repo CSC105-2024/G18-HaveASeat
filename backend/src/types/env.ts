@@ -1,4 +1,4 @@
-import type { User } from "@/prisma/generated/index.js";
+import type { Prisma, User } from "@/prisma/generated/index.js";
 
 export type AppEnv = {
   Bindings: {
@@ -6,5 +6,12 @@ export type AppEnv = {
   };
   Variables: {
     user: User;
+    merchant: Prisma.MerchantGetPayload<{
+      include: {
+        address: true,
+        promoImages: true,
+        seats: true,
+      }
+    }>
   };
 };

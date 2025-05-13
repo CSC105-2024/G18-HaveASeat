@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  IconHeartStar,
-  IconHistory,
-  IconAdjustmentsAlt, IconShieldLock
-} from "@tabler/icons-react";
+import { IconAdjustmentsAlt, IconHeartStar, IconHistory, IconShieldLock, IconStar } from "@tabler/icons-react";
 import { AccountSheet } from "./sheet.jsx";
 import { AccountSidebar } from "./sidebar.jsx";
 
@@ -17,9 +13,14 @@ const reservationsMenu = [
     title: "Reservations",
   },
   {
-    pathname: "/account/favourite",
+    pathname: "/account/favourites",
     icon: IconHeartStar,
-    title: "Favourite",
+    title: "Favourites",
+  },
+  {
+    pathname: "/account/reviews",
+    icon: IconStar,
+    title: "Reviews",
   },
 ];
 

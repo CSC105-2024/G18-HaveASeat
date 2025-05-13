@@ -19,38 +19,46 @@ import { useReportDeleteOverlay } from "@/overlay/report/delete.jsx";
  * @typedef {Object} Report
  * @property {string} id
  * @property {string} content
- * @property {UserModel} author
- * @property {Date} created_at
+ * @property {Object} author
+ * @property {string} author.id
+ * @property {string} author.name
+ * @property {boolean} author.isAdmin
+ * @property {Date|string} createdAt
  */
 
 /**
+ * @param {Object} props
+ * @param {() => void} props.onRefre
  * @return {import("@tanstack/react-table").ColumnDef<Report>[]}
  */
-export const getColumns = () => {
+export const getColumns = ({ onRefresh }) => {
   return [
     {
       id: "content",
       accessorKey: "content",
-      header: "Content",
+      header: "Report Details",
       enableHiding: false,
       cell: ({ row }) => {
+        console.log(row.original);
+        const review = row.original.review;
+        const author = review.user;
         return (
           <div className="space-y-4">
             <div className="flex space-x-2">
               <span className="max-w-[500px] truncate font-medium capitalize">
-                {row.original.author.name}
+                {author.name}
               </span>
-              {row.original.author.isAdmin && (
+              {author.isAdmin && (
                 <Badge variant="destructive">Administrator</Badge>
               )}
             </div>
-            <p className="whitespace-break-spaces">{row.original.content}</p>
-            <Badge variant="destructive" className="md:hidden">
-              {
-                Intl.DateTimeFormat("en-US", {
-                  dateStyle: "long",
-                }).format(row.original.created_at)
-              }
+            <p className="max-w-[600px] whitespace-break-spaces">
+              {review.description}
+            </p>
+            <Badge variant="outline" className="md:hidden">
+              {Intl.DateTimeFormat("en-US", {
+                dateStyle: "long",
+              }).format(new Date(row.original.createdAt))}
             </Badge>
           </div>
         );
@@ -58,7 +66,7 @@ export const getColumns = () => {
     },
     {
       id: "Reported Date",
-      accessorKey: "created_at",
+      accessorKey: "createdAt",
       header: ({ column }) => {
         return (
           <DataTableColumnHeader
@@ -69,13 +77,14 @@ export const getColumns = () => {
         );
       },
       cell: ({ row }) => {
+        const date = row.original.createdAt;
         return Intl.DateTimeFormat("en-US", {
           dateStyle: "long",
-        }).format(row.original.created_at);
+        }).format(new Date(date));
       },
       meta: {
-        className: "max-md:hidden"
-      }
+        className: "max-md:hidden",
+      },
     },
     {
       id: "actions",
@@ -86,11 +95,21 @@ export const getColumns = () => {
         const { open: openReportDeleteOverlay } = useReportDeleteOverlay();
 
         function onReportIgnore() {
-          openReportIgnoreOverlay({});
+          openReportIgnoreOverlay({
+            reportId: data.id,
+            onSuccess: () => {
+              onRefresh();
+            },
+          });
         }
 
         function onReportDelete() {
-          openReportDeleteOverlay({});
+          openReportDeleteOverlay({
+            reportId: data.id,
+            onSuccess: () => {
+              onRefresh();
+            },
+          });
         }
 
         return (

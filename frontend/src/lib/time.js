@@ -15,4 +15,4 @@ function timeToMinutes(timeString) {
   return hours * 60 + minutes;
 }
 
-export {timeToMinutes};
+export { timeToMinutes };

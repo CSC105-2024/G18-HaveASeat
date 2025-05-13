@@ -1,10 +1,5 @@
-import React from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import React from "react";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 
 /**
  * @typedef ModalProps
@@ -19,14 +14,7 @@ import {
  * @param {ModalProps} props
  * @returns {JSX.Element}
  */
-function Modal ({
-  title,
-  description,
-  isOpen,
-  onClose,
-  children,
-}) {
-
+function Modal({ title, description, isOpen, onClose, children }) {
   /** @param {boolean} open */
   const onChange = (open) => {
     if (!open) {
@@ -43,6 +31,6 @@ function Modal ({
       </DialogContent>
     </Dialog>
   );
-};
+}
 
-export {Modal};
+export { Modal };

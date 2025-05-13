@@ -2,7 +2,8 @@ import React from "react";
 import {
   Sheet,
   SheetClose,
-  SheetContent, SheetDescription,
+  SheetContent,
+  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
@@ -20,7 +21,7 @@ import { useSignOutOverlay } from "@/overlay/user/authentication.jsx";
  * @returns {Element}
  * @constructor
  */
-function AccountSheet({ reservationsMenu = [], accountMenu = []}) {
+function AccountSheet({ reservationsMenu = [], accountMenu = [] }) {
   const { open: openSignOutOverlay } = useSignOutOverlay();
 
   return (
@@ -33,7 +34,9 @@ function AccountSheet({ reservationsMenu = [], accountMenu = []}) {
         <SheetHeader>
           <NavLink to="/" className="flex flex-col">
             <SheetTitle>Have A Seat</SheetTitle>
-            <SheetDescription className="font-noto-sans-thai text-xs">Account Navigation</SheetDescription>
+            <SheetDescription className="font-noto-sans-thai text-xs">
+              Account Navigation
+            </SheetDescription>
           </NavLink>
         </SheetHeader>
         <div className="px-3">

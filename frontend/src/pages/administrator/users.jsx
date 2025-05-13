@@ -1,59 +1,72 @@
-import React from "react";
-import { Input } from "@/components/ui/input.jsx";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button.jsx";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form.jsx";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { IconUserPlus, IconUserSearch } from "@tabler/icons-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar.jsx";
-import { useUserEditOverlay } from "@/overlay/user/edit.jsx";
-import { useUserDeleteOverlay } from "@/overlay/user/delete.jsx";
+import { IconUserPlus } from "@tabler/icons-react";
 import { useUserAddOverlay } from "@/overlay/user/add.jsx";
 import AdministratorLayout from "@/components/layout/administrator.jsx";
 import { Separator } from "@/components/ui/separator.jsx";
 import { UserDataTable } from "@/components/datatable/administrator/users/table.jsx";
+import axiosInstance from "@/lib/axios.js";
 
-const users = [
-  {
-    id: 1,
-    name: "Nicole Bars",
-    phone: "0818884444",
-    isAdmin: false,
-    email: "nicoleBars@gmail.com",
-    birthday: new Date(),
-  },
-  {
-    id: 2,
-    name: "Sam Bars",
-    phone: "0818884444",
-    isAdmin: true,
-    email: "nicoleBars@gmail.com",
-    birthday: new Date(),
-  },
-];
+function Page() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-function Page(props) {
   const { open: openUserAddOverlay } = useUserAddOverlay();
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get("/users");
+      const usersData = response.data?.data || response.data;
+      setUsers(usersData);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      toast.error("Failed to load users");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleAddUser = () => {
+    openUserAddOverlay({
+      addMode: true,
+      onSuccess: () => {
+        fetchUsers();
+      },
+    });
+  };
+
+  if (loading) {
+    return (
+      <AdministratorLayout>
+        <div className="flex min-h-[400px] items-center justify-center">
+          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-gray-900"></div>
+        </div>
+      </AdministratorLayout>
+    );
+  }
 
   return (
     <AdministratorLayout>
       <div className="flex flex-col gap-8 px-4">
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold">Users Management</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-semibold">Users Management</h2>
+            <Button onClick={handleAddUser}>
+              <IconUserPlus className="mr-2 h-4 w-4" />
+              Add User
+            </Button>
+          </div>
           <Separator />
         </div>
         <div className="flex flex-col gap-12">
           <div className="space-y-4">
-            <UserDataTable data={users} />
+            <UserDataTable data={users} onRefresh={fetchUsers} />
           </div>
         </div>
       </div>

@@ -1,78 +1,63 @@
-import * as React from "react"
-import * as DialogPrimitive from "@radix-ui/react-dialog"
-import { IconX } from "@tabler/icons-react"
+import * as React from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { IconX } from "@tabler/icons-react";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Root>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-dialog").Root>} props
  * @returns {JSX.Element}
  */
-function Dialog({
-  ...props
-}) {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />
+function Dialog({ ...props }) {
+  return <DialogPrimitive.Root data-slot="dialog" {...props} />;
 }
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Trigger>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-dialog").Trigger>} props
  * @returns {JSX.Element}
  */
-function DialogTrigger({
-  ...props
-}) {
-  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
+function DialogTrigger({ ...props }) {
+  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
 }
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Portal>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-dialog").Portal>} props
  * @returns {JSX.Element}
  */
-function DialogPortal({
-  ...props
-}) {
-  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />
+function DialogPortal({ ...props }) {
+  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
 }
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Close>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-dialog").Close>} props
  * @returns {JSX.Element}
  */
-function DialogClose({
-  ...props
-}) {
-  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
+function DialogClose({ ...props }) {
+  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
 }
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Overlay>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-dialog").Overlay>} props
  * @returns {JSX.Element}
  */
-function DialogOverlay({
-  className,
-  ...props
-}) {
+function DialogOverlay({ className, ...props }) {
   return (
     <DialogPrimitive.Overlay
       data-slot="dialog-overlay"
       className={cn(
-        "overflow-y-auto py-3 grid place-items-center data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
-        className
+        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/50 py-3",
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Content>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-dialog").Content>} props
  * @returns {JSX.Element}
  */
-function DialogContent({
-  className,
-  children,
-  ...props
-}) {
+function DialogContent({ className, children, ...props }) {
   return (
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay>
@@ -80,7 +65,7 @@ function DialogContent({
           data-slot="dialog-content"
           className={cn(
             "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 relative z-50 grid w-full max-w-[calc(100%-2rem)] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg",
-            className
+            className,
           )}
           {...props}
         >
@@ -92,11 +77,11 @@ function DialogContent({
         </DialogPrimitive.Content>
       </DialogOverlay>
     </DialogPortal>
-  )
+  );
 }
 
 /**
- * @param {React.ComponentProps<'div'>} props
+ * @param {React.ComponentProps<"div">} props
  * @returns {JSX.Element}
  */
 function DialogHeader({ className, ...props }) {
@@ -106,11 +91,11 @@ function DialogHeader({ className, ...props }) {
       className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
       {...props}
     />
-  )
+  );
 }
 
 /**
- * @param {React.ComponentProps<'div'>} props
+ * @param {React.ComponentProps<"div">} props
  * @returns {JSX.Element}
  */
 function DialogFooter({ className, ...props }) {
@@ -119,45 +104,39 @@ function DialogFooter({ className, ...props }) {
       data-slot="dialog-footer"
       className={cn(
         "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Title>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-dialog").Title>} props
  * @returns {JSX.Element}
  */
-function DialogTitle({
-  className,
-  ...props
-}) {
+function DialogTitle({ className, ...props }) {
   return (
     <DialogPrimitive.Title
       data-slot="dialog-title"
       className={cn("text-lg leading-none font-semibold", className)}
       {...props}
     />
-  )
+  );
 }
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-dialog').Description>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-dialog").Description>} props
  * @returns {JSX.Element}
  */
-function DialogDescription({
-  className,
-  ...props
-}) {
+function DialogDescription({ className, ...props }) {
   return (
     <DialogPrimitive.Description
       data-slot="dialog-description"
       className={cn("text-muted-foreground text-sm", className)}
       {...props}
     />
-  )
+  );
 }
 
 export {
@@ -171,4 +150,4 @@ export {
   DialogPortal,
   DialogTitle,
   DialogTrigger,
-}
+};

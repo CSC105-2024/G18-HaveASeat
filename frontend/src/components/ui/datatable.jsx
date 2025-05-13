@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React, { useMemo } from 'react';
-import { cn } from '@/lib/utils';
+import React, { useMemo } from "react";
+import { cn } from "@/lib/utils";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -12,40 +12,32 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 import {
+  IconAdjustmentsHorizontal,
   IconArrowDown,
+  IconArrowsSort,
   IconArrowUp,
+  IconCalendarDown,
+  IconCalendarUp,
+  IconCheck,
   IconChevronLeft,
   IconChevronRight,
-  IconFilter,
-  IconCheck,
-  IconX,
   IconChevronsLeft,
   IconChevronsRight,
   IconEyeOff,
-  IconAdjustmentsHorizontal,
-  IconArrowsSort,
+  IconFilter,
   IconSortAscendingLetters,
+  IconSortAscendingNumbers,
   IconSortDescendingLetters,
-  IconCalendarUp,
-  IconCalendarDown, IconSortDescendingNumbers, IconSortAscendingNumbers
+  IconSortDescendingNumbers,
+  IconX
 } from "@tabler/icons-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import {
   Command,
   CommandEmpty,
@@ -53,90 +45,93 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-} from '@/components/ui/command';
+  CommandSeparator
+} from "@/components/ui/command";
 
 /**
  * @template TData
  * @template TValue
  * @typedef {Object} DataTableFacetedFilterProps
- * @property {import('@tanstack/react-table').Column<TData, TValue>} [column]
+ * @property {import("@tanstack/react-table").Column<TData, TValue>} [column]
  * @property {string} [title]
  * @property {FilterOption[]} options
  */
 
 /**
- * @param {('ascending'|'descending')} order
- * @param {('string'|'date'|'numeric')} type
+ * @param {("ascending"|"descending")} order
+ * @param {("string"|"date"|"numeric")} type
  * @returns {string}
  */
 function getSortingPhrase(order, type) {
   switch (type) {
-    case 'string':
-      return order === 'ascending' ? 'Sort from A-Z' : 'Sort from Z-A';
-    case 'date':
-      return order === 'ascending'
-        ? 'Oldest to Newest'
-        : 'Newest to Oldest';
-    case 'numeric':
-      return order === 'ascending' ? 'Lowest to Highest' : 'Highest to Lowest';
+    case "string":
+      return order === "ascending" ? "Sort from A-Z" : "Sort from Z-A";
+    case "date":
+      return order === "ascending" ? "Oldest to Newest" : "Newest to Oldest";
+    case "numeric":
+      return order === "ascending" ? "Lowest to Highest" : "Highest to Lowest";
   }
 }
 
 /**
  * @param {Object} props
- * @param {('ascending'|'descending')} props.order
- * @param {('string'|'date'|'numeric')} props.type
+ * @param {("ascending"|"descending")} props.order
+ * @param {("string"|"date"|"numeric")} props.type
  * @returns {JSX.Element}
  */
 function SortingIcon({ order, type }) {
   let Icon = null;
 
-  if (type === 'string') {
-    Icon = order === 'ascending'
-      ? IconSortAscendingLetters
-      : IconSortDescendingLetters;
-  } else if (type === 'date') {
-    Icon = order === 'ascending'
-      ? IconCalendarUp
-      : IconCalendarDown;
-  } else if (type === 'numeric') {
-    Icon = order === 'ascending'
-      ? IconSortAscendingNumbers
-      : IconSortDescendingNumbers;
+  if (type === "string") {
+    Icon =
+      order === "ascending"
+        ? IconSortAscendingLetters
+        : IconSortDescendingLetters;
+  } else if (type === "date") {
+    Icon = order === "ascending" ? IconCalendarUp : IconCalendarDown;
+  } else if (type === "numeric") {
+    Icon =
+      order === "ascending"
+        ? IconSortAscendingNumbers
+        : IconSortDescendingNumbers;
   }
 
-  return <Icon className="size-3.5 text-muted-foreground/70" />
+  return <Icon className="text-muted-foreground/70 size-3.5" />;
 }
 
 /**
  * @template TData
  * @template TValue
  * @param {Object} props
- * @param {import('@tanstack/react-table').Column<TData, TValue>} props.column
+ * @param {import("@tanstack/react-table").Column<TData, TValue>} props.column
  * @param {string} props.title
  * @param {string} [props.className]
- * @param {('string'|'date'|'numeric')} [props.type='numeric']
+ * @param {("string"|"date"|"numeric")} [props.type='numeric']
  * @returns {JSX.Element}
  */
-export function DataTableColumnHeader({ column, title, className, type = 'numeric' }) {
+export function DataTableColumnHeader({
+  column,
+  title,
+  className,
+  type = "numeric",
+}) {
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>;
   }
 
   return (
-    <div className={cn('flex items-center space-x-2', className)}>
+    <div className={cn("flex items-center space-x-2", className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
             size="sm"
-            className="-ml-3 h-8 data-[state=open]:bg-accent"
+            className="data-[state=open]:bg-accent -ml-3 h-8"
           >
             <span>{title}</span>
-            {column.getIsSorted() === 'desc' ? (
+            {column.getIsSorted() === "desc" ? (
               <IconArrowDown className="size-4" />
-            ) : column.getIsSorted() === 'asc' ? (
+            ) : column.getIsSorted() === "asc" ? (
               <IconArrowUp className="size-4" />
             ) : (
               <IconArrowsSort className="size-4" />
@@ -146,15 +141,15 @@ export function DataTableColumnHeader({ column, title, className, type = 'numeri
         <DropdownMenuContent align="start">
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
             <SortingIcon order="ascending" type={type} />
-            {getSortingPhrase('ascending', type)}
+            {getSortingPhrase("ascending", type)}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
             <SortingIcon order="descending" type={type} />
-            {getSortingPhrase('descending', type)}
+            {getSortingPhrase("descending", type)}
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-            <IconEyeOff className="size-3.5 text-muted-foreground/70" />
+            <IconEyeOff className="text-muted-foreground/70 size-3.5" />
             Hide
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -166,14 +161,14 @@ export function DataTableColumnHeader({ column, title, className, type = 'numeri
 /**
  * @template TData
  * @param {Object} props
- * @param {import('@tanstack/react-table').Table<TData>} props.table
+ * @param {import("@tanstack/react-table").Table<TData>} props.table
  * @returns {JSX.Element}
  */
 export function DataTablePagination({ table }) {
   return (
-    <div className="flex flex-col flex-wrap items-start md:items-center justify-between gap-4 px-2 md:flex-row">
-      <div className="flex-1 text-sm text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length} of{' '}
+    <div className="flex flex-col flex-wrap items-start justify-between gap-4 px-2 md:flex-row md:items-center">
+      <div className="text-muted-foreground flex-1 text-sm">
+        {table.getFilteredSelectedRowModel().rows.length} of{" "}
         {table.getFilteredRowModel().rows.length} row(s) selected.
       </div>
       <div className="flex flex-wrap items-center justify-center gap-4">
@@ -198,7 +193,7 @@ export function DataTablePagination({ table }) {
           </Select>
         </div>
         <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          Page {table.getState().pagination.pageIndex + 1} of{' '}
+          Page {table.getState().pagination.pageIndex + 1} of{" "}
           {Math.max(1, table.getPageCount())}
         </div>
         <div className="flex items-center space-x-2">
@@ -247,7 +242,7 @@ export function DataTablePagination({ table }) {
 /**
  * @template TData
  * @param {Object} props
- * @param {import('@tanstack/react-table').Table<TData>} props.table
+ * @param {import("@tanstack/react-table").Table<TData>} props.table
  * @returns {JSX.Element|undefined}
  */
 export function DataTableViewOptions({ table }) {
@@ -256,7 +251,7 @@ export function DataTableViewOptions({ table }) {
       .getAllColumns()
       .filter(
         (column) =>
-          typeof column.accessorFn !== 'undefined' && column.getCanHide(),
+          typeof column.accessorFn !== "undefined" && column.getCanHide(),
       );
   }, [table]);
 
@@ -307,7 +302,7 @@ export function DataTableViewOptions({ table }) {
  * @template TData
  * @template TValue
  * @param {Object} props
- * @param {import('@tanstack/react-table').Column<TData, TValue>} [props.column]
+ * @param {import("@tanstack/react-table").Column<TData, TValue>} [props.column]
  * @param {string} [props.title]
  * @param {FilterOption[]} props.options
  * @returns {JSX.Element}
@@ -382,16 +377,16 @@ export function DataTableFacetedFilter({ column, title, options }) {
                   >
                     <div
                       className={cn(
-                        'mr-2 flex size-4 items-center justify-center rounded-sm border border-primary',
+                        "border-primary mr-2 flex size-4 items-center justify-center rounded-sm border",
                         isSelected
-                          ? 'bg-primary text-primary-foreground'
-                          : 'opacity-50 [&_svg]:invisible',
+                          ? "bg-primary text-primary-foreground"
+                          : "opacity-50 [&_svg]:invisible",
                       )}
                     >
-                      <IconCheck className={cn('size-4')} />
+                      <IconCheck className={cn("size-4")} />
                     </div>
                     {option.icon && (
-                      <option.icon className="mr-2 size-4 text-muted-foreground" />
+                      <option.icon className="text-muted-foreground mr-2 size-4" />
                     )}
                     <span>{option.label}</span>
                     {facets?.get(option.value) && (
@@ -427,13 +422,18 @@ export function DataTableFacetedFilter({ column, title, options }) {
  * @template TData
  * @template TValue
  * @param {Object} props
- * @param {import('@tanstack/react-table').Table<TData>} props.table
+ * @param {import("@tanstack/react-table").Table<TData>} props.table
  * @param {string} [props.filterColumn]
- * @param {Array<import('./datatable').DataTableFacetedFilterProps<TData, TValue>>} [props.facetedFilters]
+ * @param {Array<import("./datatable").DataTableFacetedFilterProps<TData, TValue>>} [props.facetedFilters]
  * @param {string} [props.placeholder]
  * @returns {JSX.Element}
  */
-export function DataTableToolbar({ table, filterColumn, facetedFilters, placeholder }) {
+export function DataTableToolbar({
+  table,
+  filterColumn,
+  facetedFilters,
+  placeholder,
+}) {
   const isFiltered = table.getState().columnFilters.length > 0;
 
   return (
@@ -442,13 +442,11 @@ export function DataTableToolbar({ table, filterColumn, facetedFilters, placehol
         {filterColumn && (
           <Input
             placeholder={placeholder}
-            value={
-              (table.getColumn(filterColumn)?.getFilterValue() || '')
-            }
+            value={table.getColumn(filterColumn)?.getFilterValue() || ""}
             onChange={(event) =>
               table.getColumn(filterColumn)?.setFilterValue(event.target.value)
             }
-            className="w-[150px] lg:w-[250px] max-md:flex-1"
+            className="w-[150px] max-md:flex-1 lg:w-[250px]"
           />
         )}
         {facetedFilters?.map((filter) => (

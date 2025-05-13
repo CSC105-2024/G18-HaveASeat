@@ -1,19 +1,15 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area"
+import * as React from "react";
+import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-scroll-area').Root>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-scroll-area").Root>} props
  * @returns {JSX.Element}
  */
-function ScrollArea({
-  className,
-  children,
-  ...props
-}) {
+function ScrollArea({ className, children, ...props }) {
   return (
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"
@@ -29,18 +25,14 @@ function ScrollArea({
       <ScrollBar />
       <ScrollAreaPrimitive.Corner />
     </ScrollAreaPrimitive.Root>
-  )
+  );
 }
 
 /**
- * @param {React.ComponentProps<typeof import('@radix-ui/react-scroll-area').ScrollAreaScrollbar>} props
+ * @param {React.ComponentProps<typeof import("@radix-ui/react-scroll-area").ScrollAreaScrollbar>} props
  * @returns {JSX.Element}
  */
-function ScrollBar({
-  className,
-  orientation = "vertical",
-  ...props
-}) {
+function ScrollBar({ className, orientation = "vertical", ...props }) {
   return (
     <ScrollAreaPrimitive.ScrollAreaScrollbar
       data-slot="scroll-area-scrollbar"
@@ -51,7 +43,7 @@ function ScrollBar({
           "h-full w-2.5 border-l border-l-transparent",
         orientation === "horizontal" &&
           "h-2.5 flex-col border-t border-t-transparent",
-        className
+        className,
       )}
       {...props}
     >
@@ -60,7 +52,7 @@ function ScrollBar({
         className="bg-border relative flex-1 rounded-full"
       />
     </ScrollAreaPrimitive.ScrollAreaScrollbar>
-  )
+  );
 }
 
-export { ScrollArea, ScrollBar }
+export { ScrollArea, ScrollBar };

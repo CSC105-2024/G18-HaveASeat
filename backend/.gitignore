@@ -36,3 +36,6 @@ prisma/**/generated/
 prisma/**/migrations/
 prisma/**/*.db
 prisma/**/*.db-journal
+
+# User Files
+uploads/

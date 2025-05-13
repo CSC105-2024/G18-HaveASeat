@@ -1,38 +1,43 @@
-import React from "react";
-import { Input } from "@/components/ui/input.jsx";
-import { Button } from "@/components/ui/button.jsx";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form.jsx";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { IconUserPlus, IconUserSearch } from "@tabler/icons-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar.jsx";
-import { useUserEditOverlay } from "@/overlay/user/edit.jsx";
-import { useUserDeleteOverlay } from "@/overlay/user/delete.jsx";
-import { useUserAddOverlay } from "@/overlay/user/add.jsx";
-import { useReportIgnoreOverlay } from "@/overlay/report/ignore.jsx";
-import { useReportDeleteOverlay } from "@/overlay/report/delete.jsx";
 import AdministratorLayout from "@/components/layout/administrator.jsx";
 import { Separator } from "@/components/ui/separator.jsx";
 import { ReportDataTable } from "@/components/datatable/administrator/reports/table.jsx";
+import axiosInstance from "@/lib/axios.js";
 
-const reports = [
-  {
-    id: 1,
-    author: "Sam Bars",
-    content: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error hic maxime quis quo, sequi tempore. Ad animi architecto at corporis, cupiditate eum laborum natus necessitatibus nesciunt praesentium quia quos reprehenderit."
-  },
-];
+function Page() {
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-function Page(props) {
+  const fetchReports = async () => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get("/reports");
+
+      const reportsData = response.data?.data || response.data;
+      setReports(reportsData);
+    } catch (error) {
+      console.error("Error fetching reports:", error);
+      toast.error("Failed to load reports");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchReports();
+  }, []);
+
+  if (loading) {
+    return (
+      <AdministratorLayout>
+        <div className="flex min-h-[400px] items-center justify-center">
+          <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-gray-900"></div>
+        </div>
+      </AdministratorLayout>
+    );
+  }
+
   return (
     <AdministratorLayout>
       <div className="flex flex-col gap-8 px-4">
@@ -42,7 +47,7 @@ function Page(props) {
         </div>
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-16">
           <div className="flex flex-col gap-4">
-            <ReportDataTable data={reports} />
+            <ReportDataTable data={reports} onRefresh={fetchReports} />
           </div>
         </div>
       </div>

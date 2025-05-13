@@ -4,7 +4,7 @@ import { managementMenu } from "@/components/navigation/administrator/index.jsx"
 import { Separator } from "@/components/ui/separator.jsx";
 import { Link } from "react-router";
 
-function Page(props) {
+function Page() {
   return (
     <AdministratorLayout>
       <div className="flex flex-col gap-8 px-4">

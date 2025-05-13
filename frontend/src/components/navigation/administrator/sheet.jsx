@@ -2,7 +2,8 @@ import React from "react";
 import {
   Sheet,
   SheetClose,
-  SheetContent, SheetDescription,
+  SheetContent,
+  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
@@ -11,15 +12,14 @@ import {
 import { Link, NavLink } from "react-router";
 import { cn } from "@/lib/utils.js";
 import { Button, buttonVariants } from "@/components/ui/button.jsx";
-import { IconLogout, IconMenu2, IconSquareRoundedX } from "@tabler/icons-react";
-import { useSignOutOverlay } from "@/overlay/user/authentication.jsx";
+import { IconMenu2, IconSquareRoundedX } from "@tabler/icons-react";
 
 /**
  * @param {MenuEntry[]} managementMenu
  * @returns {Element}
  * @constructor
  */
-function AdministratorSheet({managementMenu = []}) {
+function AdministratorSheet({ managementMenu = [] }) {
   return (
     <Sheet>
       <SheetTrigger className={cn(buttonVariants(), "w-full md:hidden")}>
@@ -30,7 +30,9 @@ function AdministratorSheet({managementMenu = []}) {
         <SheetHeader>
           <NavLink to="/" className="flex flex-col">
             <SheetTitle>Have A Seat</SheetTitle>
-            <SheetDescription className="font-noto-sans-thai text-xs">Merchant Navigation</SheetDescription>
+            <SheetDescription className="font-noto-sans-thai text-xs">
+              Merchant Navigation
+            </SheetDescription>
           </NavLink>
         </SheetHeader>
         <div className="px-3">

@@ -17,7 +17,7 @@ function Layout({ children }) {
             <IconPicnicTable className="size-8" />
             <div className="hidden md:inline-flex md:gap-1.5">
               <h1 className="font-semibold">Have A Seat</h1>
-              <span className="font-noto-sans-thai text-xs self-center">
+              <span className="font-noto-sans-thai self-center text-xs">
                 Book It. Sip It. Love It.
               </span>
             </div>
@@ -30,7 +30,7 @@ function Layout({ children }) {
         </header>
         <main className="px-4">{children}</main>
       </section>
-      <footer className="font-noto-sans-thai  px-4 py-4 text-center text-xs text-zinc-900">
+      <footer className="font-noto-sans-thai px-4 py-4 text-center text-xs text-zinc-900">
         Have A Seat © {new Date().getFullYear()}
       </footer>
     </div>
