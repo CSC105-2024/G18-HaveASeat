@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils.js";
-import { constructAPIUrl } from "@/lib/url.ts";
+import { constructAPIUrl } from "@/lib/url.js";
 import { Badge } from "@/components/ui/badge.jsx";
 import { Button } from "@/components/ui/button.jsx";
 import {

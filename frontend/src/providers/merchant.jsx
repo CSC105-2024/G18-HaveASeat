@@ -32,7 +32,7 @@ export function MerchantProvider({ children }) {
     if (isAuthenticated && user) {
       merchantData.checkUserMerchants();
     }
-  }, [isAuthenticated, user, merchantData.checkUserMerchants]);
+  }, [isAuthenticated, user]);
 
   const contextValue = {
     ...merchantData,

@@ -349,7 +349,7 @@ function ReservationPlaceSearch({ className, ...props }) {
                             className="w-full flex-1 justify-start text-left font-normal"
                             id="date"
                           >
-                            <IconCalendar className="mr-2 size-4 text-gray-400" />
+                            <IconCalendar className="size-4 text-gray-400" />
                             {field.value ? (
                               format(field.value, "PPP")
                             ) : (
@@ -573,7 +573,7 @@ function ReservationPlaceSearch({ className, ...props }) {
         </div>
 
         <Button type="submit">
-          <IconSearch className="mr-2 h-4 w-4" />
+          <IconSearch className="h-4 w-4" />
           <span>Search</span>
         </Button>
       </form>

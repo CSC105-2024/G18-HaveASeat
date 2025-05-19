@@ -13,7 +13,6 @@ export default async function(c: Context<AppEnv>) {
     const id = c.req.param("id");
     const prisma = getPrisma();
 
-
     const merchant = await prisma.merchant.findUnique({
       where: { id },
       include: {
@@ -30,7 +29,6 @@ export default async function(c: Context<AppEnv>) {
     if (merchant.ownerId !== user.id) {
       return c.json({ error: "Unauthorized" }, 403);
     }
-
 
     const setupStatus = {
       overview: {
@@ -51,14 +49,8 @@ export default async function(c: Context<AppEnv>) {
     if (!merchant.name || merchant.name === `${user.name}'s Business`) {
       setupStatus.overview.missingFields.push("name");
     }
-    if (!merchant.phone) {
-      setupStatus.overview.missingFields.push("phone");
-    }
     if (!merchant.address) {
       setupStatus.overview.missingFields.push("address");
-    }
-    if (!merchant.openHours || (merchant.openHours as JsonObject).length === 0) {
-      setupStatus.overview.missingFields.push("openHours");
     }
     setupStatus.overview.isComplete = setupStatus.overview.missingFields.length === 0;
 

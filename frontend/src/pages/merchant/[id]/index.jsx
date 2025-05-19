@@ -22,7 +22,7 @@ import { constructAPIUrl } from "@/lib/url.js";
 function Page() {
   const { id } = useParams();
   const { isAuthenticated } = useAuthStore();
-  const { isOwner } = useMerchantContext();
+  const { isOwner, hasCompletedSetup } = useMerchantContext();
 
   const [loading, setLoading] = useState(true);
   const [merchant, setMerchant] = useState(null);
@@ -100,7 +100,7 @@ function Page() {
     );
   }
 
-  if (error || !merchant) {
+  if (error || !merchant || !hasCompletedSetup) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-16 text-center">
         <h1 className="text-2xl font-bold">{error || "Merchant not found"}</h1>
