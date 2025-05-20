@@ -38,7 +38,7 @@ export default async function(c: Context<AppEnv>) {
     }
 
 
-    if (reservation?.seat.merchant.ownerId !== user.id) {
+    if (reservation.seat?.merchant.ownerId !== user.id) {
       return c.json({ error: "Unauthorized" }, 403);
     }
 

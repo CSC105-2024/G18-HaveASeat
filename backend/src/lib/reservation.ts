@@ -34,10 +34,10 @@ export async function updateReservationStatuses(prisma: PrismaClient) {
         data: { status: newStatus }
       }),
 
-        ...[reservation.seat && prisma.seat.update({
-          where: { id: reservation?.seat.id },
-          data: { isAvailable: true }
-        })]
+      prisma.seat.update({
+        where: { id: reservation.seat?.id },
+        data: { isAvailable: true }
+      })
     ]);
   }
 

@@ -36,7 +36,7 @@ export default async function(c: Context<AppEnv>) {
     }
 
 
-    const isMerchantOwner = user.id === reservation?.seat.merchant.ownerId;
+    const isMerchantOwner = user.id === reservation.seat?.merchant.ownerId;
     const isUserReservation = user.id === reservation.userId;
 
 
