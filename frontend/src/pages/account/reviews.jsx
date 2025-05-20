@@ -16,7 +16,7 @@ function Page() {
   const fetchReviews = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get("/review/list?userId=current");
+      const response = await axiosInstance.get("/reviews?userId=current");
       setReviews(response.data.reviews || []);
     } catch (error) {
       console.error("Error fetching reviews:", error);

@@ -11,7 +11,6 @@ export default async function(c: Context<AppEnv>) {
     const sort = c.req.query("sort") || "recent";
     const order = c.req.query("order") || "desc";
 
-
     let where = {};
     if (merchantId) {
       where = { ...where, merchantId };
@@ -26,14 +25,12 @@ export default async function(c: Context<AppEnv>) {
       }
     }
 
-
     let orderBy = {};
     if (sort === "rating") {
       orderBy = { rating: order };
     } else {
       orderBy = { createdAt: order };
     }
-
 
     const reviews = await prisma.review.findMany({
       where,
