@@ -6,10 +6,7 @@ import { useMerchantContext } from "@/providers/merchant.jsx";
 import { useMerchant } from "@/hooks/use-merchant.js";
 
 function Page() {
-  const {
-    hasCompletedSetup,
-    hasMerchant,
-  } = useMerchantContext();
+  const { hasCompletedSetup, hasMerchant } = useMerchantContext();
 
   if (!hasMerchant) {
     return <Navigate to={`/`} replace={true} />;

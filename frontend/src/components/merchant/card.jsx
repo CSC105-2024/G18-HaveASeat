@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router";
-import { IconHeart, IconHeartFilled, IconStarFilled } from "@tabler/icons-react";
+import {
+  IconHeart,
+  IconHeartFilled,
+  IconStarFilled,
+} from "@tabler/icons-react";
 import { formatNumberDecimalPoint } from "@/lib/formatter.js";
 import { cn } from "@/lib/utils.js";
 import { constructAPIUrl } from "@/lib/url.js";

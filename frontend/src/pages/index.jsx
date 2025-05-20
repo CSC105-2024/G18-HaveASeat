@@ -127,7 +127,7 @@ function Page() {
                   "https://i.pinimg.com/736x/cc/c7/51/ccc751f538b11b8754aab71541380f61.jpg",
                   "https://i.pinimg.com/736x/e0/57/2e/e0572ef05c1b65db4f9d15856fbab25c.jpg",
                   "https://i.pinimg.com/736x/76/3b/16/763b169502915df85c8b210177ae5db9.jpg",
-                  "https://i.pinimg.com/736x/fc/d0/4f/fcd04f2e706b457b512491dc7eef2fba.jpg"
+                  "https://i.pinimg.com/736x/fc/d0/4f/fcd04f2e706b457b512491dc7eef2fba.jpg",
                 ];
 
                 if (index === 0) {
@@ -138,7 +138,9 @@ function Page() {
                       className="group relative aspect-[3/4] overflow-hidden rounded-xl shadow-md"
                     >
                       <img
-                        src={placeholderImages[index % placeholderImages.length]}
+                        src={
+                          placeholderImages[index % placeholderImages.length]
+                        }
                         alt={location.name}
                         className="h-full w-full object-cover transition-transform group-hover:scale-105"
                       />
@@ -213,7 +215,8 @@ function Page() {
             </div>
             {featuredLocations.length === 0 && (
               <p className="text-muted-foreground">
-                There is currently no merchant available right now. Please come back later.
+                There is currently no merchant available right now. Please come
+                back later.
               </p>
             )}
           </React.Fragment>
@@ -243,22 +246,26 @@ function Page() {
         ) : (
           <React.Fragment>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {topRatedMerchants.filter((merchant) => merchant.hasCompletedSetup).map((merchant) => (
-                <MerchantCard
-                  key={merchant.id}
-                  merchantId={merchant.id}
-                  image={merchant.bannerImage}
-                  name={merchant.name}
-                  location={merchant.location}
-                  rating={merchant.averageRating}
-                  favorite={merchant.favorite}
-                  onFavoriteToggle={handleFavoriteToggle}
-                />
-              ))}
+              {topRatedMerchants
+                .filter((merchant) => merchant.hasCompletedSetup)
+                .map((merchant) => (
+                  <MerchantCard
+                    key={merchant.id}
+                    merchantId={merchant.id}
+                    image={merchant.bannerImage}
+                    name={merchant.name}
+                    location={merchant.location}
+                    rating={merchant.averageRating}
+                    favorite={merchant.favorite}
+                    onFavoriteToggle={handleFavoriteToggle}
+                  />
+                ))}
             </div>
-            {topRatedMerchants.filter((merchant) => merchant.hasCompletedSetup).length === 0 && (
+            {topRatedMerchants.filter((merchant) => merchant.hasCompletedSetup)
+              .length === 0 && (
               <p className="text-muted-foreground">
-                There is currently no merchant available right now. Please come back later.
+                There is currently no merchant available right now. Please come
+                back later.
               </p>
             )}
           </React.Fragment>
@@ -288,23 +295,27 @@ function Page() {
         ) : (
           <React.Fragment>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
-              {popularMerchants.filter((merchant) => merchant.hasCompletedSetup).map((merchant) => (
-                <MerchantCard
-                  key={merchant.id}
-                  merchantId={merchant.id}
-                  image={merchant.bannerImage}
-                  name={merchant.name}
-                  location={merchant.location}
-                  rating={merchant.favoriteCount}
-                  favorite={merchant.favorite}
-                  isFavoriteCount={true}
-                  onFavoriteToggle={handleFavoriteToggle}
-                />
-              ))}
+              {popularMerchants
+                .filter((merchant) => merchant.hasCompletedSetup)
+                .map((merchant) => (
+                  <MerchantCard
+                    key={merchant.id}
+                    merchantId={merchant.id}
+                    image={merchant.bannerImage}
+                    name={merchant.name}
+                    location={merchant.location}
+                    rating={merchant.favoriteCount}
+                    favorite={merchant.favorite}
+                    isFavoriteCount={true}
+                    onFavoriteToggle={handleFavoriteToggle}
+                  />
+                ))}
             </div>
-            {popularMerchants.filter((merchant) => merchant.hasCompletedSetup).length === 0 && (
+            {popularMerchants.filter((merchant) => merchant.hasCompletedSetup)
+              .length === 0 && (
               <p className="text-muted-foreground">
-                There is currently no merchant available right now. Please come back later.
+                There is currently no merchant available right now. Please come
+                back later.
               </p>
             )}
           </React.Fragment>

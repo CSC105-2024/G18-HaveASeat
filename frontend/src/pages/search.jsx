@@ -216,7 +216,11 @@ function Page() {
                 search={searchQuery}
                 date={searchDate}
                 location={searchDistrict || searchProvince || searchLocation}
-                totalResults={filteredMerchants.filter((merchant) => merchant.hasCompletedSetup).length}
+                totalResults={
+                  filteredMerchants.filter(
+                    (merchant) => merchant.hasCompletedSetup,
+                  ).length
+                }
               />
             </div>
 
@@ -241,7 +245,8 @@ function Page() {
                 <Skeleton key={index} className="aspect-video w-full" />
               ))}
             </div>
-          ) : filteredMerchants.filter((merchant) => merchant.hasCompletedSetup).length > 0 ? (
+          ) : filteredMerchants.filter((merchant) => merchant.hasCompletedSetup)
+              .length > 0 ? (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
               {filteredMerchants.map((merchant) => (
                 <MerchantCard
