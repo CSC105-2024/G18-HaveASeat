@@ -162,18 +162,6 @@ function Page() {
     checkFavoriteStatus();
   }, [isAuthenticated, merchants.length]);
 
-  const applyFilters = () => {
-    setAppliedFilters({ ...filters });
-
-    let results = [...merchants];
-
-    if (filters.minRating > 1) {
-      results = results.filter((m) => m.averageRating >= filters.minRating);
-    }
-
-    setFilteredMerchants(results);
-  };
-
   const resetFilters = () => {
     setFilters({
       minRating: 1,
@@ -206,35 +194,6 @@ function Page() {
     );
   };
 
-  const handleApplyWithLocation = () => {
-    applyFilters();
-
-    if (
-      filters.province !== searchProvince ||
-      filters.district !== searchDistrict
-    ) {
-      const params = new URLSearchParams(searchParams);
-
-      if (filters.province) {
-        params.set("province", filters.province);
-      } else {
-        params.delete("province");
-      }
-
-      if (filters.district) {
-        params.set("district", filters.district);
-      } else {
-        params.delete("district");
-      }
-
-      if (params.has("location")) {
-        params.delete("location");
-      }
-
-      window.location.href = `${window.location.pathname}?${params.toString()}`;
-    }
-  };
-
   const activeFilterCount = useMemo(() => {
     let count = 0;
     if (appliedFilters.minRating > 1) count++;
@@ -257,7 +216,7 @@ function Page() {
                 search={searchQuery}
                 date={searchDate}
                 location={searchDistrict || searchProvince || searchLocation}
-                totalResults={filteredMerchants.length}
+                totalResults={filteredMerchants.filter((merchant) => merchant.hasCompletedSetup).length}
               />
             </div>
 
@@ -275,61 +234,6 @@ function Page() {
             )}
           </div>
 
-          {/* Active Filter Tags */}
-          {activeFilterCount > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {appliedFilters.minRating > 1 && (
-                <Badge variant="secondary" className="flex items-center gap-1">
-                  <IconStarFilled className="h-3 w-3" />
-                  {appliedFilters.minRating}+
-                  <button
-                    className="hover:bg-secondary-foreground/10 ml-1 rounded-full"
-                    onClick={() => {
-                      setFilters((prev) => ({ ...prev, minRating: 1 }));
-                      setAppliedFilters((prev) => ({ ...prev, minRating: 1 }));
-                      applyFilters();
-                    }}
-                  >
-                    <IconX className="h-3 w-3" />
-                  </button>
-                </Badge>
-              )}
-
-              {appliedFilters.province && (
-                <Badge variant="secondary" className="flex items-center gap-1">
-                  Province: {appliedFilters.province}
-                  <button
-                    className="hover:bg-secondary-foreground/10 ml-1 rounded-full"
-                    onClick={() => {
-                      const params = new URLSearchParams(searchParams);
-                      params.delete("province");
-                      params.delete("district");
-                      window.location.href = `${window.location.pathname}?${params.toString()}`;
-                    }}
-                  >
-                    <IconX className="h-3 w-3" />
-                  </button>
-                </Badge>
-              )}
-
-              {appliedFilters.district && (
-                <Badge variant="secondary" className="flex items-center gap-1">
-                  District: {appliedFilters.district}
-                  <button
-                    className="hover:bg-secondary-foreground/10 ml-1 rounded-full"
-                    onClick={() => {
-                      const params = new URLSearchParams(searchParams);
-                      params.delete("district");
-                      window.location.href = `${window.location.pathname}?${params.toString()}`;
-                    }}
-                  >
-                    <IconX className="h-3 w-3" />
-                  </button>
-                </Badge>
-              )}
-            </div>
-          )}
-
           {/* Results Grid */}
           {loading ? (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
@@ -337,7 +241,7 @@ function Page() {
                 <Skeleton key={index} className="aspect-video w-full" />
               ))}
             </div>
-          ) : filteredMerchants.length > 0 ? (
+          ) : filteredMerchants.filter((merchant) => merchant.hasCompletedSetup).length > 0 ? (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
               {filteredMerchants.map((merchant) => (
                 <MerchantCard

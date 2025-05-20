@@ -12,11 +12,13 @@ export default async function(c: Context<AppEnv>) {
     const user = c.get("user");
     const { ids } = await c.req.json();
 
+    if (!user) {
+      return c.json({ error: "Unauthorized"}, 401);
+    }
 
     if (!Array.isArray(ids)) {
       return c.json({ error: "Invalid request. Expected \"ids\" array" }, 400);
     }
-
 
     const favorites = await prisma.user.findUnique({
       where: { id: user.id },

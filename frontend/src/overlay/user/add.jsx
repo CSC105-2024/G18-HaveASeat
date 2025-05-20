@@ -107,7 +107,7 @@ function SignUpOverlay({ addMode = false }) {
       };
 
       const response = await axiosInstance.post(
-        "/authentication/signup",
+        "/authentication/sign-up",
         formattedData,
       );
       const { accessToken, refreshToken, user } = response.data;

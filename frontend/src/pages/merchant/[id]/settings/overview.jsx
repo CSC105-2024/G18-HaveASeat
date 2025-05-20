@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Separator } from "@/components/ui/separator.jsx";
@@ -143,6 +143,7 @@ const FormSchema = z.object({
 
 function Page() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
 
@@ -322,6 +323,7 @@ function Page() {
     try {
       await axiosInstance.patch(`/merchant/${id}/settings/overview`, data);
       toast.success("Merchant information updated successfully");
+      navigate(0);
     } catch (error) {
       console.error("Error updating merchant:", error);
       toast.error("Failed to update merchant information");

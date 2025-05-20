@@ -35,10 +35,6 @@ function SetupProgress() {
           `/merchant/${response.data.merchantId}/status`,
         );
         setSetupStatus(statusResponse.data);
-
-        if (statusResponse.data.isComplete) {
-          navigate(`/merchant/${response.data.merchantId}/dashboard`);
-        }
       }
     } catch (error) {
       console.error("Error checking merchant status:", error);

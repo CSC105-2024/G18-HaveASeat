@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import {useNavigate, useParams} from "react-router";
 import MerchantLayout from "@/components/layout/merchant.jsx";
 import { Separator } from "@/components/ui/separator.jsx";
 import { useForm } from "react-hook-form";
@@ -68,6 +68,7 @@ const FormSchema = z.object({
 
 function Page() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
 
@@ -230,6 +231,8 @@ function Page() {
         setImagePreviews([]);
         form.setValue("images", []);
       }
+
+      navigate(0);
     } catch (error) {
       console.error("Error updating display:", error);
       toast.error("Failed to update display settings");

@@ -1,8 +1,7 @@
-import type { PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "@/prisma/generated/index.d.ts";
 
 export async function updateReservationStatuses(prisma: PrismaClient) {
   const now = new Date();
-
 
   const reservationsToUpdate = await prisma.reservation.findMany({
     where: {
