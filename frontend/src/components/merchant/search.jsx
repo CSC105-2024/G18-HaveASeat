@@ -395,7 +395,7 @@ function ReservationPlaceSearch({ className, ...props }) {
                 name="date"
                 render={({ field }) => (
                   <FormItem className="">
-                    <FormLabel className="font-medium max-md:hidden md:invisible">
+                    <FormLabel className="font-medium max-sm:hidden sm:invisible">
                       Time
                     </FormLabel>
                     <FormControl>
@@ -588,35 +588,35 @@ function ReservationPlaceSearch({ className, ...props }) {
  */
 function ReservationPlaceSearchSheet({ className }) {
   return (
-    <Sheet>
-      <SheetTrigger
-        className={cn(buttonVariants(), "w-full lg:hidden", className)}
-      >
-        <IconSearch className="mr-2 size-4" />
-        Search
-      </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
-          <NavLink to="/search" className="flex flex-col">
-            <SheetTitle>Have A Seat</SheetTitle>
-            <SheetDescription className="text-xs">
-              Search Merchants
-            </SheetDescription>
-          </NavLink>
-        </SheetHeader>
-        <div className="flex h-full flex-1 flex-col px-4">
-          <ReservationPlaceSearch className="flex-1 justify-between" />
-        </div>
-        <SheetFooter className="pt-0">
-          <SheetClose asChild>
-            <Button variant="secondary">
-              <IconSquareRoundedX className="mr-2 size-4" />
-              Close
-            </Button>
-          </SheetClose>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+      <Sheet>
+        <SheetTrigger
+            className={cn(buttonVariants(), "w-full lg:hidden", className)}
+        >
+          <IconSearch className="mr-2 size-4" />
+          Search
+        </SheetTrigger>
+        <SheetContent>
+          <SheetHeader>
+            <NavLink to="/search" className="flex flex-col">
+              <SheetTitle>Have A Seat</SheetTitle>
+              <SheetDescription className="text-xs">
+                Search Merchants
+              </SheetDescription>
+            </NavLink>
+          </SheetHeader>
+          <div className="flex h-full flex-1 flex-col px-4">
+            <ReservationPlaceSearch className="flex-1 justify-between" />
+          </div>
+          <SheetFooter className="pt-0">
+            <SheetClose asChild>
+              <Button variant="secondary">
+                <IconSquareRoundedX className="mr-2 size-4" />
+                Close
+              </Button>
+            </SheetClose>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
   );
 }
 

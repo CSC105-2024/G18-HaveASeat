@@ -15,9 +15,7 @@ import {
 } from "@/components/ui/form.jsx";
 import { Input } from "@/components/ui/input.jsx";
 import { Button } from "@/components/ui/button.jsx";
-import { useForgetPasswordOverlay } from "@/overlay/user/forget-password.jsx";
 import { z } from "zod";
-import axiosInstance from "@/lib/axios.js";
 import { useAuthStore } from "@/store/auth.js";
 import { useNavigate } from "react-router";
 
