@@ -36,7 +36,7 @@ export default async function(c: Context<AppEnv>) {
     }
 
 
-    const isMerchantOwner = user.id === reservation.seat.merchant.ownerId;
+    const isMerchantOwner = user.id === reservation?.seat.merchant.ownerId;
     const isUserReservation = user.id === reservation.userId;
 
 
@@ -54,15 +54,17 @@ export default async function(c: Context<AppEnv>) {
       note: reservation.note,
       reservationType: reservation.reservationType,
       createdAt: reservation.createdAt,
-      seat: {
-        id: reservation.seat.id,
-        number: reservation.seat.number,
-        location: reservation.seat.location
-      },
-      merchant: {
-        id: reservation.seat.merchant.id,
-        name: reservation.seat.merchant.name
-      },
+      ...(reservation.seat && {
+        seat: {
+          id: reservation.seat.id,
+          number: reservation.seat.number,
+          location: reservation.seat.location
+        },
+        merchant: {
+          id: reservation.seat.merchant.id,
+          name: reservation.seat.merchant.name
+        }
+      }),
       user: reservation.user
     });
   } catch (error) {

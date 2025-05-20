@@ -35,7 +35,7 @@ export async function updateReservationStatuses(prisma: PrismaClient) {
       }),
 
       prisma.seat.update({
-        where: { id: reservation.seat.id },
+        where: { id: reservation?.seat.id },
         data: { isAvailable: true }
       })
     ]);
@@ -61,9 +61,9 @@ export async function checkCurrentReservations(prisma: PrismaClient) {
 
 
   for (const reservation of activeReservations) {
-    if (reservation.seat.isAvailable) {
+    if (reservation?.seat.isAvailable) {
       await prisma.seat.update({
-        where: { id: reservation.seat.id },
+        where: { id: reservation?.seat.id },
         data: { isAvailable: false }
       });
     }
