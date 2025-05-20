@@ -169,7 +169,9 @@ export default async function(c: Context<AppEnv>) {
         numberOfGuests: reservation.numberOfGuests,
         numberOfTables: reservation.numberOfTables,
         status: reservation.status,
-        seatLocation: reservation.seat.location,
+        ...(reservation?.seat && {
+          seatLocation: reservation.seat.location,
+        }),
         userName: reservation.user?.name || "Walk-in",
         userEmail: reservation.user?.email
       }))

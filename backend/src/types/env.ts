@@ -5,7 +5,7 @@ export type AppEnv = {
     DATABASE_URL: string;
   };
   Variables: {
-    user: Omit<User, "password">;
+    user: User;
     merchant: Prisma.MerchantGetPayload<{
       include: {
         address: true,

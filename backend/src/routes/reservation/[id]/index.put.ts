@@ -38,7 +38,7 @@ export default async function(c: Context<AppEnv>) {
     }
 
 
-    if (reservation.seat.merchant.ownerId !== user.id) {
+    if (reservation?.seat.merchant.ownerId !== user.id) {
       return c.json({ error: "Unauthorized" }, 403);
     }
 
@@ -54,7 +54,7 @@ export default async function(c: Context<AppEnv>) {
 
       ...(shouldReleaseSeat ? [
         prisma.seat.update({
-          where: { id: reservation.seat.id },
+          where: { id: reservation?.seat.id },
           data: { isAvailable: true }
         })
       ] : [])

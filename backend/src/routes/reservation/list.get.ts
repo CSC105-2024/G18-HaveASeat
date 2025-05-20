@@ -43,12 +43,14 @@ export default async function(c: Context<AppEnv>) {
           endTime: res.endTime,
           numberOfGuests: res.numberOfGuests,
           numberOfTables: res.numberOfTables,
-          seat: {
-            id: res.seat.id,
-            number: res.seat.number,
-            location: res.seat.location
-          },
-          merchant: res.seat.merchant,
+          ...(res?.seat && {
+            seat: {
+              id: res.seat.id,
+              number: res.seat.number,
+              location: res.seat.location
+            },
+            merchant: res.seat.merchant,
+          }),
           createdAt: res.createdAt
         }))
       });
@@ -98,11 +100,13 @@ export default async function(c: Context<AppEnv>) {
           numberOfTables: res.numberOfTables,
           reservationType: res.reservationType,
           note: res.note,
-          seat: {
-            id: res.seat.id,
-            number: res.seat.number,
-            location: res.seat.location
-          },
+          ...(res.seat && {
+            seat: {
+              id: res.seat.id,
+              number: res.seat.number,
+              location: res.seat.location
+            }
+          }),
           user: res.user,
           createdAt: res.createdAt
         }))
