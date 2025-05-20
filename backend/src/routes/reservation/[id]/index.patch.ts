@@ -36,7 +36,7 @@ export default async function(c: Context<AppEnv>) {
     }
 
 
-    if (user.id !== reservation?.seat.merchant.ownerId && !user.isAdmin) {
+    if (user.id !== reservation.seat?.merchant.ownerId && !user.isAdmin) {
       return c.json({ error: "Unauthorized" }, 403);
     }
 

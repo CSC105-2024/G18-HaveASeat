@@ -54,7 +54,7 @@ export default async function(c: Context<AppEnv>) {
 
       ...(shouldReleaseSeat ? [
         prisma.seat.update({
-          where: { id: reservation?.seat.id },
+          where: { id: reservation.seat?.id },
           data: { isAvailable: true }
         })
       ] : [])
