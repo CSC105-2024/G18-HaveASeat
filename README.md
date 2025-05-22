@@ -1,6 +1,6 @@
 # G18 - Have A Seat 🍽️
 
-A modern reservation platform that connects diners with their favorite establishments. Built with React and Node.js, Have A Seat simplifies the dining experience by enabling seamless table reservations and restaurant management.
+A modern reservation platform that connects diners with their favorite establishments. Built with React and Node.js, Have A Seat simplifies the dining experience by enabling seamless table reservations and merchant management.
 
 **"Book It. Sip It. Love It."**
 
@@ -46,7 +46,7 @@ This is a monorepo containing two main applications:
 -  **Hono.js** - Fast, lightweight web framework for Edge
 - ️ **Prisma + SQLite** - Type-safe database access and migrations
 -  **JWT Authentication** - Secure user sessions with HTTP-only cookies
--  **File Upload** - Image handling for restaurant galleries
+-  **File Upload** - Image handling for place galleries
 -  **Cron Jobs** - Automated reservation status updates
 -  **Advanced Search** - Full-text search with filters and sorting
 
@@ -114,8 +114,8 @@ This is a monorepo containing two main applications:
 ### Database Schema
 
 Key entities in our system:
-- **Users** - Diners and restaurant owners
-- **Merchants** - Restaurant profiles and settings
+- **Users** - Diners and place owners
+- **Merchants** - Place profiles and settings
 - **Reservations** - Booking records with status tracking
 - **Reviews** - Customer feedback and ratings
 - **Seats** - Table and seating area management
