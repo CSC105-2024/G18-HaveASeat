@@ -5,7 +5,6 @@ const getCookie = (name) => {
   const cookies = document.cookie.split(';');
   for (let cookie of cookies) {
     const [cookieName, cookieValue] = cookie.trim().split('=');
-    console.log(document.cookie)
     if (cookieName === name) {
       return cookieValue || null;
     }

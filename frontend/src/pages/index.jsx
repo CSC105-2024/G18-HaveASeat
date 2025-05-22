@@ -260,7 +260,7 @@ function Page() {
                   />
                 ))}
             </div>
-            {topRatedMerchants.filter((merchant) => merchant.hasCompletedSetup)
+            {topRatedMerchants
               .length === 0 && (
               <p className="text-muted-foreground">
                 There is currently no merchant available right now. Please come

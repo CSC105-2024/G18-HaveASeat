@@ -127,8 +127,8 @@ function ReservationAddOverlay({ isManual = false, merchantId, onSuccess }) {
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      reservationDate: addMinutes(new Date(), 5),
-      reservationTimeStart: format(new Date(), "HH:mm"),
+      reservationDate: new Date(),
+      reservationTimeStart: format(addMinutes(new Date(), 5), "HH:mm"),
       reservationTimeEnd: format(addHours(new Date(), 1), "HH:mm"),
       customerName: user?.name || "",
       customerPhone: user?.phoneNumber || "",

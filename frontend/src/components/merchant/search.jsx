@@ -430,8 +430,7 @@ function ReservationPlaceSearch({ className, ...props }) {
 
           <Separator orientation="vertical" className="h-12! max-lg:hidden" />
 
-          <div className="flex w-full flex-1 flex-col items-start space-y-2 text-sm">
-            <div className="flex flex-1 flex-col gap-2 lg:flex-row">
+          <div className="flex flex-1 flex-col gap-2 lg:flex-row">
               {/* Province Selection */}
               <FormField
                 control={form.control}
@@ -456,7 +455,7 @@ function ReservationPlaceSearch({ className, ...props }) {
                           <CommandEmpty>No province found.</CommandEmpty>
                           <CommandGroup>
                             <CommandItem
-                              value=""
+                              value="-1"
                               onSelect={() => {
                                 setSelectedProvince("");
                                 setSelectedDistrict("");
@@ -529,7 +528,7 @@ function ReservationPlaceSearch({ className, ...props }) {
                           </CommandEmpty>
                           <CommandGroup>
                             <CommandItem
-                              value=""
+                              value="-1"
                               onSelect={() => {
                                 setSelectedDistrict("");
                                 form.setValue("district", "");
@@ -568,7 +567,6 @@ function ReservationPlaceSearch({ className, ...props }) {
                   </FormItem>
                 )}
               />
-            </div>
           </div>
         </div>
 
