@@ -110,8 +110,8 @@ This is a monorepo containing two main applications:
 
 ## Detailed Installation
 
-- **Frontend** : *[View complete Insallation Steps](./frontned/README.md)*
-- **Backend** : *[View complete Insallation Steps](./backend/README.md)*
+- **Frontend** : *[View complete Installation Steps](./frontend/README.md#development-setup)*
+- **Backend** : *[View complete Installation Steps](./backend/README.md#development-setup)*
 
 ### Database Schema
 
@@ -124,7 +124,7 @@ Key entities in our system:
 
 ## API Endpoints
 
-*[View complete API documentation](./backend/README.md)*
+*[View complete API documentation](./backend/README.md#api-endpoints)*
 
 ## Deployment
 
