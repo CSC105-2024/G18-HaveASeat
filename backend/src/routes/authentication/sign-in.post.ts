@@ -1,7 +1,7 @@
 import type { Context } from "hono";
 import { UserModel } from "@/models/user.model.js";
 import bcrypt from "bcryptjs";
-import {setAuthCookie} from "@/middlewares/auth.middleware.js";
+import { setAuthCookie } from "@/middlewares/auth.middleware.js";
 import type { AppEnv } from "@/types/env.js";
 
 export default async function(c: Context<AppEnv>) {
@@ -24,7 +24,7 @@ export default async function(c: Context<AppEnv>) {
       return c.json({ error: "Invalid credentials" }, 401);
     }
 
-    await setAuthCookie(c, {id: user.id, email: user.email});
+    await setAuthCookie(c, { id: user.id, email: user.email });
 
     return c.json({
       user: {

@@ -170,21 +170,21 @@ function NavigationProfile() {
               <DropdownMenuSeparator />
 
               <DropdownMenuItem className="hover:cursor-pointer" asChild>
-                <Link to={getSettingsUrl(null, 'overview')}>
+                <Link to={getSettingsUrl(null, "overview")}>
                   <IconWorldCog className="text-muted-foreground size-4" />{" "}
                   Basic Information
                 </Link>
               </DropdownMenuItem>
 
               <DropdownMenuItem className="hover:cursor-pointer" asChild>
-                <Link to={getSettingsUrl(null,'display')}>
+                <Link to={getSettingsUrl(null, "display")}>
                   <IconPhotoCog className="text-muted-foreground size-4" />{" "}
                   Display & Images
                 </Link>
               </DropdownMenuItem>
 
               <DropdownMenuItem className="hover:cursor-pointer" asChild>
-                <Link to={getSettingsUrl(null,'reservation')}>
+                <Link to={getSettingsUrl(null, "reservation")}>
                   <IconCalendarCog className="text-muted-foreground size-4" />{" "}
                   Reservation & Zones
                 </Link>

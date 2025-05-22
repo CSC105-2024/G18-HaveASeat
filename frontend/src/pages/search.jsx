@@ -2,14 +2,12 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router";
 import { ReservationSiteHero } from "@/components/site.jsx";
 import { MerchantCard } from "@/components/merchant/card.jsx";
-import { Badge } from "@/components/ui/badge.jsx";
 import { Button } from "@/components/ui/button.jsx";
 import { Skeleton } from "@/components/ui/skeleton.jsx";
 import {
   IconCalendar,
   IconMapPin,
   IconSearch,
-  IconStarFilled,
   IconX,
 } from "@tabler/icons-react";
 import axiosInstance from "@/lib/axios";

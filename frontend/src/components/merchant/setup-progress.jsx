@@ -18,7 +18,7 @@ function SetupProgress({ trigger }) {
   const [checking, setChecking] = useState(false);
   const [merchantId, setMerchantId] = useState(null);
   const [setupStatus, setSetupStatus] = useState(null);
-  const {refreshSetupStatus} = useMerchantContext();
+  const { refreshSetupStatus } = useMerchantContext();
 
   useEffect(() => {
     checkMerchantStatus();
@@ -82,7 +82,10 @@ function SetupProgress({ trigger }) {
               <div className="flex flex-col gap-4 md:flex-row">
                 <Link
                   to="/merchant/setup"
-                  className={buttonVariants({ variant: "secondary", size: "sm" })}
+                  className={buttonVariants({
+                    variant: "secondary",
+                    size: "sm",
+                  })}
                 >
                   More Information
                 </Link>

@@ -3,15 +3,15 @@ import { getPrisma } from "@/lib/prisma.ts";
 import { authMiddleware } from "@/middlewares/auth.middleware.js";
 import type { AppEnv } from "@/types/env.js";
 
-export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
+export const middleware = [
+  authMiddleware
+];
 
+export default async function(c: Context<AppEnv>) {
   try {
     const user = c.get("user");
     const prisma = getPrisma();
     const id = c.req.param("id");
-
 
     const review = await prisma.review.findUnique({
       where: { id },
@@ -28,15 +28,12 @@ export default async function(c: Context<AppEnv>) {
       return c.json({ error: "Review not found" }, 404);
     }
 
-
     const isReviewAuthor = user.id === review.userId;
     const isMerchantOwner = user.id === review.merchant.ownerId;
-
 
     if (!isReviewAuthor && !isMerchantOwner && !user.isAdmin) {
       return c.json({ error: "Unauthorized" }, 403);
     }
-
 
     await prisma.reviewReply.deleteMany({
       where: { reviewId: id }
@@ -45,7 +42,6 @@ export default async function(c: Context<AppEnv>) {
     await prisma.reviewReport.deleteMany({
       where: { reviewId: id }
     });
-
 
     await prisma.review.delete({
       where: { id }

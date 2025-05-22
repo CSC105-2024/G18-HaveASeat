@@ -3,14 +3,14 @@ import { getPrisma } from "@/lib/prisma.ts";
 import { authMiddleware } from "@/middlewares/auth.middleware.js";
 import type { AppEnv } from "@/types/env.js";
 
+export const middleware = [
+  authMiddleware
+];
+
 export default async function(c: Context<AppEnv>) {
   try {
-    await authMiddleware(c, async () => {
-    });
-
     const prisma = getPrisma();
     const user = c.get("user");
-
 
     if (!user.isAdmin) {
       return c.json({
@@ -18,7 +18,6 @@ export default async function(c: Context<AppEnv>) {
         error: "Only administrators can view reports"
       }, 403);
     }
-
 
     const reports = await prisma.reviewReport.findMany({
       where: {

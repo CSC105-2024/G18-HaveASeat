@@ -3,15 +3,15 @@ import { authMiddleware } from "@/middlewares/auth.middleware.js";
 import type { AppEnv } from "@/types/env.js";
 import { getPrisma } from "@/lib/prisma.ts";
 
-export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
+export const middleware = [
+  authMiddleware
+];
 
+export default async function(c: Context<AppEnv>) {
   try {
     const user = c.get("user");
     const id = c.req.param("id");
     const prisma = getPrisma();
-
 
     const merchant = await prisma.merchant.findUnique({
       where: { id },
@@ -28,7 +28,6 @@ export default async function(c: Context<AppEnv>) {
       return c.json({ error: "Unauthorized" }, 403);
     }
 
-
     const zones = merchant.seats.reduce((acc, seat) => {
       if (!acc[seat.location]) {
         acc[seat.location] = {
@@ -39,7 +38,6 @@ export default async function(c: Context<AppEnv>) {
       acc[seat.location].amount += 1;
       return acc;
     }, {} as Record<string, { name: string; amount: number }>);
-
 
     const response = {
       floor_plan: merchant.floorPlan,

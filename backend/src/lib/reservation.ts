@@ -22,7 +22,6 @@ export async function updateReservationStatuses(prisma: PrismaClient) {
     }
   });
 
-
   for (const reservation of reservationsToUpdate) {
     const newStatus = reservation.endTime < now ? "COMPLETED" : "NO_SHOW";
 
@@ -45,7 +44,6 @@ export async function updateReservationStatuses(prisma: PrismaClient) {
 export async function checkCurrentReservations(prisma: PrismaClient) {
   const now = new Date();
 
-
   const activeReservations = await prisma.reservation.findMany({
     where: {
       startTime: { lte: now },
@@ -56,7 +54,6 @@ export async function checkCurrentReservations(prisma: PrismaClient) {
       seat: true
     }
   });
-
 
   for (const reservation of activeReservations) {
     if (reservation.seat?.isAvailable) {

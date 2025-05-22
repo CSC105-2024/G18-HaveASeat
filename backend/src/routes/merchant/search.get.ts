@@ -9,9 +9,7 @@ export default async function(c: Context<AppEnv>) {
     const sort = c.req.query("sort") || "recent";
     const order = c.req.query("order") || "desc";
 
-
     let where: any = {};
-
 
     if (name) {
       where.name = {
@@ -19,7 +17,6 @@ export default async function(c: Context<AppEnv>) {
         mode: "insensitive"
       };
     }
-
 
     if (location) {
       where.OR = [
@@ -55,7 +52,6 @@ export default async function(c: Context<AppEnv>) {
       ];
     }
 
-
     let orderBy: any = {};
     if (sort === "rating") {
 
@@ -74,7 +70,6 @@ export default async function(c: Context<AppEnv>) {
       };
     }
 
-
     const merchants = await prisma.merchant.findMany({
       where,
       include: {
@@ -83,8 +78,8 @@ export default async function(c: Context<AppEnv>) {
         owner: {
           select: {
             id: true,
-            name: true,
-          },
+            name: true
+          }
         },
         address: true,
         reviews: {
@@ -102,7 +97,6 @@ export default async function(c: Context<AppEnv>) {
       },
       orderBy
     });
-
 
     const transformedMerchants = merchants.map(merchant => {
 
@@ -174,7 +168,6 @@ export default async function(c: Context<AppEnv>) {
       };
     });
 
-
     if (sort === "rating") {
       transformedMerchants.sort((a, b) => {
         return order === "desc"
@@ -182,7 +175,6 @@ export default async function(c: Context<AppEnv>) {
           : a.averageRating - b.averageRating;
       });
     }
-
 
     let filteredMerchants = transformedMerchants.filter((merchant) => merchant.hasCompletedSetup);
     if (rating) {

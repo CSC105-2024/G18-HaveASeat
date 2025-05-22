@@ -3,10 +3,11 @@ import { getPrisma } from "@/lib/prisma.ts";
 import { authMiddleware } from "@/middlewares/auth.middleware.js";
 import type { AppEnv } from "@/types/env.js";
 
-export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
+export const middleware = [
+  authMiddleware
+];
 
+export default async function(c: Context<AppEnv>) {
   try {
     const user = c.get("user");
     const prisma = getPrisma();
@@ -49,7 +50,7 @@ export default async function(c: Context<AppEnv>) {
               number: res.seat.number,
               location: res.seat.location
             },
-            merchant: res.seat.merchant,
+            merchant: res.seat.merchant
           }),
           createdAt: res.createdAt
         }))
@@ -63,7 +64,6 @@ export default async function(c: Context<AppEnv>) {
       if (!merchant) {
         return c.json({ error: "Merchant not found" }, 404);
       }
-
 
       if (merchant.ownerId !== user.id && !user.isAdmin) {
         return c.json({ error: "Unauthorized" }, 403);

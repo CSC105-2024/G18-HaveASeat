@@ -1,10 +1,6 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge.jsx";
-import {
-  IconHeartFilled,
-  IconSettings,
-  IconStarFilled,
-} from "@tabler/icons-react";
+import { IconHeartFilled, IconStarFilled } from "@tabler/icons-react";
 import {
   formatNumberCompact,
   formatNumberDecimalPoint,

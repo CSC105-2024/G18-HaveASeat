@@ -9,7 +9,7 @@ import { useMerchantContext } from "@/providers/merchant.jsx";
 import { Navigate, useParams } from "react-router";
 
 function MerchantLayout({ children }) {
-  const {id} = useParams();
+  const { id } = useParams();
   const { user, isLoading: isAuthLoading } = useAuthStore();
   const {
     merchantId,
@@ -22,7 +22,7 @@ function MerchantLayout({ children }) {
     return <Loading />;
   }
 
-  if (!merchant || merchant && merchant.ownerId !== user?.id) {
+  if (!merchant || (merchant && merchant.ownerId !== user?.id)) {
     if (merchant?.id) {
       return <Navigate to={`/merchant/${id}`} replace={true} />;
     }
@@ -39,7 +39,10 @@ function MerchantLayout({ children }) {
           <MerchantBanner merchant={merchant} merchantId={merchantId} />
           <section className="flex flex-col gap-8 md:flex-row">
             <aside className="flex-3/12">
-              <MerchantNavigation merchantId={merchantId} hasCompletedSetup={hasCompletedSetup} />
+              <MerchantNavigation
+                merchantId={merchantId}
+                hasCompletedSetup={hasCompletedSetup}
+              />
             </aside>
             <div className="flex-9/12 py-4">{children}</div>
           </section>

@@ -18,8 +18,8 @@ export default async function(c: Context<AppEnv>) {
                  JOIN "Merchant" merchant ON address."merchantId" = merchant.id
                  LEFT JOIN "User" owner ON merchant."ownerId" = owner.id
         WHERE
-        -- Overview completion checks
-          merchant.name IS NOT NULL
+          -- Overview completion checks
+            merchant.name IS NOT NULL
           AND merchant.name != CONCAT(owner.name, '''s Business')
         AND address.id IS NOT NULL
         -- Display completion checks  
@@ -35,7 +35,7 @@ export default async function(c: Context<AppEnv>) {
             WHERE s."merchantId" = merchant.id
         )
         GROUP BY address."district", address."province"
-        ORDER BY COUNT(merchant.id) DESC
+        ORDER BY COUNT (merchant.id) DESC
             LIMIT 5
     `;
 
@@ -47,8 +47,8 @@ export default async function(c: Context<AppEnv>) {
         owner: {
           select: {
             id: true,
-            name: true,
-          },
+            name: true
+          }
         },
         address: true,
         reviews: {
@@ -73,8 +73,8 @@ export default async function(c: Context<AppEnv>) {
         owner: {
           select: {
             id: true,
-            name: true,
-          },
+            name: true
+          }
         },
         address: true,
         _count: {
@@ -138,9 +138,9 @@ export default async function(c: Context<AppEnv>) {
       setupStatus.reservation.isComplete = setupStatus.reservation.missingFields.length === 0;
 
       const hasCompletedSetup =
-          setupStatus.overview.isComplete &&
-          setupStatus.display.isComplete &&
-          setupStatus.reservation.isComplete;
+        setupStatus.overview.isComplete &&
+        setupStatus.display.isComplete &&
+        setupStatus.reservation.isComplete;
 
       return {
         id: merchant.id,
@@ -151,10 +151,9 @@ export default async function(c: Context<AppEnv>) {
         averageRating: avgRating,
         reviewCount: totalRatings,
         favoriteCount: merchant._count.favouritedBy,
-        hasCompletedSetup,
+        hasCompletedSetup
       };
     });
-
 
     const sortedTopRated = transformedTopRated
       .sort((a, b) => b.averageRating - a.averageRating)
@@ -202,9 +201,9 @@ export default async function(c: Context<AppEnv>) {
       setupStatus.reservation.isComplete = setupStatus.reservation.missingFields.length === 0;
 
       const hasCompletedSetup =
-          setupStatus.overview.isComplete &&
-          setupStatus.display.isComplete &&
-          setupStatus.reservation.isComplete;
+        setupStatus.overview.isComplete &&
+        setupStatus.display.isComplete &&
+        setupStatus.reservation.isComplete;
 
       return {
         id: merchant.id,
@@ -213,7 +212,7 @@ export default async function(c: Context<AppEnv>) {
         bannerImage: merchant.bannerImage,
         location: merchant.address ? merchant.address.district : null,
         favoriteCount: merchant._count.favouritedBy,
-        hasCompletedSetup,
+        hasCompletedSetup
       };
     });
 
@@ -221,14 +220,14 @@ export default async function(c: Context<AppEnv>) {
       return {
         name: location.name,
         province: location.province,
-        merchantCount: Number(location.merchantCount),
+        merchantCount: Number(location.merchantCount)
       };
     });
 
     return c.json({
       featuredLocations: featuredLocations,
       topRatedMerchants: sortedTopRated.filter((merchant) => merchant.hasCompletedSetup),
-      popularMerchants: transformedPopular.filter((merchant) => merchant.hasCompletedSetup),
+      popularMerchants: transformedPopular.filter((merchant) => merchant.hasCompletedSetup)
     });
 
   } catch (error) {

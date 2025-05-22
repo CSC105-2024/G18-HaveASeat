@@ -5,10 +5,11 @@ import type { AppEnv } from "@/types/env.js";
 import { $Enums } from "@/prisma/generated/index.js";
 import ReservationType = $Enums.ReservationType;
 
-export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
+export const middleware = [
+  authMiddleware
+];
 
+export default async function(c: Context<AppEnv>) {
   try {
     const user = c.get("user");
     const prisma = getPrisma();
@@ -28,11 +29,9 @@ export default async function(c: Context<AppEnv>) {
       reservationType = "ONLINE"
     } = body;
 
-
     if (!merchantId || !seatLocation || !startTime || !endTime || !numberOfGuests) {
       return c.json({ error: "Missing required fields" }, 400);
     }
-
 
     const merchant = await prisma.merchant.findUnique({
       where: { id: merchantId },
@@ -45,7 +44,6 @@ export default async function(c: Context<AppEnv>) {
       return c.json({ error: "Merchant not found" }, 404);
     }
 
-
     const availableSeats = merchant.seats.filter(seat =>
       seat.location === seatLocation && seat.isAvailable
     );
@@ -54,7 +52,6 @@ export default async function(c: Context<AppEnv>) {
       return c.json({ error: "No available seats in this location" }, 400);
     }
 
-
     const start = new Date(startTime);
     const end = new Date(endTime);
 
@@ -62,12 +59,10 @@ export default async function(c: Context<AppEnv>) {
       return c.json({ error: "End time must be after start time" }, 400);
     }
 
-
     const now = new Date();
     if (start < now) {
       return c.json({ error: "Cannot make reservations for past times" }, 400);
     }
-
 
     let selectedSeatId = null;
 
@@ -106,7 +101,6 @@ export default async function(c: Context<AppEnv>) {
       return c.json({ error: "This time slot is already booked for all seats in this zone" }, 409);
     }
 
-
     const result = await prisma.$transaction(async (tx) => {
 
       const reservation = await tx.reservation.create({
@@ -123,7 +117,6 @@ export default async function(c: Context<AppEnv>) {
           note: note || ""
         }
       });
-
 
       await tx.seat.update({
         where: { id: selectedSeatId },

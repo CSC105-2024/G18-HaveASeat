@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import MerchantLayout from "@/components/layout/merchant.jsx";
 import { Separator } from "@/components/ui/separator.jsx";
 import {

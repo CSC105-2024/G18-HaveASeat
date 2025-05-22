@@ -3,15 +3,15 @@ import { getPrisma } from "@/lib/prisma.ts";
 import { authMiddleware } from "@/middlewares/auth.middleware.js";
 import type { AppEnv } from "@/types/env.js";
 
-export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
+export const middleware = [
+  authMiddleware
+];
 
+export default async function(c: Context<AppEnv>) {
   try {
     const user = c.get("user");
     const prisma = getPrisma();
     const id = c.req.param("id");
-
 
     const reservation = await prisma.reservation.findUnique({
       where: { id },
@@ -35,10 +35,8 @@ export default async function(c: Context<AppEnv>) {
       return c.json({ error: "Reservation not found" }, 404);
     }
 
-
     const isMerchantOwner = user.id === reservation.seat?.merchant.ownerId;
     const isUserReservation = user.id === reservation.userId;
-
 
     if (!isMerchantOwner && !isUserReservation && !user.isAdmin) {
       return c.json({ error: "Unauthorized" }, 403);

@@ -7,7 +7,6 @@ export default async function(c: Context<AppEnv>) {
     const prisma = getPrisma();
     const id = c.req.param("id");
 
-
     const review = await prisma.review.findUnique({
       where: { id },
       include: {

@@ -431,142 +431,142 @@ function ReservationPlaceSearch({ className, ...props }) {
           <Separator orientation="vertical" className="h-12! max-lg:hidden" />
 
           <div className="flex flex-1 flex-col gap-2 lg:flex-row">
-              {/* Province Selection */}
-              <FormField
-                control={form.control}
-                name="province"
-                render={({ field }) => (
-                  <FormItem className="w-full flex-1">
-                    <FormLabel className="font-medium">Province</FormLabel>
-                    <ComboboxWrapper
-                      open={openProvince}
-                      setOpen={setOpenProvince}
-                      title="Select Province"
-                    >
-                      <span className="font-normal">
-                        {selectedProvince
-                          ? selectedProvince
-                          : "Select province..."}
-                      </span>
+            {/* Province Selection */}
+            <FormField
+              control={form.control}
+              name="province"
+              render={({ field }) => (
+                <FormItem className="w-full flex-1">
+                  <FormLabel className="font-medium">Province</FormLabel>
+                  <ComboboxWrapper
+                    open={openProvince}
+                    setOpen={setOpenProvince}
+                    title="Select Province"
+                  >
+                    <span className="font-normal">
+                      {selectedProvince
+                        ? selectedProvince
+                        : "Select province..."}
+                    </span>
 
-                      <Command className="w-full">
-                        <CommandInput placeholder="Search province..." />
-                        <CommandList className="max-h-64 overflow-y-auto">
-                          <CommandEmpty>No province found.</CommandEmpty>
-                          <CommandGroup>
+                    <Command className="w-full">
+                      <CommandInput placeholder="Search province..." />
+                      <CommandList className="max-h-64 overflow-y-auto">
+                        <CommandEmpty>No province found.</CommandEmpty>
+                        <CommandGroup>
+                          <CommandItem
+                            value="-1"
+                            onSelect={() => {
+                              setSelectedProvince("");
+                              setSelectedDistrict("");
+                              form.setValue("province", "");
+                              form.setValue("district", "");
+                              setOpenProvince(false);
+                            }}
+                          >
+                            <IconSquareRoundedX className="mr-2 h-4 w-4" />
+                            Clear selection
+                          </CommandItem>
+                          {provinces.map((province) => (
                             <CommandItem
-                              value="-1"
-                              onSelect={() => {
-                                setSelectedProvince("");
+                              key={province.value}
+                              value={province.value}
+                              onSelect={(value) => {
+                                setSelectedProvince(value);
                                 setSelectedDistrict("");
-                                form.setValue("province", "");
                                 form.setValue("district", "");
+                                field.onChange(value);
                                 setOpenProvince(false);
                               }}
                             >
-                              <IconSquareRoundedX className="mr-2 h-4 w-4" />
-                              Clear selection
+                              <IconCheck
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  selectedProvince === province.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
+                                )}
+                              />
+                              {province.label}
                             </CommandItem>
-                            {provinces.map((province) => (
-                              <CommandItem
-                                key={province.value}
-                                value={province.value}
-                                onSelect={(value) => {
-                                  setSelectedProvince(value);
-                                  setSelectedDistrict("");
-                                  form.setValue("district", "");
-                                  field.onChange(value);
-                                  setOpenProvince(false);
-                                }}
-                              >
-                                <IconCheck
-                                  className={cn(
-                                    "mr-2 h-4 w-4",
-                                    selectedProvince === province.value
-                                      ? "opacity-100"
-                                      : "opacity-0",
-                                  )}
-                                />
-                                {province.label}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </ComboboxWrapper>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </ComboboxWrapper>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              {/* District Selection */}
-              <FormField
-                control={form.control}
-                name="district"
-                render={({ field }) => (
-                  <FormItem className="w-full flex-1">
-                    <FormLabel className="font-medium">District</FormLabel>
-                    <ComboboxWrapper
-                      open={openDistrict}
-                      setOpen={setOpenDistrict}
-                      title="Select District"
-                      disabled={!selectedProvince}
-                    >
-                      <span className="font-normal">
-                        {selectedDistrict
-                          ? selectedDistrict
-                          : "Select district..."}
-                      </span>
+            {/* District Selection */}
+            <FormField
+              control={form.control}
+              name="district"
+              render={({ field }) => (
+                <FormItem className="w-full flex-1">
+                  <FormLabel className="font-medium">District</FormLabel>
+                  <ComboboxWrapper
+                    open={openDistrict}
+                    setOpen={setOpenDistrict}
+                    title="Select District"
+                    disabled={!selectedProvince}
+                  >
+                    <span className="font-normal">
+                      {selectedDistrict
+                        ? selectedDistrict
+                        : "Select district..."}
+                    </span>
 
-                      <Command className="w-full">
-                        <CommandInput placeholder="Search district..." />
-                        <CommandList className="max-h-64 overflow-y-auto">
-                          <CommandEmpty>
-                            {selectedProvince
-                              ? "No district found."
-                              : "Please select a province first."}
-                          </CommandEmpty>
-                          <CommandGroup>
+                    <Command className="w-full">
+                      <CommandInput placeholder="Search district..." />
+                      <CommandList className="max-h-64 overflow-y-auto">
+                        <CommandEmpty>
+                          {selectedProvince
+                            ? "No district found."
+                            : "Please select a province first."}
+                        </CommandEmpty>
+                        <CommandGroup>
+                          <CommandItem
+                            value="-1"
+                            onSelect={() => {
+                              setSelectedDistrict("");
+                              form.setValue("district", "");
+                              setOpenProvince(false);
+                            }}
+                          >
+                            <IconSquareRoundedX className="mr-2 h-4 w-4" />
+                            Clear selection
+                          </CommandItem>
+                          {districts.map((district) => (
                             <CommandItem
-                              value="-1"
-                              onSelect={() => {
-                                setSelectedDistrict("");
-                                form.setValue("district", "");
-                                setOpenProvince(false);
+                              key={district.value}
+                              value={district.value}
+                              onSelect={(value) => {
+                                setSelectedDistrict(value);
+                                field.onChange(value);
+                                setOpenDistrict(false);
                               }}
                             >
-                              <IconSquareRoundedX className="mr-2 h-4 w-4" />
-                              Clear selection
+                              <IconCheck
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  selectedDistrict === district.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
+                                )}
+                              />
+                              {district.label}
                             </CommandItem>
-                            {districts.map((district) => (
-                              <CommandItem
-                                key={district.value}
-                                value={district.value}
-                                onSelect={(value) => {
-                                  setSelectedDistrict(value);
-                                  field.onChange(value);
-                                  setOpenDistrict(false);
-                                }}
-                              >
-                                <IconCheck
-                                  className={cn(
-                                    "mr-2 h-4 w-4",
-                                    selectedDistrict === district.value
-                                      ? "opacity-100"
-                                      : "opacity-0",
-                                  )}
-                                />
-                                {district.label}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </ComboboxWrapper>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </ComboboxWrapper>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
         </div>
 
@@ -586,35 +586,35 @@ function ReservationPlaceSearch({ className, ...props }) {
  */
 function ReservationPlaceSearchSheet({ className }) {
   return (
-      <Sheet>
-        <SheetTrigger
-            className={cn(buttonVariants(), "w-full lg:hidden", className)}
-        >
-          <IconSearch className="mr-2 size-4" />
-          Search
-        </SheetTrigger>
-        <SheetContent>
-          <SheetHeader>
-            <NavLink to="/search" className="flex flex-col">
-              <SheetTitle>Have A Seat</SheetTitle>
-              <SheetDescription className="text-xs">
-                Search Merchants
-              </SheetDescription>
-            </NavLink>
-          </SheetHeader>
-          <div className="flex h-full flex-1 flex-col px-4">
-            <ReservationPlaceSearch className="flex-1 justify-between" />
-          </div>
-          <SheetFooter className="pt-0">
-            <SheetClose asChild>
-              <Button variant="secondary">
-                <IconSquareRoundedX className="mr-2 size-4" />
-                Close
-              </Button>
-            </SheetClose>
-          </SheetFooter>
-        </SheetContent>
-      </Sheet>
+    <Sheet>
+      <SheetTrigger
+        className={cn(buttonVariants(), "w-full lg:hidden", className)}
+      >
+        <IconSearch className="mr-2 size-4" />
+        Search
+      </SheetTrigger>
+      <SheetContent>
+        <SheetHeader>
+          <NavLink to="/search" className="flex flex-col">
+            <SheetTitle>Have A Seat</SheetTitle>
+            <SheetDescription className="text-xs">
+              Search Merchants
+            </SheetDescription>
+          </NavLink>
+        </SheetHeader>
+        <div className="flex h-full flex-1 flex-col px-4">
+          <ReservationPlaceSearch className="flex-1 justify-between" />
+        </div>
+        <SheetFooter className="pt-0">
+          <SheetClose asChild>
+            <Button variant="secondary">
+              <IconSquareRoundedX className="mr-2 size-4" />
+              Close
+            </Button>
+          </SheetClose>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   );
 }
 

@@ -16,13 +16,13 @@ const db = getPrisma();
 const app = new Hono<AppEnv>({ strict: true });
 
 app.use(
-    "*",
-    cors({
-      origin: ["http://localhost:5173"],
-      credentials: true,
-      allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-      maxAge: 86400,
-    })
+  "*",
+  cors({
+    origin: ["http://localhost:5173"],
+    credentials: true,
+    allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    maxAge: 86400
+  })
 );
 
 app.use(compress());

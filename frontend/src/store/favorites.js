@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import axiosInstance from '@/lib/axios';
+import { create } from "zustand";
+import axiosInstance from "@/lib/axios";
 
 const useFavoritesStore = create((set, get) => ({
   favorites: new Set(),
@@ -20,17 +20,17 @@ const useFavoritesStore = create((set, get) => ({
     set({ isLoading: true });
 
     try {
-      const response = await axiosInstance.get('/user/favourites');
+      const response = await axiosInstance.get("/user/favourites");
       const favourites = response.data?.favourites || [];
-      const favoriteIds = new Set(favourites.map(fav => fav.merchantId));
+      const favoriteIds = new Set(favourites.map((fav) => fav.merchantId));
 
       set({
         favorites: favoriteIds,
         isLoading: false,
-        lastFetch: Date.now()
+        lastFetch: Date.now(),
       });
     } catch (error) {
-      console.error('Error fetching favorites:', error);
+      console.error("Error fetching favorites:", error);
       set({ isLoading: false });
     }
   },
@@ -63,7 +63,7 @@ const useFavoritesStore = create((set, get) => ({
     set({ favorites: newFavorites, favoriteCounts: newCounts });
 
     try {
-      await axiosInstance.post('/user/favourites', { merchantId });
+      await axiosInstance.post("/user/favourites", { merchantId });
     } catch (error) {
       const revertedFavorites = new Set(state.favorites);
       revertedFavorites.delete(merchantId);
@@ -87,7 +87,7 @@ const useFavoritesStore = create((set, get) => ({
     set({ favorites: newFavorites, favoriteCounts: newCounts });
 
     try {
-      await axiosInstance.delete('/user/favourites', {
+      await axiosInstance.delete("/user/favourites", {
         data: { merchantId },
       });
     } catch (error) {

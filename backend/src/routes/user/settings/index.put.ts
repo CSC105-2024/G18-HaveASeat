@@ -4,11 +4,12 @@ import type { AppEnv } from "@/types/env.js";
 import { getPrisma } from "@/lib/prisma.js";
 import { UserModel } from "@/models/user.model.js";
 
+export const middleware = [
+  authMiddleware
+];
+
 export default async function(c: Context<AppEnv>) {
   try {
-    await authMiddleware(c, async () => {
-    });
-
     const prisma = getPrisma();
     const user = c.get("user");
 

@@ -3,10 +3,11 @@ import { getPrisma } from "@/lib/prisma.ts";
 import { authMiddleware } from "@/middlewares/auth.middleware.js";
 import type { AppEnv } from "@/types/env.js";
 
-export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
+export const middleware = [
+  authMiddleware
+];
 
+export default async function(c: Context<AppEnv>) {
   try {
     const user = c.get("user");
     const prisma = getPrisma();
@@ -18,7 +19,6 @@ export default async function(c: Context<AppEnv>) {
     if (!status || !["COMPLETED", "CANCELLED", "NO_SHOW", "CHECKED_IN"].includes(status)) {
       return c.json({ error: "Invalid status" }, 400);
     }
-
 
     const reservation = await prisma.reservation.findUnique({
       where: { id },
@@ -35,11 +35,9 @@ export default async function(c: Context<AppEnv>) {
       return c.json({ error: "Reservation not found" }, 404);
     }
 
-
     if (user.id !== reservation.seat?.merchant.ownerId && !user.isAdmin) {
       return c.json({ error: "Unauthorized" }, 403);
     }
-
 
     const updatedReservation = await prisma.reservation.update({
       where: { id },
@@ -47,7 +45,6 @@ export default async function(c: Context<AppEnv>) {
         status: status
       }
     });
-
 
     if (status === "COMPLETED" || status === "CANCELLED" || status === "NO_SHOW") {
       await prisma.seat.update({

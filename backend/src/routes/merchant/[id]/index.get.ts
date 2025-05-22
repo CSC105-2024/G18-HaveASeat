@@ -16,8 +16,8 @@ export default async function(c: Context<AppEnv>) {
         owner: {
           select: {
             id: true,
-            name: true,
-          },
+            name: true
+          }
         },
         reviews: {
           include: {
@@ -61,7 +61,6 @@ export default async function(c: Context<AppEnv>) {
       ? merchant.reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews
       : 0;
     const totalFavourites = merchant._count.favouritedBy;
-
 
     const zones = merchant.seats.reduce((acc, seat) => {
       if (!acc[seat.location]) {
@@ -119,9 +118,9 @@ export default async function(c: Context<AppEnv>) {
     setupStatus.reservation.isComplete = setupStatus.reservation.missingFields.length === 0;
 
     const hasCompletedSetup =
-        setupStatus.overview.isComplete &&
-        setupStatus.display.isComplete &&
-        setupStatus.reservation.isComplete;
+      setupStatus.overview.isComplete &&
+      setupStatus.display.isComplete &&
+      setupStatus.reservation.isComplete;
 
     return c.json({
       id: merchant.id,
@@ -153,7 +152,7 @@ export default async function(c: Context<AppEnv>) {
         availableSeats,
         totalReviews,
         averageRating: Math.round(averageRating * 10) / 10,
-        totalFavourites,
+        totalFavourites
       },
 
       zones: Object.values(zones),
@@ -178,7 +177,7 @@ export default async function(c: Context<AppEnv>) {
         }))
       })),
 
-      hasCompletedSetup,
+      hasCompletedSetup
     });
   } catch (error) {
     console.error("Public merchant fetch error:", error);

@@ -1,10 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
-import {
-  IconHeart,
-  IconHeartFilled,
-  IconStarFilled,
-} from "@tabler/icons-react";
+import { IconHeart, IconHeartFilled, IconStarFilled } from "@tabler/icons-react";
 import { formatNumberDecimalPoint } from "@/lib/formatter.js";
 import { cn } from "@/lib/utils.js";
 import { constructAPIUrl } from "@/lib/url.js";
@@ -20,7 +16,6 @@ import { toast } from "sonner";
  * @param {string} props.name
  * @param {string} props.location
  * @param {number|string} props.rating
- * @param {boolean} props.favorite
  * @param {boolean} props.isFavoriteCount
  * @param {string} props.description
  * @param {Function} props.onFavoriteToggle
@@ -43,17 +38,19 @@ function MerchantCard({
     fetchFavorites,
     setFavoriteCount,
     getFavoriteCount,
-    isLoading: favoritesLoading
+    isLoading: favoritesLoading,
   } = useFavoritesStore();
 
   const [favoriteLoading, setFavoriteLoading] = useState(false);
   const { open: openUserFavouriteOverlay } = useUserFavouriteOverlay();
 
   const isFavorite = merchantId ? isFavoriteInStore(merchantId) : false;
-  const currentFavoriteCount = merchantId ? (getFavoriteCount(merchantId) ?? rating) : rating;
+  const currentFavoriteCount = merchantId
+    ? (getFavoriteCount(merchantId) ?? rating)
+    : rating;
 
   useEffect(() => {
-    if (merchantId && isFavoriteCount && typeof rating === 'number') {
+    if (merchantId && isFavoriteCount && typeof rating === "number") {
       setFavoriteCount(merchantId, rating);
     }
   }, [merchantId, isFavoriteCount, rating, setFavoriteCount]);
@@ -159,7 +156,9 @@ function MerchantCard({
             <>
               <IconHeartFilled className="h-4 w-4 text-red-500" />
               <span className="text-sm">{currentFavoriteCount}</span>
-              <span className="text-muted-foreground text-xs">favorite{currentFavoriteCount > 1 ? "s" : ""}</span>
+              <span className="text-muted-foreground text-xs">
+                favorite{currentFavoriteCount > 1 ? "s" : ""}
+              </span>
             </>
           ) : (
             <>

@@ -4,18 +4,17 @@ import type { AppEnv } from "@/types/env.js";
 import { getPrisma } from "@/lib/prisma.ts";
 import { uploadFile } from "@/lib/upload.ts";
 
-export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
+export const middleware = [
+  authMiddleware
+];
 
+export default async function(c: Context<AppEnv>) {
   try {
     const user = c.get("user");
     const id = c.req.param("id");
     const prisma = getPrisma();
 
-
     const body = await c.req.parseBody();
-
 
     const merchant = await prisma.merchant.findUnique({
       where: { id }
@@ -32,7 +31,6 @@ export default async function(c: Context<AppEnv>) {
     let bannerUrl = merchant.bannerImage;
     const imageUrls: string[] = [];
 
-
     let existingImageIds: string[] = [];
     if (body.existingImages) {
       try {
@@ -42,11 +40,9 @@ export default async function(c: Context<AppEnv>) {
       }
     }
 
-
     if (body.banner instanceof File) {
       bannerUrl = await uploadFile(body.banner);
     }
-
 
     if (body.images) {
       const images = Array.isArray(body.images) ? body.images : [body.images];
@@ -58,7 +54,6 @@ export default async function(c: Context<AppEnv>) {
       }
     }
 
-
     const updatedMerchant = await prisma.$transaction(async (tx) => {
 
       if (bannerUrl !== merchant.bannerImage) {
@@ -68,14 +63,12 @@ export default async function(c: Context<AppEnv>) {
         });
       }
 
-
       await tx.merchantImage.deleteMany({
         where: {
           merchantId: id,
           id: { notIn: existingImageIds }
         }
       });
-
 
       if (imageUrls.length > 0) {
         await tx.merchantImage.createMany({

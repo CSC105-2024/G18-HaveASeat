@@ -2,9 +2,9 @@ import { create } from "zustand";
 import axiosInstance from "@/lib/axios.js";
 
 const getCookie = (name) => {
-  const cookies = document.cookie.split(';');
+  const cookies = document.cookie.split(";");
   for (let cookie of cookies) {
-    const [cookieName, cookieValue] = cookie.trim().split('=');
+    const [cookieName, cookieValue] = cookie.trim().split("=");
     if (cookieName === name) {
       return cookieValue || null;
     }
@@ -51,7 +51,7 @@ export const useAuthStore = create((set, get) => ({
 
   fetchCurrentUser: async () => {
     try {
-      const authToken = getCookie('auth_token');
+      const authToken = getCookie("auth_token");
 
       if (!authToken) {
         console.log(authToken);
@@ -79,19 +79,22 @@ export const useAuthStore = create((set, get) => ({
 
   signIn: async (data) => {
     try {
-      const {user} = await axiosInstance.post("/authentication/sign-in", data);
-      set({ user, isAuthenticated: true});
+      const { user } = await axiosInstance.post(
+        "/authentication/sign-in",
+        data,
+      );
+      set({ user, isAuthenticated: true });
     } finally {
-      set({isLoading: false});
+      set({ isLoading: false });
     }
   },
 
   signOut: async () => {
     try {
       await axiosInstance.delete("/authentication/session");
-      set({user: null, isAuthenticated: false});
+      set({ user: null, isAuthenticated: false });
     } finally {
-      set({isLoading: false});
+      set({ isLoading: false });
     }
   },
 }));
