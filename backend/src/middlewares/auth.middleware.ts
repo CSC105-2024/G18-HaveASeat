@@ -8,7 +8,7 @@ export const JWT_SECRET = process.env.JWT_SECRET || "jwt-secret-key";
 export const COOKIE_NAME = "auth_token";
 
 const cookieOptions = {
-  httpOnly: true,
+  httpOnly: false,
   secure: process.env.NODE_ENV === "production",
   sameSite: "lax" as const,
   path: "/",

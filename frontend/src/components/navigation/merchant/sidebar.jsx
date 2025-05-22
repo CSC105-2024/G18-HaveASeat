@@ -17,29 +17,31 @@ function MerchantSidebar({
 }) {
   return (
     <div className="hidden md:block">
-      <div className="px-3 py-4">
-        <div className="space-y-1">
-          {uncategorizedMenu.map((item, index) => (
-            <Link
-              key={index}
-              to={item.pathname}
-              className={cn(
-                buttonVariants({
-                  variant:
-                    item.pathname === location.pathname ||
-                    item.pathname + "/" === location.pathname
-                      ? "secondary"
-                      : "ghost",
-                }),
-                "w-full justify-start",
-              )}
-            >
-              <item.icon className="mr-2 h-4 w-4" />
-              {item.title}
-            </Link>
-          ))}
+      {uncategorizedMenu.length > 0 && (
+        <div className="px-3 py-4">
+          <div className="space-y-1">
+            {uncategorizedMenu.map((item, index) => (
+              <Link
+                key={index}
+                to={item.pathname}
+                className={cn(
+                  buttonVariants({
+                    variant:
+                      item.pathname === location.pathname ||
+                      item.pathname + "/" === location.pathname
+                        ? "secondary"
+                        : "ghost",
+                  }),
+                  "w-full justify-start",
+                )}
+              >
+                <item.icon className="mr-2 h-4 w-4" />
+                {item.title}
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
       <div className="px-3 py-4">
         <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
           Reservations

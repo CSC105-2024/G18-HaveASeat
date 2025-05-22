@@ -16,8 +16,27 @@ export default async function(c: Context<AppEnv>) {
                COUNT(merchant.id) AS merchantCount
         FROM "MerchantAddress" address
                  JOIN "Merchant" merchant ON address."merchantId" = merchant.id
+                 LEFT JOIN "User" owner ON merchant."ownerId" = owner.id
+        WHERE
+        -- Overview completion checks
+          merchant.name IS NOT NULL
+          AND merchant.name != CONCAT(owner.name, '''s Business')
+        AND address.id IS NOT NULL
+        -- Display completion checks  
+        AND merchant."bannerImage" IS NOT NULL
+        AND EXISTS (
+            SELECT 1 FROM "MerchantImage" pi 
+            WHERE pi."merchantId" = merchant.id
+        )
+        -- Reservation completion checks
+        AND merchant."floorPlan" IS NOT NULL
+        AND EXISTS (
+            SELECT 1 FROM "Seat" s 
+            WHERE s."merchantId" = merchant.id
+        )
         GROUP BY address."district", address."province"
-        ORDER BY COUNT(merchant.id) DESC LIMIT 5
+        ORDER BY COUNT(merchant.id) DESC
+            LIMIT 5
     `;
 
     const topRatedMerchants = await prisma.merchant.findMany({
@@ -207,9 +226,9 @@ export default async function(c: Context<AppEnv>) {
     });
 
     return c.json({
-      featuredLocations,
-      topRatedMerchants: sortedTopRated,
-      popularMerchants: transformedPopular,
+      featuredLocations: featuredLocations,
+      topRatedMerchants: sortedTopRated.filter((merchant) => merchant.hasCompletedSetup),
+      popularMerchants: transformedPopular.filter((merchant) => merchant.hasCompletedSetup),
     });
 
   } catch (error) {

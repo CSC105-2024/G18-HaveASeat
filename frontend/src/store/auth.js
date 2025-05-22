@@ -1,30 +1,41 @@
 import { create } from "zustand";
 import axiosInstance from "@/lib/axios.js";
 
+const getCookie = (name) => {
+  const cookies = document.cookie.split(';');
+  for (let cookie of cookies) {
+    const [cookieName, cookieValue] = cookie.trim().split('=');
+    console.log(document.cookie)
+    if (cookieName === name) {
+      return cookieValue || null;
+    }
+  }
+  return null;
+};
+
 /**
  * @typedef {Object} User
  * @property {string} id - User ID
  * @property {string} email - User email
- * @property {string} name - User name
+ * @property {string} name - Username
  * @property {boolean} isAdmin - Whether the user is an admin
  * @property {string} [phoneNumber] - User phone number
  * @property {string} [birthday] - User birthday
- * @property {string} createdAt - User registed
+ * @property {string} createdAt - User registered
  */
 
 /**
  * @typedef {Object} AuthState
- * @property {User|null} user - Current authenticated user
- * @property {boolean} isAuthenticated - Whether the user is authenticated
- * @property {boolean} isLoading - Whether auth state is being loaded
+ * @property {User|null} user
+ * @property {boolean} isAuthenticated
+ * @property {boolean} isLoading
  */
 
 /**
  * @typedef {Object} AuthActions
- * @property {() => Promise<User|null>} fetchCurrentUser - Fetch current user data from API
- * @property {(user: User) => Promise<void>} signIn - Login user and store tokens
- * @property {() => void} signOut - Logout user and clear tokens
- * @property {() => Promise<User|null>} updateUser - Update current user data by fetching from API
+ * @property {() => Promise<User|null>} fetchCurrentUser
+ * @property {(user: User) => Promise<void>} signIn
+ * @property {() => void} signOut
  */
 
 /**
@@ -32,7 +43,6 @@ import axiosInstance from "@/lib/axios.js";
  */
 
 /**
- * Auth store for managing user authentication state
  * @type {import("zustand").UseBoundStore<import("zustand").StoreApi<AuthStore>>}
  */
 export const useAuthStore = create((set, get) => ({
@@ -42,6 +52,14 @@ export const useAuthStore = create((set, get) => ({
 
   fetchCurrentUser: async () => {
     try {
+      const authToken = getCookie('auth_token');
+
+      if (!authToken) {
+        console.log(authToken);
+        set({ user: null, isAuthenticated: false });
+        return null;
+      }
+
       const response = await axiosInstance.get("/user");
       const userData = response.data?.data || response.data;
 
@@ -53,6 +71,7 @@ export const useAuthStore = create((set, get) => ({
       return userData;
     } catch (error) {
       console.error("Failed to fetch current user:", error);
+      set({ user: null, isAuthenticated: false });
       return null;
     } finally {
       set({ isLoading: false });

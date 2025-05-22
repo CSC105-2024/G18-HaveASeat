@@ -143,7 +143,6 @@ const FormSchema = z.object({
 
 function Page() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
 
@@ -323,7 +322,6 @@ function Page() {
     try {
       await axiosInstance.patch(`/merchant/${id}/settings/overview`, data);
       toast.success("Merchant information updated successfully");
-      navigate(0);
     } catch (error) {
       console.error("Error updating merchant:", error);
       toast.error("Failed to update merchant information");
@@ -344,7 +342,7 @@ function Page() {
 
   return (
     <MerchantLayout>
-      <SetupProgress />
+      <SetupProgress trigger={isLoading} />
       <div className="flex flex-col gap-8">
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">Merchant Settings</h2>

@@ -11,16 +11,20 @@ import { Link, useNavigate } from "react-router";
 import axiosInstance from "@/lib/axios.js";
 import { Button, buttonVariants } from "@/components/ui/button.jsx";
 import { IconArrowRight } from "@tabler/icons-react";
+import { useMerchantContext } from "@/providers/merchant.jsx";
 
-function SetupProgress() {
+function SetupProgress({ trigger }) {
   const navigate = useNavigate();
   const [checking, setChecking] = useState(false);
   const [merchantId, setMerchantId] = useState(null);
   const [setupStatus, setSetupStatus] = useState(null);
+  const {refreshSetupStatus} = useMerchantContext();
 
   useEffect(() => {
     checkMerchantStatus();
-  }, []);
+    refreshSetupStatus();
+    // eslint-disable-next-line
+  }, [trigger]);
 
   const checkMerchantStatus = async () => {
     try {

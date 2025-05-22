@@ -23,8 +23,4 @@ export class UserModel {
       data: userData
     });
   }
-
-  static async findAll(): Promise<User[]> {
-    return getPrisma().user.findMany();
-  }
 }

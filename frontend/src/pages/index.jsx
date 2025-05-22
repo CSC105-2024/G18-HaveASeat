@@ -247,7 +247,6 @@ function Page() {
           <React.Fragment>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {topRatedMerchants
-                .filter((merchant) => merchant.hasCompletedSetup)
                 .map((merchant) => (
                   <MerchantCard
                     key={merchant.id}
@@ -296,7 +295,6 @@ function Page() {
           <React.Fragment>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
               {popularMerchants
-                .filter((merchant) => merchant.hasCompletedSetup)
                 .map((merchant) => (
                   <MerchantCard
                     key={merchant.id}
@@ -311,7 +309,7 @@ function Page() {
                   />
                 ))}
             </div>
-            {popularMerchants.filter((merchant) => merchant.hasCompletedSetup)
+            {popularMerchants
               .length === 0 && (
               <p className="text-muted-foreground">
                 There is currently no merchant available right now. Please come

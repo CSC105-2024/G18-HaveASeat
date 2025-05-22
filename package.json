@@ -8,7 +8,7 @@
     "backend"
   ],
   "scripts": {
-    "dev": "pnpm --filter frontend run dev & pnpm --filter backend run dev",
+    "dev": "turbo run dev",
     "dev:frontend": "pnpm --filter frontend run dev",
     "dev:backend": "pnpm --filter backend run dev"
   },
@@ -58,5 +58,8 @@
       "esbuild",
       "prisma"
     ]
+  },
+  "devDependencies": {
+    "turbo": "^2.5.3"
   }
 }

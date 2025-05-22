@@ -175,7 +175,12 @@ function MerchantSetup() {
                             <ul className="text-sm text-red-600">
                               {setupStatus.setupStatus.overview.missingFields.map(
                                 (field) => (
-                                  <li key={field}>• {toDisplayName(field)}</li>
+                                  <li key={field}>
+                                    • {toDisplayName(field)}{" "}
+                                    {field === "name" && (
+                                      <span>(Change the default name)</span>
+                                    )}
+                                  </li>
                                 ),
                               )}
                             </ul>
