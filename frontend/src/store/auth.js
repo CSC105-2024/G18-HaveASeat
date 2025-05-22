@@ -54,7 +54,6 @@ export const useAuthStore = create((set, get) => ({
       const authToken = getCookie("auth_token");
 
       if (!authToken) {
-        console.log(authToken);
         set({ user: null, isAuthenticated: false });
         return null;
       }
