@@ -139,9 +139,6 @@ function ReservationAddOverlay({ isManual = false, merchantId, onSuccess }) {
     },
   });
 
-  const selectedDate = form.watch("reservationDate");
-  const selectedSeat = form.watch("seat");
-
   useEffect(() => {
     const fetchMerchant = async () => {
       if (!merchantId) return;

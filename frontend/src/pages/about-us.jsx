@@ -1,6 +1,6 @@
 import React from "react";
 
-function Page(props) {
+function Page() {
   return (
     <div className="mx-auto max-w-7xl space-y-8">
       {/* Hero Banner Section */}

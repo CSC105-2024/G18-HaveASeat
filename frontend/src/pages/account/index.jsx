@@ -155,7 +155,7 @@ function Page() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
-                          Phone Number <FormRequiredLabel />
+                          Phone Number
                         </FormLabel>
                         <FormControl>
                           <Input

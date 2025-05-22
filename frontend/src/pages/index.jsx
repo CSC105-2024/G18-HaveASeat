@@ -73,6 +73,7 @@ function Page() {
     };
 
     checkFavoriteStatus();
+    // eslint-disable-next-line
   }, [isAuthenticated, topRatedMerchants.length, popularMerchants.length]);
 
   const handleFavoriteToggle = (merchantId, isFavorite) => {
@@ -151,7 +152,7 @@ function Page() {
                         </h3>
                         <p className="mt-1 flex items-center text-sm text-white/80">
                           <IconMapPin className="mr-1 h-4 w-4" />
-                          {location.merchantCount} merchants
+                          {location.merchantCount} merchant{location.merchantCount > 1 ? "s" : ""}
                         </p>
                       </div>
                     </Link>
@@ -180,7 +181,7 @@ function Page() {
                       </h3>
                       <p className="mt-1 flex items-center text-sm text-white/80">
                         <IconMapPin className="mr-1 h-3 w-3" />
-                        {location.merchantCount} merchants
+                        {location.merchantCount} merchant{location.merchantCount > 1 ? "s" : ""}
                       </p>
                     </div>
                   </Link>
@@ -206,7 +207,7 @@ function Page() {
                       </h3>
                       <p className="mt-1 flex items-center text-sm text-white/80">
                         <IconMapPin className="mr-1 h-3 w-3" />
-                        {location.merchantCount} merchants
+                        {location.merchantCount} merchant{location.merchantCount > 1 ? "s" : ""}
                       </p>
                     </div>
                   </Link>
