@@ -65,7 +65,7 @@ This is a monorepo containing two main applications:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-team/G18-HaveASeat.git
+   git clone https://github.com/CSC105-2024/G18-HaveASeat.git
    cd G18-HaveASeat
    ```
 
