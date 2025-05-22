@@ -2,12 +2,10 @@ import type { Context, Next } from "hono";
 import { getPrisma } from "@/lib/prisma.ts";
 import type { AppEnv } from "@/types/env.js";
 
-
 export async function merchantSetupMiddleware(c: Context<AppEnv>, next: Next) {
   const id = c.req.param("id");
   const path = c.req.path;
   const prisma = getPrisma();
-
 
   if (path.includes("/settings")) {
     return next();
@@ -27,7 +25,6 @@ export async function merchantSetupMiddleware(c: Context<AppEnv>, next: Next) {
       return c.json({ error: "Merchant not found" }, 404);
     }
 
-
     const isSetupComplete = checkMerchantSetupComplete(merchant);
 
     if (!isSetupComplete) {
@@ -36,14 +33,12 @@ export async function merchantSetupMiddleware(c: Context<AppEnv>, next: Next) {
         return c.json({ error: "Merchant setup incomplete" }, 404);
       }
 
-
       return c.json({
         error: "Merchant setup incomplete",
         redirect: `/merchant/${id}/setup`,
         setupRequired: true
       }, 302);
     }
-
 
     c.set("merchant", merchant);
 
@@ -63,11 +58,9 @@ function checkMerchantSetupComplete(merchant: any): boolean {
     merchant.address &&
     merchant.openHours?.length > 0;
 
-
   const hasDisplay =
     merchant.bannerImage &&
     merchant.promoImages.length > 0;
-
 
   const hasReservation =
     merchant.floorPlan &&

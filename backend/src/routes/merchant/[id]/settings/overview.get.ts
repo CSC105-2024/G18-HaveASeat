@@ -3,10 +3,11 @@ import { authMiddleware } from "@/middlewares/auth.middleware.js";
 import type { AppEnv } from "@/types/env.js";
 import { getPrisma } from "@/lib/prisma.js";
 
-export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
+export const middleware = [
+  authMiddleware
+];
 
+export default async function(c: Context<AppEnv>) {
   try {
     const user = c.get("user");
     const id = c.req.param("id");
@@ -26,7 +27,6 @@ export default async function(c: Context<AppEnv>) {
     if (merchant.ownerId !== user.id) {
       return c.json({ error: "Unauthorized" }, 403);
     }
-
 
     const response = {
       name: merchant.name,

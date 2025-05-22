@@ -73,6 +73,7 @@ function Page() {
     };
 
     checkFavoriteStatus();
+    // eslint-disable-next-line
   }, [isAuthenticated, topRatedMerchants.length, popularMerchants.length]);
 
   const handleFavoriteToggle = (merchantId, isFavorite) => {
@@ -119,97 +120,110 @@ function Page() {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {featuredLocations.slice(0, 5).map((location, index) => {
-              const placeholderImages = [
-                "https://i.pinimg.com/736x/67/86/94/67869432930f288a4f31328f20793cc8.jpg",
-                "https://i.pinimg.com/736x/cc/c7/51/ccc751f538b11b8754aab71541380f61.jpg",
-                "https://i.pinimg.com/736x/e0/57/2e/e0572ef05c1b65db4f9d15856fbab25c.jpg",
-                "https://i.pinimg.com/736x/76/3b/16/763b169502915df85c8b210177ae5db9.jpg",
-                "https://i.pinimg.com/736x/fc/d0/4f/fcd04f2e706b457b512491dc7eef2fba.jpg",
-              ];
+          <React.Fragment>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+              {featuredLocations.slice(0, 5).map((location, index) => {
+                const placeholderImages = [
+                  "https://i.pinimg.com/736x/67/86/94/67869432930f288a4f31328f20793cc8.jpg",
+                  "https://i.pinimg.com/736x/cc/c7/51/ccc751f538b11b8754aab71541380f61.jpg",
+                  "https://i.pinimg.com/736x/e0/57/2e/e0572ef05c1b65db4f9d15856fbab25c.jpg",
+                  "https://i.pinimg.com/736x/76/3b/16/763b169502915df85c8b210177ae5db9.jpg",
+                  "https://i.pinimg.com/736x/fc/d0/4f/fcd04f2e706b457b512491dc7eef2fba.jpg",
+                ];
 
-              if (index === 0) {
-                return (
+                if (index === 0) {
+                  return (
+                    <Link
+                      key={location.name}
+                      to={`/search?location=${encodeURIComponent(location.name)}`}
+                      className="group relative aspect-[3/4] overflow-hidden rounded-xl shadow-md"
+                    >
+                      <img
+                        src={
+                          placeholderImages[index % placeholderImages.length]
+                        }
+                        alt={location.name}
+                        className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                      <div className="absolute right-4 bottom-4 left-4">
+                        <h3 className="text-xl font-semibold text-white">
+                          {location.name}
+                        </h3>
+                        <p className="mt-1 flex items-center text-sm text-white/80">
+                          <IconMapPin className="mr-1 h-4 w-4" />
+                          {location.merchantCount} merchant
+                          {location.merchantCount > 1 ? "s" : ""}
+                        </p>
+                      </div>
+                    </Link>
+                  );
+                }
+
+                return null;
+              })}
+
+              <div className="flex flex-col gap-4">
+                {featuredLocations.slice(1, 3).map((location, idx) => (
                   <Link
                     key={location.name}
                     to={`/search?location=${encodeURIComponent(location.name)}`}
-                    className="group relative aspect-[3/4] overflow-hidden rounded-xl shadow-md"
+                    className="group relative aspect-[4/3] overflow-hidden rounded-xl shadow-md"
                   >
                     <img
-                      src={placeholderImages[index % placeholderImages.length]}
+                      src={`https://i.pinimg.com/736x/${["cc/c7/51/ccc751f538b11b8754aab71541380f61", "e0/57/2e/e0572ef05c1b65db4f9d15856fbab25c"][idx]}.jpg`}
                       alt={location.name}
                       className="h-full w-full object-cover transition-transform group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                     <div className="absolute right-4 bottom-4 left-4">
-                      <h3 className="text-xl font-semibold text-white">
+                      <h3 className="text-lg font-semibold text-white">
                         {location.name}
                       </h3>
                       <p className="mt-1 flex items-center text-sm text-white/80">
-                        <IconMapPin className="mr-1 h-4 w-4" />
-                        {location.merchantCount} merchants
+                        <IconMapPin className="mr-1 h-3 w-3" />
+                        {location.merchantCount} merchant
+                        {location.merchantCount > 1 ? "s" : ""}
                       </p>
                     </div>
                   </Link>
-                );
-              }
+                ))}
+              </div>
 
-              return null;
-            })}
-
-            <div className="flex flex-col gap-4">
-              {featuredLocations.slice(1, 3).map((location, idx) => (
-                <Link
-                  key={location.name}
-                  to={`/search?location=${encodeURIComponent(location.name)}`}
-                  className="group relative aspect-[4/3] overflow-hidden rounded-xl shadow-md"
-                >
-                  <img
-                    src={`https://i.pinimg.com/736x/${["cc/c7/51/ccc751f538b11b8754aab71541380f61", "e0/57/2e/e0572ef05c1b65db4f9d15856fbab25c"][idx]}.jpg`}
-                    alt={location.name}
-                    className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <div className="absolute right-4 bottom-4 left-4">
-                    <h3 className="text-lg font-semibold text-white">
-                      {location.name}
-                    </h3>
-                    <p className="mt-1 flex items-center text-sm text-white/80">
-                      <IconMapPin className="mr-1 h-3 w-3" />
-                      {location.merchantCount} merchants
-                    </p>
-                  </div>
-                </Link>
-              ))}
+              <div className="flex flex-col gap-4">
+                {featuredLocations.slice(3, 5).map((location, idx) => (
+                  <Link
+                    key={location.name}
+                    to={`/search?location=${encodeURIComponent(location.name)}`}
+                    className="group relative aspect-[4/3] overflow-hidden rounded-xl shadow-md"
+                  >
+                    <img
+                      src={`https://i.pinimg.com/736x/${["76/3b/16/763b169502915df85c8b210177ae5db9", "fc/d0/4f/fcd04f2e706b457b512491dc7eef2fba"][idx]}.jpg`}
+                      alt={location.name}
+                      className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute right-4 bottom-4 left-4">
+                      <h3 className="text-lg font-semibold text-white">
+                        {location.name}
+                      </h3>
+                      <p className="mt-1 flex items-center text-sm text-white/80">
+                        <IconMapPin className="mr-1 h-3 w-3" />
+                        {location.merchantCount} merchant
+                        {location.merchantCount > 1 ? "s" : ""}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
-
-            <div className="flex flex-col gap-4">
-              {featuredLocations.slice(3, 5).map((location, idx) => (
-                <Link
-                  key={location.name}
-                  to={`/search?location=${encodeURIComponent(location.name)}`}
-                  className="group relative aspect-[4/3] overflow-hidden rounded-xl shadow-md"
-                >
-                  <img
-                    src={`https://i.pinimg.com/736x/${["76/3b/16/763b169502915df85c8b210177ae5db9", "fc/d0/4f/fcd04f2e706b457b512491dc7eef2fba"][idx]}.jpg`}
-                    alt={location.name}
-                    className="h-full w-full object-cover transition-transform group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <div className="absolute right-4 bottom-4 left-4">
-                    <h3 className="text-lg font-semibold text-white">
-                      {location.name}
-                    </h3>
-                    <p className="mt-1 flex items-center text-sm text-white/80">
-                      <IconMapPin className="mr-1 h-3 w-3" />
-                      {location.merchantCount} merchants
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
+            {featuredLocations.length === 0 && (
+              <p className="text-muted-foreground">
+                There is currently no merchant available right now. Please come
+                back later.
+              </p>
+            )}
+          </React.Fragment>
         )}
       </section>
 
@@ -234,20 +248,28 @@ function Page() {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {topRatedMerchants.map((merchant) => (
-              <MerchantCard
-                key={merchant.id}
-                merchantId={merchant.id}
-                image={merchant.bannerImage}
-                name={merchant.name}
-                location={merchant.location}
-                rating={merchant.averageRating}
-                favorite={merchant.favorite}
-                onFavoriteToggle={handleFavoriteToggle}
-              />
-            ))}
-          </div>
+          <React.Fragment>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {topRatedMerchants.map((merchant) => (
+                <MerchantCard
+                  key={merchant.id}
+                  merchantId={merchant.id}
+                  image={merchant.bannerImage}
+                  name={merchant.name}
+                  location={merchant.location}
+                  rating={merchant.averageRating}
+                  favorite={merchant.favorite}
+                  onFavoriteToggle={handleFavoriteToggle}
+                />
+              ))}
+            </div>
+            {topRatedMerchants.length === 0 && (
+              <p className="text-muted-foreground">
+                There is currently no merchant available right now. Please come
+                back later.
+              </p>
+            )}
+          </React.Fragment>
         )}
       </section>
 
@@ -272,21 +294,29 @@ function Page() {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
-            {popularMerchants.map((merchant) => (
-              <MerchantCard
-                key={merchant.id}
-                merchantId={merchant.id}
-                image={merchant.bannerImage}
-                name={merchant.name}
-                location={merchant.location}
-                rating={merchant.favoriteCount}
-                favorite={merchant.favorite}
-                isFavoriteCount={true}
-                onFavoriteToggle={handleFavoriteToggle}
-              />
-            ))}
-          </div>
+          <React.Fragment>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
+              {popularMerchants.map((merchant) => (
+                <MerchantCard
+                  key={merchant.id}
+                  merchantId={merchant.id}
+                  image={merchant.bannerImage}
+                  name={merchant.name}
+                  location={merchant.location}
+                  rating={merchant.favoriteCount}
+                  favorite={merchant.favorite}
+                  isFavoriteCount={true}
+                  onFavoriteToggle={handleFavoriteToggle}
+                />
+              ))}
+            </div>
+            {popularMerchants.length === 0 && (
+              <p className="text-muted-foreground">
+                There is currently no merchant available right now. Please come
+                back later.
+              </p>
+            )}
+          </React.Fragment>
         )}
       </section>
     </div>

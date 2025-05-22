@@ -86,7 +86,6 @@ const useReservationCancelOverlay = createModalHook(
   "reservation-cancel",
   "Cancel Reservation",
   null,
-  "sm",
 );
 
 export { useReservationCancelOverlay, ReservationCancelOverlay };

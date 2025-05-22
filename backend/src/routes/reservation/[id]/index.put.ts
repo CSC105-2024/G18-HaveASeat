@@ -5,10 +5,11 @@ import type { AppEnv } from "@/types/env.js";
 import { $Enums } from "@/prisma/generated/index.js";
 import ReservationStatus = $Enums.ReservationStatus;
 
-export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
+export const middleware = [
+  authMiddleware
+];
 
+export default async function(c: Context<AppEnv>) {
   try {
     const user = c.get("user");
     const reservationId = c.req.param("id");
@@ -20,7 +21,6 @@ export default async function(c: Context<AppEnv>) {
     if (!Object.values(ReservationStatus).includes(status)) {
       return c.json({ error: "Invalid status" }, 400);
     }
-
 
     const reservation = await prisma.reservation.findUnique({
       where: { id: reservationId },
@@ -37,11 +37,9 @@ export default async function(c: Context<AppEnv>) {
       return c.json({ error: "Reservation not found" }, 404);
     }
 
-
-    if (reservation.seat.merchant.ownerId !== user.id) {
+    if (reservation.seat?.merchant.ownerId !== user.id) {
       return c.json({ error: "Unauthorized" }, 403);
     }
-
 
     const shouldReleaseSeat = ["COMPLETED", "CANCELLED", "NO_SHOW"].includes(status);
 
@@ -54,7 +52,7 @@ export default async function(c: Context<AppEnv>) {
 
       ...(shouldReleaseSeat ? [
         prisma.seat.update({
-          where: { id: reservation.seat.id },
+          where: { id: reservation.seat?.id },
           data: { isAvailable: true }
         })
       ] : [])

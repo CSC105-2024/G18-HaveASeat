@@ -17,6 +17,7 @@ import {
 } from "@tabler/icons-react";
 import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
+import { toDisplayName } from "@/lib/string.js";
 
 function MerchantSetup() {
   const navigate = useNavigate();
@@ -124,7 +125,7 @@ function MerchantSetup() {
 
   if (merchantId && setupStatus && !setupStatus.isComplete) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8">
+      <div className="min-h-screen py-8">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-3xl">
             <div className="mb-8 text-center">
@@ -138,7 +139,7 @@ function MerchantSetup() {
             </div>
 
             <Card className="mb-6">
-              <CardContent className="pt-6">
+              <CardContent>
                 <div className="space-y-4">
                   <div className="flex justify-between text-sm">
                     <span>Setup Progress</span>
@@ -152,7 +153,7 @@ function MerchantSetup() {
             <div className="space-y-4">
               {/* Overview Status */}
               <Card>
-                <CardContent className="pt-6">
+                <CardContent>
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4">
                       <div className="mt-1">
@@ -174,7 +175,12 @@ function MerchantSetup() {
                             <ul className="text-sm text-red-600">
                               {setupStatus.setupStatus.overview.missingFields.map(
                                 (field) => (
-                                  <li key={field}>• {field}</li>
+                                  <li key={field}>
+                                    • {toDisplayName(field)}{" "}
+                                    {field === "name" && (
+                                      <span>(Change the default name)</span>
+                                    )}
+                                  </li>
                                 ),
                               )}
                             </ul>
@@ -199,7 +205,7 @@ function MerchantSetup() {
 
               {/* Display Status */}
               <Card>
-                <CardContent className="pt-6">
+                <CardContent>
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4">
                       <div className="mt-1">
@@ -221,7 +227,7 @@ function MerchantSetup() {
                             <ul className="text-sm text-red-600">
                               {setupStatus.setupStatus.display.missingFields.map(
                                 (field) => (
-                                  <li key={field}>• {field}</li>
+                                  <li key={field}>• {toDisplayName(field)}</li>
                                 ),
                               )}
                             </ul>
@@ -247,7 +253,7 @@ function MerchantSetup() {
 
               {/* Reservation Status */}
               <Card>
-                <CardContent className="pt-6">
+                <CardContent>
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4">
                       <div className="mt-1">
@@ -269,7 +275,7 @@ function MerchantSetup() {
                             <ul className="text-sm text-red-600">
                               {setupStatus.setupStatus.reservation.missingFields.map(
                                 (field) => (
-                                  <li key={field}>• {field}</li>
+                                  <li key={field}>• {toDisplayName(field)}</li>
                                 ),
                               )}
                             </ul>

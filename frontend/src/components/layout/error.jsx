@@ -43,9 +43,11 @@ function ErrorLayout({ error, resetErrorBoundary }) {
             <span className="font-semibold">
               The following error has occurred:
             </span>{" "}
-            <pre className="mt-2 text-red-500">{error.message}</pre>
+            <pre className="word-break mt-2 p-4 text-wrap text-red-500">
+              {error.message}
+            </pre>
           </div>
-          <pre className="w-full max-w-screen overflow-x-auto rounded bg-gray-50 p-4 text-start">
+          <pre className="max-w-screen overflow-x-auto rounded bg-gray-50 p-4 text-start">
             {error.stack}
           </pre>
           <Button className="w-full" onClick={resetErrorBoundary}>

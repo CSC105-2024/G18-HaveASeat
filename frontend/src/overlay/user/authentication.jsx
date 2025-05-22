@@ -15,10 +15,9 @@ import {
 } from "@/components/ui/form.jsx";
 import { Input } from "@/components/ui/input.jsx";
 import { Button } from "@/components/ui/button.jsx";
-import { useForgetPasswordOverlay } from "@/overlay/user/forget-password.jsx";
 import { z } from "zod";
-import axiosInstance from "@/lib/axios.js";
 import { useAuthStore } from "@/store/auth.js";
+import { useNavigate } from "react-router";
 
 const FormSchema = z.object({
   email: z.string().email({
@@ -29,9 +28,9 @@ const FormSchema = z.object({
 
 function SignInOverlay() {
   const [isLoading, setIsLoading] = useState(false);
-  const { open: openForgetPasswordOverlay } = useForgetPasswordOverlay();
   const { closeModal } = useModalStore();
-  const { login } = useAuthStore();
+  const { signIn } = useAuthStore();
+  const navigate = useNavigate();
 
   /** @type {import("react-hook-form").UseFormReturn<z.infer<typeof formSchema>>} */
   const form = useForm({
@@ -48,12 +47,10 @@ function SignInOverlay() {
   async function onSubmit(data) {
     setIsLoading(true);
     try {
-      const response = await axiosInstance.post("/authentication/signin", data);
-      const { accessToken, refreshToken, user } = response.data;
-
-      await login(user, accessToken, refreshToken);
+      await signIn(data);
       toast.success("Successfully signed in!");
       closeModal("sign-in");
+      navigate(0);
     } catch (error) {
       console.error("Sign in error:", error);
       if (error.response?.status === 401) {
@@ -64,11 +61,6 @@ function SignInOverlay() {
     } finally {
       setIsLoading(false);
     }
-  }
-
-  function onSwapOverlay() {
-    closeModal("sign-in");
-    openForgetPasswordOverlay({});
   }
 
   return (
@@ -116,12 +108,6 @@ function SignInOverlay() {
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Signing in..." : "Sign in"}
             </Button>
-            <span
-              onClick={onSwapOverlay}
-              className="mx-auto block w-fit cursor-default text-center text-sm underline underline-offset-4 transition hover:scale-105"
-            >
-              Forget Password?
-            </span>
           </div>
         </form>
       </Form>
@@ -139,12 +125,12 @@ const useSignInOverlay = createModalHook(
   </Fragment>,
 );
 
-function UserSignOutOverlay(props) {
+function UserSignOutOverlay() {
   const { closeModal } = useModalStore();
-  const { logout } = useAuthStore();
+  const { signOut } = useAuthStore();
 
   function onSignOut() {
-    logout();
+    signOut();
     toast.success("Successfully signed out");
     closeModal("user-sign-out");
   }

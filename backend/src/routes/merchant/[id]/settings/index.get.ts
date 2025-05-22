@@ -3,15 +3,15 @@ import { authMiddleware } from "@/middlewares/auth.middleware.js";
 import type { AppEnv } from "@/types/env.js";
 import { getPrisma } from "@/lib/prisma.ts";
 
-export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
+export const middleware = [
+  authMiddleware
+];
 
+export default async function(c: Context<AppEnv>) {
   try {
     const user = c.get("user");
     const id = c.req.param("id");
     const prisma = getPrisma();
-
 
     const merchant = await prisma.merchant.findUnique({
       where: { id },
@@ -93,7 +93,6 @@ export default async function(c: Context<AppEnv>) {
 
       acc[seat.location].totalSeats += 1;
 
-
       const hasCurrentReservation = seat.reservations.some(reservation => {
         const now = new Date();
         return reservation.startTime <= now && reservation.endTime >= now;
@@ -115,7 +114,6 @@ export default async function(c: Context<AppEnv>) {
       occupiedSeats: number;
       currentReservations: number;
     }>);
-
 
     const totalSeats = merchant.seats.length;
     const availableSeats = merchant.seats.filter(seat => seat.isAvailable).length;
@@ -169,7 +167,9 @@ export default async function(c: Context<AppEnv>) {
         numberOfGuests: reservation.numberOfGuests,
         numberOfTables: reservation.numberOfTables,
         status: reservation.status,
-        seatLocation: reservation.seat.location,
+        ...(reservation?.seat && {
+          seatLocation: reservation.seat.location
+        }),
         userName: reservation.user?.name || "Walk-in",
         userEmail: reservation.user?.email
       }))

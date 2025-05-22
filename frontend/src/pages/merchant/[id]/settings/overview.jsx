@@ -47,6 +47,7 @@ import axiosInstance from "@/lib/axios";
  */
 /** @type {Address[]} */
 import addressData from "@/data/geography.json";
+import SetupProgress from "@/components/merchant/setup-progress.jsx";
 
 const FormSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -341,6 +342,7 @@ function Page() {
 
   return (
     <MerchantLayout>
+      <SetupProgress trigger={isLoading} />
       <div className="flex flex-col gap-8">
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">Merchant Settings</h2>

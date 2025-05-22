@@ -5,10 +5,11 @@ import type { AppEnv } from "@/types/env.js";
 import { $Enums } from "@/prisma/generated/index.js";
 import ReportReason = $Enums.ReportReason;
 
-export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
+export const middleware = [
+  authMiddleware
+];
 
+export default async function(c: Context<AppEnv>) {
   try {
     const user = c.get("user");
     const prisma = getPrisma();
@@ -16,16 +17,13 @@ export default async function(c: Context<AppEnv>) {
     const body = await c.req.json();
     const { reviewId, reason, details } = body;
 
-
     if (!reviewId || !reason) {
       return c.json({ error: "Missing required fields" }, 400);
     }
 
-
     if (!Object.values(ReportReason).includes(reason as ReportReason)) {
       return c.json({ error: "Invalid report reason" }, 400);
     }
-
 
     const review = await prisma.review.findUnique({
       where: { id: reviewId }
@@ -34,7 +32,6 @@ export default async function(c: Context<AppEnv>) {
     if (!review) {
       return c.json({ error: "Review not found" }, 404);
     }
-
 
     const existingReport = await prisma.reviewReport.findFirst({
       where: {
@@ -46,7 +43,6 @@ export default async function(c: Context<AppEnv>) {
     if (existingReport) {
       return c.json({ error: "You have already reported this review" }, 409);
     }
-
 
     const report = await prisma.reviewReport.create({
       data: {

@@ -8,6 +8,7 @@ const MerchantContext = createContext(null);
 export function MerchantProvider({ children }) {
   const { user, isAuthenticated } = useAuthStore();
   const [setupStatus, setSetupStatus] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const merchantData = useMerchant({ skipStatusCheck: true });
 
@@ -21,8 +22,11 @@ export function MerchantProvider({ children }) {
           setSetupStatus(response.data);
         } catch (error) {
           console.error("Error checking merchant status:", error);
+        } finally {
+          setIsLoading(false);
         }
       }
+      setIsLoading(false);
     };
 
     checkStatus();
@@ -32,12 +36,13 @@ export function MerchantProvider({ children }) {
     if (isAuthenticated && user) {
       merchantData.checkUserMerchants();
     }
-  }, [isAuthenticated, user, merchantData.checkUserMerchants]);
+  }, [isAuthenticated, user]);
 
   const contextValue = {
     ...merchantData,
     hasCompletedSetup: setupStatus?.isComplete || false,
     setupStatus: setupStatus || merchantData.setupStatus,
+    isLoading,
 
     refreshSetupStatus: async () => {
       if (merchantData.merchantId) {

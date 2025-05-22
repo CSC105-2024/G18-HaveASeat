@@ -1,14 +1,12 @@
-import type { PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "@/prisma/generated/index.d.ts";
 
 export async function updateReservationStatuses(prisma: PrismaClient) {
   const now = new Date();
-
 
   const reservationsToUpdate = await prisma.reservation.findMany({
     where: {
       status: "PENDING",
       OR: [
-
         {
           endTime: { lt: now }
         },
@@ -24,19 +22,17 @@ export async function updateReservationStatuses(prisma: PrismaClient) {
     }
   });
 
-
   for (const reservation of reservationsToUpdate) {
     const newStatus = reservation.endTime < now ? "COMPLETED" : "NO_SHOW";
 
     await prisma.$transaction([
-
       prisma.reservation.update({
         where: { id: reservation.id },
         data: { status: newStatus }
       }),
 
       prisma.seat.update({
-        where: { id: reservation.seat.id },
+        where: { id: reservation.seat?.id },
         data: { isAvailable: true }
       })
     ]);
@@ -47,7 +43,6 @@ export async function updateReservationStatuses(prisma: PrismaClient) {
 
 export async function checkCurrentReservations(prisma: PrismaClient) {
   const now = new Date();
-
 
   const activeReservations = await prisma.reservation.findMany({
     where: {
@@ -60,11 +55,10 @@ export async function checkCurrentReservations(prisma: PrismaClient) {
     }
   });
 
-
   for (const reservation of activeReservations) {
-    if (reservation.seat.isAvailable) {
+    if (reservation.seat?.isAvailable) {
       await prisma.seat.update({
-        where: { id: reservation.seat.id },
+        where: { id: reservation.seat?.id },
         data: { isAvailable: false }
       });
     }

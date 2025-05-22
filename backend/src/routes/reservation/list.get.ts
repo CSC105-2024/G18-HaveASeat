@@ -3,10 +3,11 @@ import { getPrisma } from "@/lib/prisma.ts";
 import { authMiddleware } from "@/middlewares/auth.middleware.js";
 import type { AppEnv } from "@/types/env.js";
 
-export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
+export const middleware = [
+  authMiddleware
+];
 
+export default async function(c: Context<AppEnv>) {
   try {
     const user = c.get("user");
     const prisma = getPrisma();
@@ -43,12 +44,14 @@ export default async function(c: Context<AppEnv>) {
           endTime: res.endTime,
           numberOfGuests: res.numberOfGuests,
           numberOfTables: res.numberOfTables,
-          seat: {
-            id: res.seat.id,
-            number: res.seat.number,
-            location: res.seat.location
-          },
-          merchant: res.seat.merchant,
+          ...(res?.seat && {
+            seat: {
+              id: res.seat.id,
+              number: res.seat.number,
+              location: res.seat.location
+            },
+            merchant: res.seat.merchant
+          }),
           createdAt: res.createdAt
         }))
       });
@@ -61,7 +64,6 @@ export default async function(c: Context<AppEnv>) {
       if (!merchant) {
         return c.json({ error: "Merchant not found" }, 404);
       }
-
 
       if (merchant.ownerId !== user.id && !user.isAdmin) {
         return c.json({ error: "Unauthorized" }, 403);
@@ -98,11 +100,13 @@ export default async function(c: Context<AppEnv>) {
           numberOfTables: res.numberOfTables,
           reservationType: res.reservationType,
           note: res.note,
-          seat: {
-            id: res.seat.id,
-            number: res.seat.number,
-            location: res.seat.location
-          },
+          ...(res.seat && {
+            seat: {
+              id: res.seat.id,
+              number: res.seat.number,
+              location: res.seat.location
+            }
+          }),
           user: res.user,
           createdAt: res.createdAt
         }))

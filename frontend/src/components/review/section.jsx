@@ -75,7 +75,7 @@ function MerchantReviewSection({ merchant, merchantId }) {
 
       try {
         const response = await axiosInstance.get(
-          `/review/list?merchantId=${merchantId}&userId=${user.id}`,
+          `/reviews?merchantId=${merchantId}&userId=${user.id}`,
         );
         setHasReviewed(response.data.reviews.length > 0);
       } catch (error) {
@@ -92,7 +92,7 @@ function MerchantReviewSection({ merchant, merchantId }) {
     try {
       setLoading(true);
       const response = await axiosInstance.get(
-        `/review/list?merchantId=${merchantId}&sort=${sortOption}&order=${sortOrder}`,
+        `/reviews?merchantId=${merchantId}&sort=${sortOption}&order=${sortOrder}`,
       );
       setReviews(response.data.reviews || []);
     } catch (error) {

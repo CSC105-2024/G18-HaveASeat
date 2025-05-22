@@ -3,10 +3,11 @@ import { getPrisma } from "@/lib/prisma.ts";
 import { authMiddleware } from "@/middlewares/auth.middleware.js";
 import type { AppEnv } from "@/types/env.js";
 
-export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
+export const middleware = [
+  authMiddleware
+];
 
+export default async function(c: Context<AppEnv>) {
   try {
     const user = c.get("user");
     const prisma = getPrisma();
@@ -14,11 +15,9 @@ export default async function(c: Context<AppEnv>) {
     const body = await c.req.json();
     const { merchantId, rating, description } = body;
 
-
     if (!merchantId || !rating || !description) {
       return c.json({ error: "Missing required fields" }, 400);
     }
-
 
     const merchant = await prisma.merchant.findUnique({
       where: { id: merchantId }
@@ -28,12 +27,10 @@ export default async function(c: Context<AppEnv>) {
       return c.json({ error: "Merchant not found" }, 404);
     }
 
-
     const ratingNumber = Number(rating);
     if (isNaN(ratingNumber) || ratingNumber < 1 || ratingNumber > 5) {
       return c.json({ error: "Rating must be between 1 and 5" }, 400);
     }
-
 
     const existingReview = await prisma.review.findFirst({
       where: {
@@ -45,7 +42,6 @@ export default async function(c: Context<AppEnv>) {
     if (existingReview) {
       return c.json({ error: "You have already reviewed this merchant" }, 409);
     }
-
 
     const review = await prisma.review.create({
       data: {

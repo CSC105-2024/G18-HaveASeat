@@ -74,7 +74,6 @@ const useReservationCheckInOverlay = createModalHook(
   "reservation-check-in",
   "Check In Customer",
   null,
-  "sm",
 );
 
 export { useReservationCheckInOverlay, ReservationCheckInOverlay };

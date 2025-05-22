@@ -188,7 +188,6 @@ const useReviewReportOverlay = createModalHook(
   "review-report",
   "Report Review",
   null,
-  "sm",
 );
 
 export { useReviewReportOverlay, ReviewReportOverlay };

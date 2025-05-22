@@ -32,6 +32,7 @@ import { CardContent } from "@/components/ui/card.jsx";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.jsx";
 import axiosInstance from "@/lib/axios";
 import { constructAPIUrl } from "@/lib/url.js";
+import SetupProgress from "@/components/merchant/setup-progress.jsx";
 
 const MAX_IMAGES = 8;
 
@@ -249,6 +250,7 @@ function Page() {
 
   return (
     <MerchantLayout>
+      <SetupProgress trigger={isLoading} />
       <div className="flex flex-col gap-8">
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">Merchant Settings</h2>

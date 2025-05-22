@@ -3,15 +3,15 @@ import { getPrisma } from "@/lib/prisma.ts";
 import { authMiddleware } from "@/middlewares/auth.middleware.js";
 import type { AppEnv } from "@/types/env.js";
 
-export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
+export const middleware = [
+  authMiddleware
+];
 
+export default async function(c: Context<AppEnv>) {
   try {
     const user = c.get("user");
     const prisma = getPrisma();
     const reportId = c.req.param("id");
-
 
     if (!user.isAdmin) {
       return c.json({
@@ -19,7 +19,6 @@ export default async function(c: Context<AppEnv>) {
         error: "Only administrators can delete reports"
       }, 403);
     }
-
 
     const report = await prisma.reviewReport.findUnique({
       where: { id: reportId },
@@ -35,7 +34,6 @@ export default async function(c: Context<AppEnv>) {
       }, 404);
     }
 
-
     const result = await prisma.$transaction(async (tx) => {
 
       const deletedReport = await tx.reviewReport.update({
@@ -45,21 +43,17 @@ export default async function(c: Context<AppEnv>) {
         }
       });
 
-
       if (deletedReport.status === "DELETED") {
-
 
         await tx.reviewReply.deleteMany({
           where: { reviewId: report.review.id }
         });
-
 
         await tx.reviewReport.deleteMany({
           where: {
             reviewId: report.review.id
           }
         });
-
 
         await tx.review.delete({
           where: { id: report.review.id }

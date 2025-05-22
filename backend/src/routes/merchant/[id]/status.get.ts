@@ -2,17 +2,16 @@ import type { Context } from "hono";
 import { authMiddleware } from "@/middlewares/auth.middleware.js";
 import type { AppEnv } from "@/types/env.js";
 import { getPrisma } from "@/lib/prisma.ts";
-import type { JsonObject } from "@/prisma/generated/runtime/library.js";
+
+export const middleware = [
+  authMiddleware
+];
 
 export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
-
   try {
     const user = c.get("user");
     const id = c.req.param("id");
     const prisma = getPrisma();
-
 
     const merchant = await prisma.merchant.findUnique({
       where: { id },
@@ -31,7 +30,6 @@ export default async function(c: Context<AppEnv>) {
       return c.json({ error: "Unauthorized" }, 403);
     }
 
-
     const setupStatus = {
       overview: {
         isComplete: false,
@@ -47,21 +45,13 @@ export default async function(c: Context<AppEnv>) {
       }
     };
 
-
     if (!merchant.name || merchant.name === `${user.name}'s Business`) {
       setupStatus.overview.missingFields.push("name");
-    }
-    if (!merchant.phone) {
-      setupStatus.overview.missingFields.push("phone");
     }
     if (!merchant.address) {
       setupStatus.overview.missingFields.push("address");
     }
-    if (!merchant.openHours || (merchant.openHours as JsonObject).length === 0) {
-      setupStatus.overview.missingFields.push("openHours");
-    }
     setupStatus.overview.isComplete = setupStatus.overview.missingFields.length === 0;
-
 
     if (!merchant.bannerImage) {
       setupStatus.display.missingFields.push("bannerImage");
@@ -72,7 +62,6 @@ export default async function(c: Context<AppEnv>) {
     }
     setupStatus.display.isComplete = setupStatus.display.missingFields.length === 0;
 
-
     if (!merchant.floorPlan) {
       setupStatus.reservation.missingFields.push("floorPlan");
     }
@@ -81,12 +70,10 @@ export default async function(c: Context<AppEnv>) {
     }
     setupStatus.reservation.isComplete = setupStatus.reservation.missingFields.length === 0;
 
-
     const isComplete =
       setupStatus.overview.isComplete &&
       setupStatus.display.isComplete &&
       setupStatus.reservation.isComplete;
-
 
     let nextStep = null;
     if (!setupStatus.overview.isComplete) {

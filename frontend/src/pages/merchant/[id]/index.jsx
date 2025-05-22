@@ -22,7 +22,11 @@ import { constructAPIUrl } from "@/lib/url.js";
 function Page() {
   const { id } = useParams();
   const { isAuthenticated } = useAuthStore();
-  const { isOwner } = useMerchantContext();
+  const {
+    isOwner,
+    hasCompletedSetup,
+    isLoading: isMerchantDataLoading,
+  } = useMerchantContext();
 
   const [loading, setLoading] = useState(true);
   const [merchant, setMerchant] = useState(null);
@@ -106,6 +110,24 @@ function Page() {
         <h1 className="text-2xl font-bold">{error || "Merchant not found"}</h1>
         <p className="text-muted-foreground mt-4">
           The merchant you're looking for might not exist or has been removed.
+        </p>
+        <Link
+          to="/"
+          className={cn(buttonVariants({ variant: "default" }), "mt-8")}
+        >
+          Go back home
+        </Link>
+      </div>
+    );
+  }
+
+  if (merchant && isMerchantDataLoading && !hasCompletedSetup) {
+    return (
+      <div className="mx-auto max-w-7xl px-4 py-16 text-center">
+        <h1 className="text-2xl font-bold">Oops!</h1>
+        <p className="text-muted-foreground mt-4">
+          The merchant you're looking for currently setting up their page.
+          Please come back later.
         </p>
         <Link
           to="/"

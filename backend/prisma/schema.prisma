@@ -33,7 +33,7 @@ model Merchant {
   openHours    Json
   description  String?
   ownerId      String
-  owner        User             @relation(fields: [ownerId], references: [id], name: "MerchantBars")
+  owner        User             @relation(fields: [ownerId], references: [id], name: "MerchantBars", onDelete: Cascade, onUpdate: Cascade)
   bannerImage  String?
   promoImages  MerchantImage[]
   floorPlan    String?
@@ -46,7 +46,7 @@ model Merchant {
 model MerchantAddress {
   id          String   @id @default(uuid())
   merchantId  String
-  merchant    Merchant @relation(fields: [merchantId], references: [id])
+  merchant    Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   address     String
   subDistrict String
   district    String
@@ -59,7 +59,7 @@ model MerchantAddress {
 model MerchantImage {
   id         String   @id @default(uuid())
   merchantId String
-  merchant   Merchant @relation(fields: [merchantId], references: [id])
+  merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   url        String
 }
 
@@ -69,7 +69,7 @@ model Seat {
   location     String
   isAvailable  Boolean       @default(true)
   merchantId   String
-  merchant     Merchant      @relation(fields: [merchantId], references: [id])
+  merchant     Merchant      @relation(fields: [merchantId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   reservations Reservation[]
 }
 
@@ -81,7 +81,7 @@ model Reservation {
   customerPhone   String?
   reservationType ReservationType
   seatId          String
-  seat            Seat              @relation(fields: [seatId], references: [id])
+  seat            Seat?             @relation(fields: [seatId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   startTime       DateTime
   endTime         DateTime
   numberOfGuests  Int

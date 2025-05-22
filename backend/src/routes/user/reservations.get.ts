@@ -3,18 +3,17 @@ import { authMiddleware } from "@/middlewares/auth.middleware.js";
 import type { AppEnv } from "@/types/env.js";
 import { getPrisma } from "@/lib/prisma.js";
 
-export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
+export const middleware = [
+  authMiddleware
+];
 
+export default async function(c: Context<AppEnv>) {
   try {
     const user = c.get("user");
     const prisma = getPrisma();
 
-
     const now = new Date();
     now.setHours(0, 0, 0, 0);
-
 
     const upcomingReservations = await prisma.reservation.findMany({
       where: {
@@ -49,7 +48,6 @@ export default async function(c: Context<AppEnv>) {
         startTime: "asc"
       }
     });
-
 
     const pastReservations = await prisma.reservation.findMany({
       where: {
@@ -90,7 +88,6 @@ export default async function(c: Context<AppEnv>) {
         startTime: "desc"
       }
     });
-
 
     const formatReservation = (reservation: any) => {
       const merchant = reservation.seat.merchant;

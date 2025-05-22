@@ -4,18 +4,17 @@ import type { AppEnv } from "@/types/env.js";
 import { getPrisma } from "@/lib/prisma.ts";
 import { uploadFile } from "@/lib/upload.ts";
 
-export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
+export const middleware = [
+  authMiddleware
+];
 
+export default async function(c: Context<AppEnv>) {
   try {
     const user = c.get("user");
     const id = c.req.param("id");
     const prisma = getPrisma();
 
-
     const body = await c.req.parseBody();
-
 
     const merchant = await prisma.merchant.findUnique({
       where: { id }
@@ -29,7 +28,6 @@ export default async function(c: Context<AppEnv>) {
       return c.json({ error: "Unauthorized" }, 403);
     }
 
-
     let zones: Array<{ name: string; amount: number }> = [];
     if (body.zones) {
       try {
@@ -39,17 +37,14 @@ export default async function(c: Context<AppEnv>) {
       }
     }
 
-
     if (!zones.length) {
       return c.json({ error: "At least one zone is required" }, 400);
     }
-
 
     let floorPlanUrl = merchant.floorPlan;
     if (body.floor_plan instanceof File) {
       floorPlanUrl = await uploadFile(body.floor_plan);
     }
-
 
     const updatedMerchant = await prisma.$transaction(async (tx) => {
 
@@ -60,11 +55,9 @@ export default async function(c: Context<AppEnv>) {
         });
       }
 
-
       await tx.seat.deleteMany({
         where: { merchantId: id }
       });
-
 
       let seatNumber = 1;
       for (const zone of zones) {

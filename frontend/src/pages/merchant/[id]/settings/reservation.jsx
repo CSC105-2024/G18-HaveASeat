@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input.jsx";
 import { IconPhotoQuestion, IconPlus, IconTrash } from "@tabler/icons-react";
 import axiosInstance from "@/lib/axios";
 import { constructAPIUrl } from "@/lib/url.js";
+import SetupProgress from "@/components/merchant/setup-progress.jsx";
 
 const FormSchema = z.object({
   floor_plan: z
@@ -167,6 +168,7 @@ function Page() {
 
   return (
     <MerchantLayout>
+      <SetupProgress trigger={isLoading} />
       <div className="flex flex-col gap-8">
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold">Merchant Settings</h2>

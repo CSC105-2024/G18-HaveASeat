@@ -1,6 +1,6 @@
 import React from "react";
 
-function Page(props) {
+function Page() {
   return (
     <div className="mx-auto max-w-7xl space-y-8">
       {/* Hero Banner Section */}
@@ -30,7 +30,7 @@ function Page(props) {
           instant booking, and a seamless experience from start to cheers.
         </p>
         <p className="mt-4 text-lg leading-relaxed">
-          At <strong>Take A Seat</strong>, we believe great nights start with
+          At <strong>Have A Seat</strong>, we believe great nights start with
           great places. So explore, book, and let the good times roll.
         </p>
         <p className="mt-4 text-lg leading-relaxed font-semibold">

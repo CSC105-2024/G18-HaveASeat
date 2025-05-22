@@ -58,14 +58,16 @@ const settingsMenu = [
   },
 ];
 
-function MerchantNavigation({ merchantId }) {
+function MerchantNavigation({ merchantId, hasCompletedSetup }) {
   /**
    * @type {MenuEntry[]}
    */
-  const merchantUncategorizedMenu = uncategorizedMenu.map((item) => ({
-    ...item,
-    pathname: item.pathname.replace("%id%", merchantId),
-  }));
+  const merchantUncategorizedMenu = !hasCompletedSetup
+    ? []
+    : uncategorizedMenu.map((item) => ({
+        ...item,
+        pathname: item.pathname.replace("%id%", merchantId),
+      }));
 
   /**
    * @type {MenuEntry[]}

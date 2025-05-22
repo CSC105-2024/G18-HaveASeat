@@ -1,24 +1,14 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge.jsx";
-import {
-  IconHeartFilled,
-  IconSettings,
-  IconStarFilled,
-} from "@tabler/icons-react";
+import { IconHeartFilled, IconStarFilled } from "@tabler/icons-react";
 import {
   formatNumberCompact,
   formatNumberDecimalPoint,
 } from "@/lib/formatter.js";
-import { Link } from "react-router";
-import { cn } from "@/lib/utils.js";
-import { buttonVariants } from "@/components/ui/button.jsx";
 import { format } from "date-fns";
-import { useMerchantContext } from "@/providers/merchant.jsx";
 import { constructAPIUrl } from "@/lib/url.js";
 
-function MerchantBanner({ merchant, merchantId }) {
-  const { isOwner } = useMerchantContext();
-
+function MerchantBanner({ merchant }) {
   if (!merchant) {
     return null;
   }
@@ -35,11 +25,11 @@ function MerchantBanner({ merchant, merchantId }) {
 
   return (
     <section
-      className={`${overlayClass} relative gap-4 overflow-hidden rounded-lg bg-gray-50 px-12 py-20 ${merchant.bannerImage ? "" : "bg-black/10 backdrop-blur-sm"} bg-cover bg-center bg-no-repeat shadow-lg`}
+      className={`${overlayClass} relative gap-4 overflow-hidden rounded-lg px-12 py-20 ${merchant.bannerImage ? "bg-black/10 backdrop-blur-sm" : "bg-gray-50"} bg-cover bg-center bg-no-repeat shadow-lg`}
       style={bannerStyle}
     >
       <div
-        className={`absolute inset-0 flex flex-col justify-center gap-4 bg-black/10 px-8 text-white backdrop-blur-sm ${textClass}`}
+        className={`absolute inset-0 flex flex-col justify-center gap-4 bg-black/10 px-8 backdrop-blur-sm ${textClass}`}
       >
         <h1 className="ml-1 text-3xl font-bold">{merchant.name}</h1>
         <div className="flex flex-row flex-wrap gap-2 text-sm">
@@ -62,29 +52,8 @@ function MerchantBanner({ merchant, merchantId }) {
               )}
             </span>
           </Badge>
-          {import.meta.env.DEV && (
-            <Badge variant="destructive">
-              <span className="font-medium">ID</span> {merchantId}
-            </Badge>
-          )}
         </div>
       </div>
-
-      {/* Only show settings button for merchant owner */}
-      {isOwner && (
-        <div className="absolute top-4 right-4 z-10">
-          <Link
-            to={`/merchant/${merchantId}/settings/overview`}
-            className={cn(
-              buttonVariants({ variant: "secondary" }),
-              "flex w-full items-center justify-center gap-2",
-            )}
-          >
-            <IconSettings className="h-4 w-4" />
-            <span>Settings</span>
-          </Link>
-        </div>
-      )}
     </section>
   );
 }

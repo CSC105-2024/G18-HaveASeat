@@ -3,11 +3,12 @@ import { getPrisma } from "@/lib/prisma.ts";
 import { authMiddleware } from "@/middlewares/auth.middleware.js";
 import type { AppEnv } from "@/types/env.js";
 
+export const middleware = [
+  authMiddleware
+];
+
 export default async function(c: Context<AppEnv>) {
   try {
-    await authMiddleware(c, async () => {
-    });
-
     const prisma = getPrisma();
     const id = c.req.param("id");
 

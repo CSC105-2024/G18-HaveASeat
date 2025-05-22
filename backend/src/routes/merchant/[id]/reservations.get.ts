@@ -3,20 +3,19 @@ import { authMiddleware } from "@/middlewares/auth.middleware.js";
 import type { AppEnv } from "@/types/env.js";
 import { getPrisma } from "@/lib/prisma.js";
 
-export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
+export const middleware = [
+  authMiddleware
+];
 
+export default async function(c: Context<AppEnv>) {
   try {
     const user = c.get("user");
     const prisma = getPrisma();
     const { id } = c.req.param();
 
-
     if (!id) {
       return c.json({ error: "Merchant ID is required" }, 400);
     }
-
 
     const merchant = await prisma.merchant.findUnique({
       where: { id },
@@ -29,11 +28,9 @@ export default async function(c: Context<AppEnv>) {
       return c.json({ error: "Merchant not found" }, 404);
     }
 
-
     if (merchant.ownerId !== user.id && !user.isAdmin) {
       return c.json({ error: "Unauthorized access" }, 403);
     }
-
 
     const reservations = await prisma.reservation.findMany({
       where: {
@@ -62,7 +59,6 @@ export default async function(c: Context<AppEnv>) {
         startTime: "desc"
       }
     });
-
 
     const formattedReservations = reservations.map(reservation => {
       const customerName = reservation.user?.name || reservation.customerName || "Unknown";

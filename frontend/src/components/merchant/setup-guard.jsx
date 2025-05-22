@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router";
+import { Navigate, useLocation, useParams } from "react-router";
 import axiosInstance from "@/lib/axios";
 
 function MerchantSetupGuard({ children }) {
   const { id } = useParams();
+  const location = useLocation();
   const [checking, setChecking] = useState(true);
   const [setupStatus, setSetupStatus] = useState(null);
 
@@ -33,9 +34,9 @@ function MerchantSetupGuard({ children }) {
   }
 
   if (setupStatus && !setupStatus.isComplete) {
-    const currentPath = window.location.pathname;
+    const currentPath = location.pathname;
     if (!currentPath.includes("/settings") && !currentPath.includes("/setup")) {
-      return <Navigate to={`/merchant/${id}/setup`} replace />;
+      return <Navigate to={`/merchant/setup`} replace />;
     }
   }
 

@@ -13,6 +13,12 @@ export default async function(c: Context<AppEnv>) {
         address: true,
         promoImages: true,
         seats: true,
+        owner: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
         reviews: {
           include: {
             user: {
@@ -48,7 +54,6 @@ export default async function(c: Context<AppEnv>) {
       return c.json({ error: "Merchant not found" }, 404);
     }
 
-
     const totalSeats = merchant.seats.length;
     const availableSeats = merchant.seats.filter(seat => seat.isAvailable).length;
     const totalReviews = merchant.reviews.length;
@@ -56,7 +61,6 @@ export default async function(c: Context<AppEnv>) {
       ? merchant.reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews
       : 0;
     const totalFavourites = merchant._count.favouritedBy;
-
 
     const zones = merchant.seats.reduce((acc, seat) => {
       if (!acc[seat.location]) {
@@ -73,6 +77,50 @@ export default async function(c: Context<AppEnv>) {
       return acc;
     }, {} as Record<string, { name: string; totalSeats: number; availableSeats: number }>);
 
+    const setupStatus = {
+      overview: {
+        isComplete: false,
+        missingFields: [] as string[]
+      },
+      display: {
+        isComplete: false,
+        missingFields: [] as string[]
+      },
+      reservation: {
+        isComplete: false,
+        missingFields: [] as string[]
+      }
+    };
+
+    if (!merchant.name || merchant.name === `${merchant.owner.name}'s Business`) {
+      setupStatus.overview.missingFields.push("name");
+    }
+    if (!merchant.address) {
+      setupStatus.overview.missingFields.push("address");
+    }
+    setupStatus.overview.isComplete = setupStatus.overview.missingFields.length === 0;
+
+    if (!merchant.bannerImage) {
+      setupStatus.display.missingFields.push("bannerImage");
+    }
+
+    if (merchant.promoImages.length === 0) {
+      setupStatus.display.missingFields.push("promoImages");
+    }
+    setupStatus.display.isComplete = setupStatus.display.missingFields.length === 0;
+
+    if (!merchant.floorPlan) {
+      setupStatus.reservation.missingFields.push("floorPlan");
+    }
+    if (merchant.seats.length === 0) {
+      setupStatus.reservation.missingFields.push("zones");
+    }
+    setupStatus.reservation.isComplete = setupStatus.reservation.missingFields.length === 0;
+
+    const hasCompletedSetup =
+      setupStatus.overview.isComplete &&
+      setupStatus.display.isComplete &&
+      setupStatus.reservation.isComplete;
 
     return c.json({
       id: merchant.id,
@@ -104,7 +152,7 @@ export default async function(c: Context<AppEnv>) {
         availableSeats,
         totalReviews,
         averageRating: Math.round(averageRating * 10) / 10,
-        totalFavourites: merchant._count.favouritedBy
+        totalFavourites
       },
 
       zones: Object.values(zones),
@@ -127,7 +175,9 @@ export default async function(c: Context<AppEnv>) {
             name: reply.merchant.name
           }
         }))
-      }))
+      })),
+
+      hasCompletedSetup
     });
   } catch (error) {
     console.error("Public merchant fetch error:", error);

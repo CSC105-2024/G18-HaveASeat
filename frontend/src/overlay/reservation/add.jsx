@@ -20,7 +20,14 @@ import { useModalStore } from "@/store/modal.jsx";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils.js";
 import { Button } from "@/components/ui/button.jsx";
-import { addHours, format, isBefore, parse, startOfToday } from "date-fns";
+import {
+  addHours,
+  addMinutes,
+  format,
+  isBefore,
+  parse,
+  startOfToday,
+} from "date-fns";
 import {
   Popover,
   PopoverContent,
@@ -128,7 +135,7 @@ function ReservationAddOverlay({ isManual = false, merchantId, onSuccess }) {
     resolver: zodResolver(FormSchema),
     defaultValues: {
       reservationDate: new Date(),
-      reservationTimeStart: format(new Date(), "HH:mm"),
+      reservationTimeStart: format(addMinutes(new Date(), 5), "HH:mm"),
       reservationTimeEnd: format(addHours(new Date(), 1), "HH:mm"),
       customerName: user?.name || "",
       customerPhone: user?.phoneNumber || "",
@@ -138,9 +145,6 @@ function ReservationAddOverlay({ isManual = false, merchantId, onSuccess }) {
       note: "",
     },
   });
-
-  const selectedDate = form.watch("reservationDate");
-  const selectedSeat = form.watch("seat");
 
   useEffect(() => {
     const fetchMerchant = async () => {
@@ -518,7 +522,6 @@ const useReservationAddOverlay = createModalHook(
   "reservation-add-modal",
   "Make a Reservation",
   "",
-  "lg",
 );
 
 export { useReservationAddOverlay, ReservationAddOverlay };

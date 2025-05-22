@@ -4,15 +4,8 @@ import path from "path";
 import process from "process";
 
 type HttpMethod = "get" | "post" | "put" | "delete" | "patch" | "options" | "head"
-type RouteEntry = {
-  path: string;
-  method: HttpMethod;
-  handler: any;
-  filePath: string;
-  isDynamic: boolean;
-}
 
-export async function loadRoutes<T extends Env>(app: Hono<T>): Promise<void> {
+export function loadRoutes<T extends Env>(app: Hono<T>): void {
   const routesDir = path.join(process.cwd(), "src", "routes");
 
   if (!fs.existsSync(routesDir)) {
@@ -20,61 +13,27 @@ export async function loadRoutes<T extends Env>(app: Hono<T>): Promise<void> {
     return;
   }
 
-
-  const routes: RouteEntry[] = [];
-  await collectAllRoutes(routesDir, "", routes);
-
-
-  routes.sort((a, b) => {
-
-    if (a.isDynamic && !b.isDynamic) return 1;
-    if (!a.isDynamic && b.isDynamic) return -1;
-
-
-    const aSegments = a.path.split("/").filter(Boolean).length;
-    const bSegments = b.path.split("/").filter(Boolean).length;
-
-    return bSegments - aSegments;
-  });
-
-
-  registerRoutes(app, routes);
+  walkRoutes<T>(app, routesDir, "");
 }
 
-async function collectAllRoutes(
-  baseDir: string,
-  currentPath: string,
-  routes: RouteEntry[]
-): Promise<void> {
-  const dirPath = path.join(baseDir, currentPath);
-  const files = fs.readdirSync(dirPath);
+function walkRoutes<T extends Env>(app: Hono<T>, baseDir: string, currentPath: string): void {
+  const routesDir = path.join(baseDir, currentPath);
+  const files = fs.readdirSync(routesDir);
 
-  const filePromises = [];
-
-  for (const file of files) {
-    const filePath = path.join(dirPath, file);
+  files.forEach(file => {
+    const filePath = path.join(routesDir, file);
     const stats = fs.statSync(filePath);
 
     if (stats.isDirectory()) {
-
-      await collectAllRoutes(baseDir, path.join(currentPath, file), routes);
+      walkRoutes<T>(app, baseDir, path.join(currentPath, file));
     } else if (stats.isFile() && file.endsWith(".ts")) {
-
-      const promise = processRouteFile(baseDir, path.join(currentPath, file), routes);
-      filePromises.push(promise);
+      registerRoute<T>(app, baseDir, path.join(currentPath, file));
     }
-  }
-
-
-  await Promise.all(filePromises);
+  });
 }
 
-async function processRouteFile(
-  baseDir: string,
-  routeFile: string,
-  routes: RouteEntry[]
-): Promise<void> {
-  const { routePath, method, isDynamic } = parseRoutePath(routeFile);
+async function registerRoute<T extends Env>(app: Hono<T>, baseDir: string, routeFile: string): Promise<void> {
+  const { routePath, method } = parseRoutePath(routeFile);
 
   if (!method) {
     console.warn(`Skipping file with no HTTP method: ${routeFile}`);
@@ -85,6 +44,7 @@ async function processRouteFile(
 
   try {
     const fileUrl = pathToFileURL(fullPath);
+
     const module = await import(fileUrl);
     const handler = module.default;
 
@@ -93,54 +53,41 @@ async function processRouteFile(
       return;
     }
 
-    routes.push({
-      path: routePath,
-      method,
-      handler,
-      filePath: routeFile,
-      isDynamic
-    });
+    const middlewares = Array.isArray(module.middleware) ? module.middleware : [];
+
+    console.log(`\x1b[46m[Router]\x1b[0m \x1b[37m${method.toUpperCase()}\x1b[0m \t ${routePath}`);
+
+    switch (method) {
+      case "get":
+        app.get(routePath, ...middlewares, handler);
+        break;
+      case "post":
+        app.post(routePath, ...middlewares, handler);
+        break;
+      case "put":
+        app.put(routePath, ...middlewares, handler);
+        break;
+      case "delete":
+        app.delete(routePath, ...middlewares, handler);
+        break;
+      case "patch":
+        app.patch(routePath, ...middlewares, handler);
+        break;
+      case "options":
+        app.options(routePath, ...middlewares, handler);
+        break;
+      case "head":
+        app.get(routePath, ...middlewares, handler);
+        break;
+    }
   } catch (err) {
     console.error(`\x1b[31m[Router Error]\x1b[0m Error loading route ${routeFile}:`, err);
   }
 }
 
-function registerRoutes<T extends Env>(app: Hono<T>, routes: RouteEntry[]): void {
-  for (const route of routes) {
-    console.log(
-      `\x1b[46m[Router]\x1b[0m \x1b[37m${route.method.toUpperCase()}\x1b[0m \t${route.path}${
-        route.isDynamic ? " (dynamic)" : ""
-      }`
-    );
-
-    switch (route.method) {
-      case "get":
-        app.get(route.path, route.handler);
-        break;
-      case "post":
-        app.post(route.path, route.handler);
-        break;
-      case "put":
-        app.put(route.path, route.handler);
-        break;
-      case "delete":
-        app.delete(route.path, route.handler);
-        break;
-      case "patch":
-        app.patch(route.path, route.handler);
-        break;
-      case "options":
-        app.options(route.path, route.handler);
-        break;
-      case "head":
-        app.get(route.path, route.handler);
-        break;
-    }
-  }
-}
-
 function pathToFileURL(filePath: string): string {
   const absolutePath = path.resolve(filePath);
+
   const normalizedPath = absolutePath.replace(/\\/g, "/");
 
   if (process.platform === "win32") {
@@ -150,9 +97,8 @@ function pathToFileURL(filePath: string): string {
   return `file://${normalizedPath}`;
 }
 
-function parseRoutePath(filePath: string): { routePath: string, method: HttpMethod | null, isDynamic: boolean } {
+function parseRoutePath(filePath: string): { routePath: string, method: HttpMethod | null } {
   let routePath = filePath.replace(/\.ts$/, "");
-  let isDynamic = false;
 
   const methodMatch = routePath.match(/\.(get|post|put|delete|patch|options|head)$/);
   const method = methodMatch ? methodMatch[1] as HttpMethod : null;
@@ -163,14 +109,10 @@ function parseRoutePath(filePath: string): { routePath: string, method: HttpMeth
 
   routePath = routePath.replace(/\\/g, "/");
 
-
-  if (routePath.includes("[")) {
-    isDynamic = true;
-    routePath = routePath.replace(/\[([^\]]+)\]/g, ":$1");
-  }
+  routePath = routePath.replace(/\[([^\]]+)\]/g, ":$1");
 
   if (routePath === "index" || routePath === "/index") {
-    return { routePath: "/", method, isDynamic };
+    return { routePath: "/", method };
   }
 
   if (routePath.endsWith("/index")) {
@@ -181,5 +123,5 @@ function parseRoutePath(filePath: string): { routePath: string, method: HttpMeth
     routePath = "/" + routePath;
   }
 
-  return { routePath, method, isDynamic };
+  return { routePath, method };
 }

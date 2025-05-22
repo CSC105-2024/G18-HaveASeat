@@ -1,27 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { IconHeart, IconHeartFilled, IconStarFilled } from "@tabler/icons-react";
 import { formatNumberDecimalPoint } from "@/lib/formatter.js";
 import { cn } from "@/lib/utils.js";
 import { constructAPIUrl } from "@/lib/url.js";
 import { useAuthStore } from "@/store/auth";
+import { useFavoritesStore } from "@/store/favorites";
 import { useUserFavouriteOverlay } from "@/overlay/user/favourite.jsx";
 import { toast } from "sonner";
 
 /**
- * MerchantCard Component - Displays merchant information in a card format
- *
  * @param {Object} props
- * @param {string} props.merchantId - Merchant ID
- * @param {string} props.image - Image URL
- * @param {string} props.name - Merchant name
- * @param {string} props.location - Merchant location
- * @param {number|string} props.rating - Merchant rating (number) or favorite count (string)
- * @param {boolean} props.favorite - Whether the merchant is favorite
- * @param {boolean} props.isFavoriteCount - Whether rating represents favorite count
- * @param {string} props.description - Merchant description
- * @param {Function} props.onFavoriteToggle - Optional callback when favorite is toggled
- * @param {string} props.className - Additional class names
+ * @param {string} props.merchantId
+ * @param {string} props.image
+ * @param {string} props.name
+ * @param {string} props.location
+ * @param {number|string} props.rating
+ * @param {boolean} props.isFavoriteCount
+ * @param {string} props.description
+ * @param {Function} props.onFavoriteToggle
+ * @param {string} props.className
  */
 function MerchantCard({
   merchantId,
@@ -29,16 +27,39 @@ function MerchantCard({
   name,
   location,
   rating,
-  favorite = false,
   isFavoriteCount = false,
   description,
   onFavoriteToggle,
   className,
 }) {
   const { isAuthenticated } = useAuthStore();
-  const [isFavorite, setIsFavorite] = useState(favorite);
+  const {
+    isFavorite: isFavoriteInStore,
+    fetchFavorites,
+    setFavoriteCount,
+    getFavoriteCount,
+    isLoading: favoritesLoading,
+  } = useFavoritesStore();
+
   const [favoriteLoading, setFavoriteLoading] = useState(false);
   const { open: openUserFavouriteOverlay } = useUserFavouriteOverlay();
+
+  const isFavorite = merchantId ? isFavoriteInStore(merchantId) : false;
+  const currentFavoriteCount = merchantId
+    ? (getFavoriteCount(merchantId) ?? rating)
+    : rating;
+
+  useEffect(() => {
+    if (merchantId && isFavoriteCount && typeof rating === "number") {
+      setFavoriteCount(merchantId, rating);
+    }
+  }, [merchantId, isFavoriteCount, rating, setFavoriteCount]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchFavorites();
+    }
+  }, [isAuthenticated, fetchFavorites]);
 
   const handleToggleFavorite = (e) => {
     e.preventDefault();
@@ -59,11 +80,12 @@ function MerchantCard({
     openUserFavouriteOverlay({
       merchantId,
       onSuccess: () => {
-        const newFavoriteState = !isFavorite;
-        setIsFavorite(newFavoriteState);
         if (onFavoriteToggle) {
-          onFavoriteToggle(merchantId, newFavoriteState);
+          onFavoriteToggle(merchantId, !isFavorite);
         }
+        setFavoriteLoading(false);
+      },
+      onClose: () => {
         setFavoriteLoading(false);
       },
     });
@@ -94,11 +116,11 @@ function MerchantCard({
         {isAuthenticated && merchantId && (
           <button
             onClick={handleToggleFavorite}
-            disabled={favoriteLoading}
+            disabled={favoriteLoading || favoritesLoading}
             className={cn(
               "absolute top-2 right-2 rounded-full bg-white/80 p-2 shadow-sm transition-opacity hover:bg-white",
               isFavorite ? "text-red-500" : "text-gray-400",
-              favoriteLoading
+              favoriteLoading || favoritesLoading
                 ? "cursor-not-allowed opacity-50"
                 : "group-hover:opacity-100",
               !isFavorite && "opacity-0",
@@ -133,8 +155,10 @@ function MerchantCard({
           {isFavoriteCount ? (
             <>
               <IconHeartFilled className="h-4 w-4 text-red-500" />
-              <span className="text-sm">{rating}</span>
-              <span className="text-muted-foreground text-xs">favorites</span>
+              <span className="text-sm">{currentFavoriteCount}</span>
+              <span className="text-muted-foreground text-xs">
+                favorite{currentFavoriteCount > 1 ? "s" : ""}
+              </span>
             </>
           ) : (
             <>

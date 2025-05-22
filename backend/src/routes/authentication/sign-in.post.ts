@@ -1,7 +1,7 @@
 import type { Context } from "hono";
 import { UserModel } from "@/models/user.model.js";
 import bcrypt from "bcryptjs";
-import { createTokenPair } from "@/middlewares/auth.middleware.js";
+import { setAuthCookie } from "@/middlewares/auth.middleware.js";
 import type { AppEnv } from "@/types/env.js";
 
 export default async function(c: Context<AppEnv>) {
@@ -24,11 +24,9 @@ export default async function(c: Context<AppEnv>) {
       return c.json({ error: "Invalid credentials" }, 401);
     }
 
-    const { accessToken, refreshToken } = await createTokenPair(user);
+    await setAuthCookie(c, { id: user.id, email: user.email });
 
     return c.json({
-      accessToken,
-      refreshToken,
       user: {
         id: user.id,
         email: user.email,

@@ -165,7 +165,7 @@ export function useMerchant({
     checkSetupStatus,
     createMerchant,
 
-    getSetupUrl: (id) => `/merchant/${id || currentMerchantId}/setup`,
+    getSetupUrl: () => "/merchant/setup",
     getDashboardUrl: (id) => `/merchant/${id || currentMerchantId}/dashboard`,
     getReservationsUrl: (id) =>
       `/merchant/${id || currentMerchantId}/reservations`,

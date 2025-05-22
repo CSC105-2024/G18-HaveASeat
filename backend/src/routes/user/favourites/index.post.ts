@@ -4,20 +4,19 @@ import type { AppEnv } from "@/types/env.js";
 import { getPrisma } from "@/lib/prisma.js";
 import { z } from "zod";
 
+export const middleware = [
+  authMiddleware
+];
 
 const favouriteSchema = z.object({
   merchantId: z.string().uuid()
 });
 
 export default async function(c: Context<AppEnv>) {
-  await authMiddleware(c, async () => {
-  });
-
   try {
     const user = c.get("user");
     const prisma = getPrisma();
     const body = await c.req.json();
-
 
     const validation = favouriteSchema.safeParse(body);
     if (!validation.success) {
@@ -26,7 +25,6 @@ export default async function(c: Context<AppEnv>) {
 
     const { merchantId } = validation.data;
 
-
     const merchant = await prisma.merchant.findUnique({
       where: { id: merchantId }
     });
@@ -34,7 +32,6 @@ export default async function(c: Context<AppEnv>) {
     if (!merchant) {
       return c.json({ error: "Merchant not found" }, 404);
     }
-
 
     const existingFavourite = await prisma.user.findFirst({
       where: {
@@ -53,7 +50,6 @@ export default async function(c: Context<AppEnv>) {
         already: true
       }, 409);
     }
-
 
     await prisma.merchant.update({
       where: { id: merchantId },

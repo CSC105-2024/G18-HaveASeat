@@ -9,9 +9,7 @@ export default async function(c: Context<AppEnv>) {
     const sort = c.req.query("sort") || "recent";
     const order = c.req.query("order") || "desc";
 
-
     let where: any = {};
-
 
     if (name) {
       where.name = {
@@ -19,7 +17,6 @@ export default async function(c: Context<AppEnv>) {
         mode: "insensitive"
       };
     }
-
 
     if (location) {
       where.OR = [
@@ -55,7 +52,6 @@ export default async function(c: Context<AppEnv>) {
       ];
     }
 
-
     let orderBy: any = {};
     if (sort === "rating") {
 
@@ -74,10 +70,17 @@ export default async function(c: Context<AppEnv>) {
       };
     }
 
-
     const merchants = await prisma.merchant.findMany({
       where,
       include: {
+        promoImages: true,
+        seats: true,
+        owner: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
         address: true,
         reviews: {
           select: {
@@ -95,7 +98,6 @@ export default async function(c: Context<AppEnv>) {
       orderBy
     });
 
-
     const transformedMerchants = merchants.map(merchant => {
 
       const totalRatings = merchant.reviews.length;
@@ -103,10 +105,54 @@ export default async function(c: Context<AppEnv>) {
         ? merchant.reviews.reduce((sum, review) => sum + review.rating, 0) / totalRatings
         : 0;
 
-
       const location = merchant.address
         ? `${merchant.address.district}, ${merchant.address.province}`
         : null;
+
+      const setupStatus = {
+        overview: {
+          isComplete: false,
+          missingFields: [] as string[]
+        },
+        display: {
+          isComplete: false,
+          missingFields: [] as string[]
+        },
+        reservation: {
+          isComplete: false,
+          missingFields: [] as string[]
+        }
+      };
+
+      if (!merchant.name || merchant.name === `${merchant.owner.name}'s Business`) {
+        setupStatus.overview.missingFields.push("name");
+      }
+      if (!merchant.address) {
+        setupStatus.overview.missingFields.push("address");
+      }
+      setupStatus.overview.isComplete = setupStatus.overview.missingFields.length === 0;
+
+      if (!merchant.bannerImage) {
+        setupStatus.display.missingFields.push("bannerImage");
+      }
+
+      if (merchant.promoImages.length === 0) {
+        setupStatus.display.missingFields.push("promoImages");
+      }
+      setupStatus.display.isComplete = setupStatus.display.missingFields.length === 0;
+
+      if (!merchant.floorPlan) {
+        setupStatus.reservation.missingFields.push("floorPlan");
+      }
+      if (merchant.seats.length === 0) {
+        setupStatus.reservation.missingFields.push("zones");
+      }
+      setupStatus.reservation.isComplete = setupStatus.reservation.missingFields.length === 0;
+
+      const hasCompletedSetup =
+        setupStatus.overview.isComplete &&
+        setupStatus.display.isComplete &&
+        setupStatus.reservation.isComplete;
 
       return {
         id: merchant.id,
@@ -117,10 +163,10 @@ export default async function(c: Context<AppEnv>) {
         address: merchant.address,
         averageRating: avgRating,
         reviewCount: totalRatings,
-        favoriteCount: merchant._count.favouritedBy
+        favoriteCount: merchant._count.favouritedBy,
+        hasCompletedSetup
       };
     });
-
 
     if (sort === "rating") {
       transformedMerchants.sort((a, b) => {
@@ -130,8 +176,7 @@ export default async function(c: Context<AppEnv>) {
       });
     }
 
-
-    let filteredMerchants = transformedMerchants;
+    let filteredMerchants = transformedMerchants.filter((merchant) => merchant.hasCompletedSetup);
     if (rating) {
       const minRating = parseFloat(rating);
       if (!isNaN(minRating)) {
