@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router";
 import {
   IconHeart,
@@ -9,10 +9,9 @@ import { formatNumberDecimalPoint } from "@/lib/formatter.js";
 import { cn } from "@/lib/utils.js";
 import { constructAPIUrl } from "@/lib/url.js";
 import { useAuthStore } from "@/store/auth";
+import { useFavoritesStore } from "@/store/favorites";
 import { useUserFavouriteOverlay } from "@/overlay/user/favourite.jsx";
-import { useModalStore } from "@/store/modal.jsx";
 import { toast } from "sonner";
-import axiosInstance from "@/lib/axios";
 
 /**
  * @param {Object} props
@@ -33,54 +32,37 @@ function MerchantCard({
   name,
   location,
   rating,
-  favorite = false,
   isFavoriteCount = false,
   description,
   onFavoriteToggle,
   className,
 }) {
   const { isAuthenticated } = useAuthStore();
-  const { modals } = useModalStore();
-  const [isFavorite, setIsFavorite] = useState(favorite);
+  const {
+    isFavorite: isFavoriteInStore,
+    fetchFavorites,
+    setFavoriteCount,
+    getFavoriteCount,
+    isLoading: favoritesLoading
+  } = useFavoritesStore();
+
   const [favoriteLoading, setFavoriteLoading] = useState(false);
   const { open: openUserFavouriteOverlay } = useUserFavouriteOverlay();
-  const loadingTimeoutRef = useRef(null);
+
+  const isFavorite = merchantId ? isFavoriteInStore(merchantId) : false;
+  const currentFavoriteCount = merchantId ? (getFavoriteCount(merchantId) ?? rating) : rating;
 
   useEffect(() => {
-    const isModalOpen = modals["user-favourite"]?.isOpen;
-
-    if (favoriteLoading && !isModalOpen) {
-      setFavoriteLoading(false);
+    if (merchantId && isFavoriteCount && typeof rating === 'number') {
+      setFavoriteCount(merchantId, rating);
     }
-  }, [modals, favoriteLoading]);
+  }, [merchantId, isFavoriteCount, rating, setFavoriteCount]);
 
   useEffect(() => {
-    const checkFavouriteStatus = async () => {
-      if (!isAuthenticated || !merchantId) {
-        setIsFavorite(false);
-        return;
-      }
-
-      try {
-        const response = await axiosInstance.get(`/user/favourites`);
-        const favourites = response.data?.favourites || [];
-        const isCurrentlyFavorite = favourites.some((fav) => fav.merchantId === merchantId);
-        setIsFavorite(isCurrentlyFavorite);
-      } catch (_) {
-        setIsFavorite(favorite);
-      }
-    };
-
-    checkFavouriteStatus();
-  }, [isAuthenticated, merchantId, favorite]);
-
-  useEffect(() => {
-    return () => {
-      if (loadingTimeoutRef.current) {
-        clearTimeout(loadingTimeoutRef.current);
-      }
-    };
-  }, []);
+    if (isAuthenticated) {
+      fetchFavorites();
+    }
+  }, [isAuthenticated, fetchFavorites]);
 
   const handleToggleFavorite = (e) => {
     e.preventDefault();
@@ -98,38 +80,16 @@ function MerchantCard({
 
     setFavoriteLoading(true);
 
-    loadingTimeoutRef.current = setTimeout(() => {
-      setFavoriteLoading(false);
-    }, 10000);
-
     openUserFavouriteOverlay({
       merchantId,
-      onSuccess: async () => {
-        if (loadingTimeoutRef.current) {
-          clearTimeout(loadingTimeoutRef.current);
+      onSuccess: () => {
+        if (onFavoriteToggle) {
+          onFavoriteToggle(merchantId, !isFavorite);
         }
-
-        try {
-          const response = await axiosInstance.get(`/user/favourites`);
-          const favourites = response.data?.favourites || [];
-          const newFavoriteState = favourites.some((fav) => fav.merchantId === merchantId);
-
-          setIsFavorite(newFavoriteState);
-
-          if (onFavoriteToggle) {
-            onFavoriteToggle(merchantId, newFavoriteState);
-          }
-        } catch (error) {
-          console.error("Error syncing favourite status:", error);
-          // Fallback to simple toggle if sync fails
-          const newFavoriteState = !isFavorite;
-          setIsFavorite(newFavoriteState);
-          if (onFavoriteToggle) {
-            onFavoriteToggle(merchantId, newFavoriteState);
-          }
-        } finally {
-          setFavoriteLoading(false);
-        }
+        setFavoriteLoading(false);
+      },
+      onClose: () => {
+        setFavoriteLoading(false);
       },
     });
   };
@@ -159,11 +119,11 @@ function MerchantCard({
         {isAuthenticated && merchantId && (
           <button
             onClick={handleToggleFavorite}
-            disabled={favoriteLoading}
+            disabled={favoriteLoading || favoritesLoading}
             className={cn(
               "absolute top-2 right-2 rounded-full bg-white/80 p-2 shadow-sm transition-opacity hover:bg-white",
               isFavorite ? "text-red-500" : "text-gray-400",
-              favoriteLoading
+              favoriteLoading || favoritesLoading
                 ? "cursor-not-allowed opacity-50"
                 : "group-hover:opacity-100",
               !isFavorite && "opacity-0",
@@ -198,8 +158,8 @@ function MerchantCard({
           {isFavoriteCount ? (
             <>
               <IconHeartFilled className="h-4 w-4 text-red-500" />
-              <span className="text-sm">{rating}</span>
-              <span className="text-muted-foreground text-xs">favorites</span>
+              <span className="text-sm">{currentFavoriteCount}</span>
+              <span className="text-muted-foreground text-xs">favorite{currentFavoriteCount > 1 ? "s" : ""}</span>
             </>
           ) : (
             <>

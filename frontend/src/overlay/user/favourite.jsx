@@ -1,35 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { createModalHook } from "@/hooks/use-modal.jsx";
 import { Button } from "@/components/ui/button.jsx";
 import { useModalStore } from "@/store/modal.jsx";
-import axiosInstance from "@/lib/axios";
+import { useFavoritesStore } from "@/store/favorites";
 import { toast } from "sonner";
 import { IconHeart, IconHeartFilled } from "@tabler/icons-react";
 
-function UserFavouriteOverlay({ merchantId, onSuccess, onClose }) {
+function UserFavouriteOverlay({ merchantId, onSuccess }) {
   const { closeModal } = useModalStore();
+  const { isFavorite, addFavorite, removeFavorite } = useFavoritesStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isFavourite, setIsFavourite] = useState(false);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const checkFavourite = async () => {
-      if (!merchantId) return;
-
-      try {
-        setLoading(true);
-        const response = await axiosInstance.get(`/user/favourites`);
-        const favourites = response.data?.favourites || [];
-        setIsFavourite(favourites.some((fav) => fav.merchantId === merchantId));
-      } catch (error) {
-        console.error("Error checking favourite status:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    checkFavourite();
-  }, [merchantId]);
+  const isFavourite = merchantId ? isFavorite(merchantId) : false;
 
   const toggleFavourite = async () => {
     if (!merchantId) return;
@@ -37,15 +19,11 @@ function UserFavouriteOverlay({ merchantId, onSuccess, onClose }) {
     setIsSubmitting(true);
     try {
       if (isFavourite) {
-        await axiosInstance.delete(`/user/favourites`, {
-          data: { merchantId },
-        });
+        await removeFavorite(merchantId);
         toast.success("Removed from favourites");
-        setIsFavourite(false);
       } else {
-        await axiosInstance.post(`/user/favourites`, { merchantId });
+        await addFavorite(merchantId);
         toast.success("Added to favourites");
-        setIsFavourite(true);
       }
 
       if (onSuccess) {
@@ -63,21 +41,6 @@ function UserFavouriteOverlay({ merchantId, onSuccess, onClose }) {
       setIsSubmitting(false);
     }
   };
-
-  const handleClose = () => {
-    closeModal("user-favourite");
-    if (onClose) {
-      onClose();
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-4">
-        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-gray-900"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
@@ -117,7 +80,7 @@ function UserFavouriteOverlay({ merchantId, onSuccess, onClose }) {
               : "Add to Favourites"}
         </Button>
         <Button
-          onClick={() => handleClose}
+          onClick={() => closeModal("user-favourite")}
           className="flex-1"
           variant="outline"
           disabled={isSubmitting}
