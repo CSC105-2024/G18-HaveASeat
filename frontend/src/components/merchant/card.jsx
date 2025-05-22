@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router";
 import {
   IconHeart,
@@ -10,22 +10,22 @@ import { cn } from "@/lib/utils.js";
 import { constructAPIUrl } from "@/lib/url.js";
 import { useAuthStore } from "@/store/auth";
 import { useUserFavouriteOverlay } from "@/overlay/user/favourite.jsx";
+import { useModalStore } from "@/store/modal.jsx";
 import { toast } from "sonner";
+import axiosInstance from "@/lib/axios";
 
 /**
- * MerchantCard Component - Displays merchant information in a card format
- *
  * @param {Object} props
- * @param {string} props.merchantId - Merchant ID
- * @param {string} props.image - Image URL
- * @param {string} props.name - Merchant name
- * @param {string} props.location - Merchant location
- * @param {number|string} props.rating - Merchant rating (number) or favorite count (string)
- * @param {boolean} props.favorite - Whether the merchant is favorite
- * @param {boolean} props.isFavoriteCount - Whether rating represents favorite count
- * @param {string} props.description - Merchant description
- * @param {Function} props.onFavoriteToggle - Optional callback when favorite is toggled
- * @param {string} props.className - Additional class names
+ * @param {string} props.merchantId
+ * @param {string} props.image
+ * @param {string} props.name
+ * @param {string} props.location
+ * @param {number|string} props.rating
+ * @param {boolean} props.favorite
+ * @param {boolean} props.isFavoriteCount
+ * @param {string} props.description
+ * @param {Function} props.onFavoriteToggle
+ * @param {string} props.className
  */
 function MerchantCard({
   merchantId,
@@ -40,9 +40,47 @@ function MerchantCard({
   className,
 }) {
   const { isAuthenticated } = useAuthStore();
+  const { modals } = useModalStore();
   const [isFavorite, setIsFavorite] = useState(favorite);
   const [favoriteLoading, setFavoriteLoading] = useState(false);
   const { open: openUserFavouriteOverlay } = useUserFavouriteOverlay();
+  const loadingTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    const isModalOpen = modals["user-favourite"]?.isOpen;
+
+    if (favoriteLoading && !isModalOpen) {
+      setFavoriteLoading(false);
+    }
+  }, [modals, favoriteLoading]);
+
+  useEffect(() => {
+    const checkFavouriteStatus = async () => {
+      if (!isAuthenticated || !merchantId) {
+        setIsFavorite(false);
+        return;
+      }
+
+      try {
+        const response = await axiosInstance.get(`/user/favourites`);
+        const favourites = response.data?.favourites || [];
+        const isCurrentlyFavorite = favourites.some((fav) => fav.merchantId === merchantId);
+        setIsFavorite(isCurrentlyFavorite);
+      } catch (_) {
+        setIsFavorite(favorite);
+      }
+    };
+
+    checkFavouriteStatus();
+  }, [isAuthenticated, merchantId, favorite]);
+
+  useEffect(() => {
+    return () => {
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleToggleFavorite = (e) => {
     e.preventDefault();
@@ -60,15 +98,38 @@ function MerchantCard({
 
     setFavoriteLoading(true);
 
+    loadingTimeoutRef.current = setTimeout(() => {
+      setFavoriteLoading(false);
+    }, 10000);
+
     openUserFavouriteOverlay({
       merchantId,
-      onSuccess: () => {
-        const newFavoriteState = !isFavorite;
-        setIsFavorite(newFavoriteState);
-        if (onFavoriteToggle) {
-          onFavoriteToggle(merchantId, newFavoriteState);
+      onSuccess: async () => {
+        if (loadingTimeoutRef.current) {
+          clearTimeout(loadingTimeoutRef.current);
         }
-        setFavoriteLoading(false);
+
+        try {
+          const response = await axiosInstance.get(`/user/favourites`);
+          const favourites = response.data?.favourites || [];
+          const newFavoriteState = favourites.some((fav) => fav.merchantId === merchantId);
+
+          setIsFavorite(newFavoriteState);
+
+          if (onFavoriteToggle) {
+            onFavoriteToggle(merchantId, newFavoriteState);
+          }
+        } catch (error) {
+          console.error("Error syncing favourite status:", error);
+          // Fallback to simple toggle if sync fails
+          const newFavoriteState = !isFavorite;
+          setIsFavorite(newFavoriteState);
+          if (onFavoriteToggle) {
+            onFavoriteToggle(merchantId, newFavoriteState);
+          }
+        } finally {
+          setFavoriteLoading(false);
+        }
       },
     });
   };

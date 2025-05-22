@@ -279,7 +279,6 @@ const useReviewAddOverlay = createModalHook(
     isReply
       ? "This is the best way to interact with your customers"
       : "Tell us more about this place!",
-  "md",
 );
 
 export { useReviewAddOverlay, ReviewAddOverlay };

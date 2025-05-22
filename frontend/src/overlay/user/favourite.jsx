@@ -6,7 +6,7 @@ import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
 import { IconHeart, IconHeartFilled } from "@tabler/icons-react";
 
-function UserFavouriteOverlay({ merchantId, onSuccess }) {
+function UserFavouriteOverlay({ merchantId, onSuccess, onClose }) {
   const { closeModal } = useModalStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFavourite, setIsFavourite] = useState(false);
@@ -64,6 +64,13 @@ function UserFavouriteOverlay({ merchantId, onSuccess }) {
     }
   };
 
+  const handleClose = () => {
+    closeModal("user-favourite");
+    if (onClose) {
+      onClose();
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center p-4">
@@ -110,7 +117,7 @@ function UserFavouriteOverlay({ merchantId, onSuccess }) {
               : "Add to Favourites"}
         </Button>
         <Button
-          onClick={() => closeModal("user-favourite")}
+          onClick={() => handleClose}
           className="flex-1"
           variant="outline"
           disabled={isSubmitting}
@@ -127,7 +134,6 @@ const useUserFavouriteOverlay = createModalHook(
   "user-favourite",
   "Favourite",
   null,
-  "sm",
 );
 
 export { useUserFavouriteOverlay, UserFavouriteOverlay };

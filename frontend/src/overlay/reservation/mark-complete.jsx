@@ -89,7 +89,6 @@ const useReservationMarkAsCompleteOverlay = createModalHook(
       reservations.
     </span>
   </Fragment>,
-  "sm",
 );
 
 export {

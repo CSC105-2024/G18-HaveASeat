@@ -75,7 +75,6 @@ const useReservationNoShowOverlay = createModalHook(
   "reservation-no-show",
   "Mark as No-Show",
   null,
-  "sm",
 );
 
 export { useReservationNoShowOverlay, ReservationNoShowOverlay };

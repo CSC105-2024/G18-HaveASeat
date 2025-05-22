@@ -7,7 +7,6 @@ export async function updateReservationStatuses(prisma: PrismaClient) {
     where: {
       status: "PENDING",
       OR: [
-
         {
           endTime: { lt: now }
         },
@@ -28,7 +27,6 @@ export async function updateReservationStatuses(prisma: PrismaClient) {
     const newStatus = reservation.endTime < now ? "COMPLETED" : "NO_SHOW";
 
     await prisma.$transaction([
-
       prisma.reservation.update({
         where: { id: reservation.id },
         data: { status: newStatus }

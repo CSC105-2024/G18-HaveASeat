@@ -515,7 +515,6 @@ const useReservationAddOverlay = createModalHook(
   "reservation-add-modal",
   "Make a Reservation",
   "",
-  "lg",
 );
 
 export { useReservationAddOverlay, ReservationAddOverlay };

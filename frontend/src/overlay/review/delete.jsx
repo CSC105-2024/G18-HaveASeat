@@ -80,7 +80,6 @@ const useReviewDeleteOverlay = createModalHook(
     Are you sure you want to delete this review?{" "}
     <span className="text-red-500">This action cannot be undone.</span>
   </Fragment>,
-  "sm",
 );
 
 export { useReviewDeleteOverlay, ReviewDeleteOverlay };
