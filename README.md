@@ -29,8 +29,6 @@ This is a monorepo containing two main applications:
 📦 G18-HaveASeat/
 ├── 🎨 frontend/     # React SPA with Vite
 ├── 🔧 backend/      # Node.js API with Hono
-├── 📊 shared/       # Shared utilities and types
-└── 📝 docs/         # Documentation
 ```
 
 ### Tech Stack
