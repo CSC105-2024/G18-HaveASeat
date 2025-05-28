@@ -12,53 +12,75 @@ import { cors } from "hono/cors";
 import { CronJob } from "cron";
 import { checkCurrentReservations, updateReservationStatuses } from "@/lib/reservation.js";
 
-const db = getPrisma();
-const app = new Hono<AppEnv>({ strict: true });
+async function startServer() {
+  const db = getPrisma();
+  const app = new Hono<AppEnv>({ strict: true });
 
-app.use(
-  "*",
-  cors({
-    origin: ["http://localhost:5173"],
-    credentials: true,
-    allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    maxAge: 86400
-  })
-);
+  app.use(
+    "*",
+    cors({
+      origin: ["http://localhost:5173"],
+      credentials: true,
+      allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+      maxAge: 86400
+    })
+  );
 
-app.use(compress());
-app.use(trimTrailingSlash());
-app.use(logger());
+  app.use(compress());
+  app.use(trimTrailingSlash());
+  app.use(logger());
 
-app.get(
-  "/uploads/*",
-  serveStatic({
-    root: "./",
-    rewriteRequestPath: (path) =>
-      path.replace(/^\/uploads/, "/uploads")
-  })
-);
+  app.get(
+    "/uploads/*",
+    serveStatic({
+      root: "./",
+      rewriteRequestPath: (path) =>
+        path.replace(/^\/uploads/, "/uploads")
+    })
+  );
 
-await loadRoutes(app);
+  try {
+    console.log("\x1b[46m[Router]\x1b[0m Loading routes...");
+    await loadRoutes(app);
+    console.log("\x1b[46m[Router]\x1b[0m Routes loaded successfully");
+  } catch (error) {
+    console.error("\x1b[31m[Router Error]\x1b[0m Failed to load routes:", error);
+    process.exit(1);
+  }
 
-db.$connect()
-  .then(() => {
+  try {
+    await db.$connect();
     console.log("\x1b[44m[Database]\x1b[0m \x1b[32mConnected to the database\x1b[0m");
-  })
-  .catch((error) => {
+  } catch (error) {
     console.error("\x1b[44m[Prisma]\x1b[0m \x1b[31mError connecting to the database:\x1b[0m", error);
+    process.exit(1);
+  }
+
+  const port = Number(process.env.PORT) || 3000;
+
+  serve({
+    fetch: app.fetch,
+    port: port,
+  }, (info) => {
+    console.log(`\x1b[31m[Hono]\x1b[0m Server is running on http://localhost:${info.port}`);
   });
 
-serve({
-  fetch: app.fetch,
-  port: process.env.PORT as (number | undefined) || 3000
-}, (info) => {
-  console.log(`\x1b[31m[Hono]\x1b[0m Server is running on http://localhost:${info.port}`);
-});
+  const reservationCleanupJob = new CronJob("*/5 * * * *", async () => {
+    try {
+      const prisma = getPrisma();
+      await updateReservationStatuses(prisma);
+      await checkCurrentReservations(prisma);
+    } catch (error) {
+      console.error("\x1b[33m[Cron Job]\x1b[0m Error in reservation cleanup:", error);
+    }
+  });
 
-const reservationCleanupJob = new CronJob("*/5 * * * *", async () => {
-  const prisma = getPrisma();
-  await updateReservationStatuses(prisma);
-  await checkCurrentReservations(prisma);
-});
+  reservationCleanupJob.start();
+  console.log("\x1b[33m[Cron Job]\x1b[0m Reservation cleanup job started (runs every 5 minutes)");
 
-reservationCleanupJob.start();
+  return app;
+}
+
+const app = await startServer();
+
+export default app;
