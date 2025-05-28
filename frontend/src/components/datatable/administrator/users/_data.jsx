@@ -30,7 +30,7 @@ export const getColumns = ({ onRefresh }) => {
       cell: ({ row }) => {
         return (
           <div className="flex space-x-2">
-            <span className="max-w-[500px] truncate font-medium capitalize">
+            <span className="max-w-[500px] truncate font-medium">
               {row.original.name}
             </span>
             {row.original.isAdmin && (

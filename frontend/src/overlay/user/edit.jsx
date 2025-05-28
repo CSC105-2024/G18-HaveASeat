@@ -26,6 +26,7 @@ import { IconCalendarWeekFilled } from "@tabler/icons-react";
 import { Calendar } from "@/components/ui/calendar.jsx";
 import { z } from "zod";
 import axiosInstance from "@/lib/axios.js";
+import { useUserEditSecurityOverlay } from "@/overlay/user/security.jsx";
 
 const FormSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -64,7 +65,9 @@ const FormSchema = z.object({
 function UserEditOverlay({ userId, userData, onSuccess }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingUser, setIsLoadingUser] = useState(false);
+
   const { closeModal } = useModalStore();
+  const { open: openUserEditSecurityOverlay } = useUserEditSecurityOverlay();
 
   /** @type {import("react-hook-form").UseFormReturn<z.infer<typeof formSchema>>} */
   const form = useForm({
@@ -111,6 +114,11 @@ function UserEditOverlay({ userId, userData, onSuccess }) {
       });
     }
   }, [userId, userData]);
+
+  function handleOnSwapOverlay() {
+    closeModal('user-edit');
+    openUserEditSecurityOverlay({ userId });
+  }
 
   /**
    * @param {ReturnType<typeof FormSchema["parse"]>} data
@@ -269,6 +277,14 @@ function UserEditOverlay({ userId, userData, onSuccess }) {
                   </FormItem>
                 )}
               />
+            </div>
+            <div className="flex flex-col gap-4">
+              <FormLabel>
+                Change Password
+              </FormLabel>
+              <Button type="button" variant="outline" onClick={handleOnSwapOverlay}>
+                Change Password
+              </Button>
             </div>
           </div>
           <div className="flex flex-col gap-4 md:flex-row">

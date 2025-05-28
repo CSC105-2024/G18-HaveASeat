@@ -19,23 +19,18 @@ export default async function(c: Context<AppEnv>) {
     }
 
     const body = await c.req.json();
-    const { currentPassword, newPassword } = body;
+    const { newPassword } = body;
 
-    if (!currentPassword || !newPassword) {
+    if (!newPassword) {
       return c.json({
         success: false,
-        error: "Current password and new password are required"
+        error: "New password are required"
       }, 400);
     }
 
     const user = await prisma.user.findUnique({ where: { id } });
     if (!user) {
       return c.json({ success: false, error: "User not found" }, 404);
-    }
-
-    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
-    if (!isPasswordValid) {
-      return c.json({ success: false, error: "Current password is incorrect" }, 400);
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);

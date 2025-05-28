@@ -45,7 +45,7 @@ export const getColumns = ({ onRefresh }) => {
         return (
           <div className="space-y-4">
             <div className="flex space-x-2">
-              <span className="max-w-[500px] truncate font-medium capitalize">
+              <span className="max-w-[500px] truncate font-medium">
                 {author.name}
               </span>
               {author.isAdmin && (
