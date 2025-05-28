@@ -5,7 +5,7 @@ import process from "process";
 
 type HttpMethod = "get" | "post" | "put" | "delete" | "patch" | "options" | "head"
 
-export function loadRoutes<T extends Env>(app: Hono<T>): void {
+export async function loadRoutes<T extends Env>(app: Hono<T>): Promise<void> {
   const routesDir = path.join(process.cwd(), "src", "routes");
 
   if (!fs.existsSync(routesDir)) {
@@ -13,11 +13,23 @@ export function loadRoutes<T extends Env>(app: Hono<T>): void {
     return;
   }
 
-  walkRoutes<T>(app, routesDir, "");
+  const routeFiles: string[] = [];
+  collectRouteFiles(routesDir, "", routeFiles);
+
+  for (const routeFile of routeFiles) {
+    await registerRoute<T>(app, routesDir, routeFile);
+  }
+
+  console.log(`\x1b[42m[Router]\x1b[0m Loaded ${routeFiles.length} routes successfully`);
 }
 
-function walkRoutes<T extends Env>(app: Hono<T>, baseDir: string, currentPath: string): void {
+function collectRouteFiles(baseDir: string, currentPath: string, routeFiles: string[]): void {
   const routesDir = path.join(baseDir, currentPath);
+
+  if (!fs.existsSync(routesDir)) {
+    return;
+  }
+
   const files = fs.readdirSync(routesDir);
 
   files.forEach(file => {
@@ -25,9 +37,9 @@ function walkRoutes<T extends Env>(app: Hono<T>, baseDir: string, currentPath: s
     const stats = fs.statSync(filePath);
 
     if (stats.isDirectory()) {
-      walkRoutes<T>(app, baseDir, path.join(currentPath, file));
-    } else if (stats.isFile() && file.endsWith(".ts")) {
-      registerRoute<T>(app, baseDir, path.join(currentPath, file));
+      collectRouteFiles(baseDir, path.join(currentPath, file), routeFiles);
+    } else if (stats.isFile() && file.endsWith(".ts") && !file.endsWith(".d.ts")) {
+      routeFiles.push(path.join(currentPath, file));
     }
   });
 }
@@ -45,7 +57,9 @@ async function registerRoute<T extends Env>(app: Hono<T>, baseDir: string, route
   try {
     const fileUrl = pathToFileURL(fullPath);
 
-    const module = await import(fileUrl);
+    const moduleUrl = `${fileUrl}?t=${Date.now()}`;
+
+    const module = await import(moduleUrl);
     const handler = module.default;
 
     if (typeof handler !== "function") {
@@ -57,37 +71,45 @@ async function registerRoute<T extends Env>(app: Hono<T>, baseDir: string, route
 
     console.log(`\x1b[46m[Router]\x1b[0m \x1b[37m${method.toUpperCase()}\x1b[0m \t ${routePath}`);
 
-    switch (method) {
-      case "get":
-        app.get(routePath, ...middlewares, handler);
-        break;
-      case "post":
-        app.post(routePath, ...middlewares, handler);
-        break;
-      case "put":
-        app.put(routePath, ...middlewares, handler);
-        break;
-      case "delete":
-        app.delete(routePath, ...middlewares, handler);
-        break;
-      case "patch":
-        app.patch(routePath, ...middlewares, handler);
-        break;
-      case "options":
-        app.options(routePath, ...middlewares, handler);
-        break;
-      case "head":
-        app.get(routePath, ...middlewares, handler);
-        break;
+    try {
+      switch (method) {
+        case "get":
+          app.get(routePath, ...middlewares, handler);
+          break;
+        case "post":
+          app.post(routePath, ...middlewares, handler);
+          break;
+        case "put":
+          app.put(routePath, ...middlewares, handler);
+          break;
+        case "delete":
+          app.delete(routePath, ...middlewares, handler);
+          break;
+        case "patch":
+          app.patch(routePath, ...middlewares, handler);
+          break;
+        case "options":
+          app.options(routePath, ...middlewares, handler);
+          break;
+        case "head":
+          app.get(routePath, ...middlewares, handler);
+          break;
+      }
+    } catch (routeError) {
+      if (routeError instanceof Error && routeError.message.includes("matcher is already built")) {
+        console.error(`\x1b[31m[Router Error]\x1b[0m Route registration failed for ${routePath}. Make sure loadRoutes() is called before any requests are made to the app.`);
+        throw new Error(`Router matcher already built. Ensure loadRoutes() is called before app.fetch() or any HTTP requests.`);
+      }
+      throw routeError;
     }
   } catch (err) {
     console.error(`\x1b[31m[Router Error]\x1b[0m Error loading route ${routeFile}:`, err);
+    throw err;
   }
 }
 
 function pathToFileURL(filePath: string): string {
   const absolutePath = path.resolve(filePath);
-
   const normalizedPath = absolutePath.replace(/\\/g, "/");
 
   if (process.platform === "win32") {
@@ -108,7 +130,6 @@ function parseRoutePath(filePath: string): { routePath: string, method: HttpMeth
   }
 
   routePath = routePath.replace(/\\/g, "/");
-
   routePath = routePath.replace(/\[([^\]]+)\]/g, ":$1");
 
   if (routePath === "index" || routePath === "/index") {
