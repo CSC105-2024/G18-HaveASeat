@@ -27,6 +27,7 @@ import { IconCalendarWeekFilled } from "@tabler/icons-react";
 import { Calendar } from "@/components/ui/calendar.jsx";
 import { useAuthStore } from "@/store/auth.js";
 import axiosInstance from "@/lib/axios.js";
+import { useNavigate } from "react-router";
 
 const FormSchema = z
   .object({
@@ -73,7 +74,8 @@ const FormSchema = z
 function SignUpOverlay({ addMode = false }) {
   const [isLoading, setIsLoading] = useState(false);
   const { closeModal } = useModalStore();
-  const { login } = useAuthStore();
+  const { signIn } = useAuthStore();
+  const navigate = useNavigate();
 
   /** @type {import("react-hook-form").UseFormReturn<z.infer<typeof formSchema>>} */
   const form = useForm({
@@ -113,8 +115,9 @@ function SignUpOverlay({ addMode = false }) {
       const { accessToken, refreshToken, user } = response.data;
 
       if (!addMode) {
-        await login(user, accessToken, refreshToken);
+        await signIn({ email: data.email, password: data.password });
         toast.success("Account created successfully!");
+        navigate(0);
       } else {
         toast.success("User added successfully!");
       }

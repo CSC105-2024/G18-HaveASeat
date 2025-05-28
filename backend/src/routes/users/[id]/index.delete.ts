@@ -12,21 +12,13 @@ export default async function(c: Context<AppEnv>) {
     const prisma = getPrisma();
     const id = c.req.param("id");
 
-    const body = await c.req.json();
-    const { name, phoneNumber, birthday } = body;
-
     const existing = await prisma.user.findUnique({ where: { id } });
     if (!existing) {
       return c.json({ success: false, error: "User not found" }, 404);
     }
 
-    const updated = await prisma.user.update({
+    const updated = await prisma.user.delete({
       where: { id },
-      data: {
-        name,
-        phoneNumber,
-        birthday: birthday ? new Date(birthday) : undefined
-      }
     });
 
     return c.json({ success: true, data: updated });

@@ -14,7 +14,6 @@ export default async function(c: Context<AppEnv>) {
     if (name) {
       where.name = {
         contains: name,
-        mode: "insensitive"
       };
     }
 
